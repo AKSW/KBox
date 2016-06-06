@@ -27,7 +27,7 @@ public class RBoxTest {
 	public void testFileMethods() throws MalformedURLException, Exception {		
 		File rboxedFile = KBox.getResource(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));		
 		String path = KBox.URLToPath(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));
-
+		KBox.install(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));
 		File inDisk = new File(KBox.getResourceFolder() + File.separator + path);
 		assertEquals(true, inDisk.exists());
 		assertEquals(rboxedFile.getPath(), inDisk.getPath());

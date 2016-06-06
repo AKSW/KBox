@@ -204,10 +204,9 @@ public class KBox {
 	
 	/**
 	 * Publish a given file in a given URL local directory.
-	 * This function allows RBox to serve files to applications, acting as proxy to the publised file.
+	 * This function allows RBox to serve files to applications, acting as proxy to the published file.
 	 * The file that is published in a give URL u will be located when the client execute 
-	 * the function RBox.getResource(u). 
-	 * 
+	 * the function RBox.getResource(u).
 	 * 
 	 * @param url - the URL were the file is going to be published.
 	 * @param file - the URL of the file that is going to be published at the given URL.
@@ -216,6 +215,20 @@ public class KBox {
 	 */
 	public static void install(URL url, URL file) throws Exception {
 		install(url, file.openStream());
+	}
+	
+	/**
+	 * Publish a given file in a given URL local directory.
+	 * This function allows RBox to serve files to applications, acting as proxy to the published file.
+	 * The file that is published in a give URL u will be located when the client executes 
+	 * the function RBox.getResource(u).
+	 * 
+	 * @param url - the URL of the resource that is going to be published at the given URL.
+	 * @throws Exception if the resource does not exist or can not be copied or some error 
+	 * occurs during the resource publication.
+	 */
+	public static void install(URL url) throws Exception {
+		install(url, url.openStream());
 	}
 	
 	/**
