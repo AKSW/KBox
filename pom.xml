@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.aksw.kbox</groupId>
+  <artifactId>parent</artifactId>
+  <version>0.0.1-beta</version>
+  <packaging>pom</packaging>
+  
+  <build>
+    <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.3</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
+          <shortRevisionLength>5</shortRevisionLength>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <scm>
+    <url>https://bitbucket.org/emarx/openqa.git</url>
+    <connection>scm:git:https://bitbucket.org/emarx/openqa.git</connection>
+  </scm>
+  
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+  </dependencies>
+  <modules>
+    <module>kbox.core</module>
+	<module>kbox.core.test</module>
+	<module>kbox.kibe</module>
+	<module>kbox.kibe.test</module>
+  </modules>
+  <repositories>
+    <repository>
+      <id>maven.aksw.internal</id>
+      <name>University Leipzig, AKSW Maven2 Repository</name>
+      <url>http://maven.aksw.org/archiva/repository/internal</url>
+    </repository>
+    <repository>
+      <id>maven.aksw.snapshots</id>
+      <name>University Leipzig, AKSW Maven2 Repository</name>
+      <url>http://maven.aksw.org/archiva/repository/snapshots</url>
+    </repository>
+    <repository>
+      <id>sonatype</id>
+      <name>Sonatype Repo</name>
+      <url>https://repository.sonatype.org/content/repositories/forge/</url>
+    </repository>
+</repositories>
+</project>
