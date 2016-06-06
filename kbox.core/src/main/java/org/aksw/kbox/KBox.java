@@ -103,7 +103,6 @@ public class KBox {
 	 * The default resource folder is "user/.rbox".
 	 */
 	public static void setResourceFolder(String resourceFolderPath) {
-		init();
 		CustomParams params = getParams();
 		File resourceFolder = new File(resourceFolderPath);
 		if(!resourceFolder.exists()) {
@@ -122,7 +121,6 @@ public class KBox {
 		if(cachedResourceFolderPath != null) {
 			return cachedResourceFolderPath;
 		}
-		init();
 		CustomParams params = getParams();
 		cachedResourceFolderPath = params.getProperty(KBOX_RESOURCE_FOLDER, KBOX_DIR);
 		return cachedResourceFolderPath;
@@ -159,7 +157,6 @@ public class KBox {
 	 * the local resource materialization.
 	 */
 	public static File getResource(URL url, boolean install) throws Exception {
-		init();
 		File resource = new File(URLToAbsolutePath(url));
 		if(!resource.exists() && !install) {
 			return null;
