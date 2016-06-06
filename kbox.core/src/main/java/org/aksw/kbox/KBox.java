@@ -20,7 +20,7 @@ import java.nio.channels.ReadableByteChannel;
 public class KBox {
 		
 	private final static String KBOX_FOLDER = ".kbox";
-	private final static String KBOX_RESOURCE_FOLDER = "RBOX_RESOURCE_FOLDER";
+	private final static String KBOX_RESOURCE_FOLDER = "KBOX_RESOURCE_FOLDER";
 	private final static String KBOX_CONFIG_CONTEXT = "kbox";
 	
 	public final static String KBOX_CONFIG_FILE = ".config";
@@ -86,9 +86,9 @@ public class KBox {
 	
 	
 	/**
-	 * Create a local directory representing the url.
+	 * Create a KBox directory representing the url.
 	 * 
-	 * @param the local directory representing the given URL.
+	 * @param the KBox directory representing the given URL.
 	 */
 	public static File newDir(URL url) {
 		File resource = new File(URLToAbsolutePath(url));
@@ -100,7 +100,7 @@ public class KBox {
 	 * Replace the old resource folder by the given one.
 	 * 
 	 * @param resourceFolderPath - a full path folder where the resources were going to be saved.
-	 * The default resource folder is "user/.rbox".
+	 * The default resource folder is "user/.kbox".
 	 */
 	public static void setResourceFolder(String resourceFolderPath) {
 		CustomParams params = getParams();
@@ -127,18 +127,18 @@ public class KBox {
 	}
 	
 	/**
-	 * Get a local representation of the remote resource.
-	 * If the representation of the resource already exists,
-	 * return it, otherwise create a local representation and 
+	 * Get a KBox representation of the given resource.
+	 * If the representation of the resource already exists in KBox,
+	 * return it, otherwise create its representation and 
 	 * return it.
 	 * 
 	 * This method will not try to install the resource and will return null in 
 	 * case it does not exists.
 	 * 
 	 * @param url - the remote URL of the resource to be retrieved.
-	 * @return a file pointing to a local materialization of the resource.
+	 * @return a file pointing to a local KBox resource.
 	 * @throws Exception if the resource can not be located or some error occurs during
-	 * the local resource materialization.
+	 * the KBox resource lookup.
 	 */
 	public static File getResource(URL url) throws Exception {
 		return getResource(url, false);
@@ -203,24 +203,24 @@ public class KBox {
 	
 	
 	/**
-	 * Publish a given file in a given URL local directory.
-	 * This function allows RBox to serve files to applications, acting as proxy to the published file.
+	 * Publish the dereferenced file in the given path on your Knowledge Box (KBox) resource folder.
+	 * This function allows KBox to serve files to applications, acting as proxy to the published file.
 	 * The file that is published in a give URL u will be located when the client execute 
 	 * the function RBox.getResource(u).
 	 * 
-	 * @param url - the URL were the file is going to be published.
+	 * @param path - the path were the dereferenced file is going to be published.
 	 * @param file - the URL of the file that is going to be published at the given URL.
 	 * @throws Exception if the resource does not exist or can not be copied or some error 
 	 * occurs during the resource publication.
 	 */
-	public static void install(URL url, URL file) throws Exception {
-		install(url, file.openStream());
+	public static void install(URL path, URL file) throws Exception {
+		install(path, file.openStream());
 	}
 	
 	/**
-	 * Publish a given file in a given URL local directory.
-	 * This function allows RBox to serve files to applications, acting as proxy to the published file.
-	 * The file that is published in a give URL u will be located when the client executes 
+	 * Publish the dereferenced file in a given URL in your corresponding local Knowledge Box (KBox) resource folder.
+	 * This function allows KBox to serve files to applications, acting as proxy to the published file.
+	 * The file that is installed in a give URL u will be located when the client executes 
 	 * the function RBox.getResource(u).
 	 * 
 	 * @param url - the URL of the resource that is going to be published at the given URL.
@@ -232,12 +232,12 @@ public class KBox {
 	}
 	
 	/**
-	 * Publish a given file in a given URL local directory.
-	 * This function allows RBox to serve files to applications, acting as proxy to the published file.
-	 * The file that is published in a give URL u will be located when the client execute 
+	 * Publish the given input stream in the given path on your local Knowledge Box (KBox) resource folder.
+	 * This function allows KBox to serve files to applications, acting as proxy to the published file.
+	 * The file that is installed in a give URL u will be located when the client execute 
 	 * the function RBox.getResource(u). 
 	 * 
-	 * @param url - the URL were the file is going to be published.
+	 * @param path - the path were the file is going to be published.
 	 * @param inputStream - the inputStream that is going to be published in the given URL.
 	 * @throws Exception if the resource does not exist or can not be copied or some error 
 	 * occurs during the resource publication.
