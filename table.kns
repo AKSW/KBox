@@ -1,1 +1,1 @@
-{"name": "http://dbpedia.org/full/en", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3030/kbox.kb", "desc": "This dataset contains the english version of the DBpedia full."}
+{"name": "http://dbpedia.org/en/full", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3030/kbox.kb", "desc": "This dataset contains the english version of the DBpedia full."}
