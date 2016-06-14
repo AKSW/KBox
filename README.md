@@ -25,17 +25,18 @@ It is easy to plug and use it.
 # How can I execute KBox in in command Line?
 
 java -jar knox.jar <command> [option]
-		Where [command] is:
-		* -createIndex <directory> - Create an index with the files in a given directory.");
-		   ps: the directory might contain only RDF compatible file formats.");
-		* -sparql <query> -graph <graph>  - Query a given graph.");		
-		* -kns-list  - List all availables KNS services.");
-		* -kns-install <kns-URL>  - Install a given KNS service.");
-		* -kns-remove <kns-URL>  - Remove a given KNS service.");	
-		* -r-install  <URL>  - Install a given resource in KBox.");
-		* -kb-install  <kb-URL> - Install a given knowledgebase using the available KNS services to resolve it.");
-		* -kb-install  <kb-URL> -index <indexFile> - Install a given index in a given knowledgebase URL.");
-		* -kb-install  <kb-URL> -kns-server <kns-server-URL> - Install a knowledgebase from a a given KNS server.");
-		* -kb-list  - List all available KNS services and knowledgebases.");
-		* -r-dir <resourceDir> - Change the current path of the KBox resource container.");
-		* -version - display KBox version.");
+```Where [command] is:
+* -createIndex <directory> - Create an index with the files in a given directory.");
+ ps: the directory might contain only RDF compatible file formats.");
+* -sparql <query> -graph <graph>  - Query a given graph.");		
+* -kns-list  - List all availables KNS services.");
+* -kns-install <kns-URL>  - Install a given KNS service.");
+* -kns-remove <kns-URL>  - Remove a given KNS service.");	
+* -r-install  <URL>  - Install a given resource in KBox.");
+* -kb-install  <kb-URL> - Install a given knowledgebase using the available KNS services to resolve it.");
+* -kb-install  <kb-URL> -index <indexFile> - Install a given index in a given knowledgebase URL.");
+* -kb-install  <kb-URL> -kns-server <kns-server-URL> - Install a knowledgebase from a a given KNS server.");
+* -kb-list  - List all available KNS services and knowledgebases.");
+* -r-dir <resourceDir> - Change the current path of the KBox resource container.");
+* -version - display KBox version.");
+´´´
