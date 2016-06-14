@@ -26,7 +26,7 @@ It is easy to plug and use it.
 
 
 ```
-java -jar knox.jar <command> [option]
+java -jar kbox.jar <command> [option]
 Where [command] is:
 * -createIndex <directory> - Create an index with the files in a given directory.
  ps: the directory might contain only RDF compatible file formats.
