@@ -11,9 +11,10 @@ public class KNS {
 	private String target;
 	private String desc;
 	
-	public KNS(String name, String target) {
+	public KNS(String name, String target, String desc) {
 		this.name = name;
 		this.target = target;
+		this.desc = desc;
 	}
 	
 	public String getName() {
@@ -38,7 +39,8 @@ public class KNS {
        JSONObject jsonObject = (JSONObject) jsonParser.parse(stringReader);
 		String name = (String) jsonObject.get("name");
 		String target = (String) jsonObject.get("target");
-		return new KNS(name, target);
+		String desc = (String) jsonObject.get("desc");
+		return new KNS(name, target, desc);
 	}
 	
 	public void setDesc(String desc) {

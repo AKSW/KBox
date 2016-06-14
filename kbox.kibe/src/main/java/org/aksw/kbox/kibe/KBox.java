@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.aksw.kbox.CustomParams;
+import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.apache.log4j.Logger;
@@ -48,6 +49,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	private final static String INDEX_COMMAND = "-index";
 	private final static String CREATE_INDEX_COMMAND = "-createIndex";
 	private final static String VERSION_COMMAND = "-version";
+	private final static String RESOURCE_DIR_COMMAND = "-r-dir";
 
 	public static void main(String[] args) throws Exception {
 		Map<String, String> commands = parse(args);
@@ -57,27 +59,30 @@ public class KBox extends org.aksw.kbox.KBox {
 			logger.info("Creating index.");
 			createIndex(indexFile, filePathsToURLs(new File(files).listFiles()));
 			logger.info("Index created.");
-		} else if(commands.containsKey(RESOURCE_INSTALL_COMMAND) && 
+		} else if(commands.containsKey(RESOURCE_INSTALL_COMMAND) &&
 				commands.containsKey(GRAPH_COMMAND)) {
 			String url = commands.get(GRAPH_COMMAND);
 			URL resourceURL = new URL(url);
 			String resource = commands.get(RESOURCE_INSTALL_COMMAND);
 			URL file = new URL(resource);
+			logger.info("Installing resource " + resource);
 			KBox.install(resourceURL, file);
 			logger.info("Resource installed.");
 		} else if(commands.containsKey(KB_INSTALL_COMMAND) && 
 				commands.containsKey(INDEX_COMMAND)) {
-			String kbURLString = commands.get(KB_INSTALL_COMMAND);
-			URL kbURL = new URL(kbURLString);
+			String kbURL2Install = commands.get(KB_INSTALL_COMMAND);
+			URL kbURL = new URL(kbURL2Install);
 			String resource = commands.get(INDEX_COMMAND);
 			File resourceFile = new File(resource);
 			URL file = resourceFile.toURI().toURL();
+			logger.info("Installing KB " + kbURL2Install);
 			KBox.installKB(kbURL, file);
 			logger.info("KB installed.");
 		}  else if(commands.containsKey(KB_INSTALL_COMMAND)
 				&& commands.containsKey(KNS_SERVER_COMMAND)) {
 			String knsServer = commands.get(KNS_SERVER_COMMAND);
 			String kbURL = commands.get(KB_INSTALL_COMMAND);
+			logger.info("Installing KB " + kbURL + " from KNS " + knsServer);
 			KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer));
 			logger.info("KB installed.");
 		} else if(commands.containsKey(KB_INSTALL_COMMAND)) {
@@ -87,30 +92,40 @@ public class KBox extends org.aksw.kbox.KBox {
 			if(file == null) {
 				logger.info("KB could not be located in the available KNS services.");
 			} else {
+				logger.info("Installing KB " + url);
 				KBox.installKB(kbURL, file);
 				logger.info("KB installed.");
 			}
 		} else if(commands.containsKey(KNS_INSTALL_COMMAND)) {
 			String url = commands.get(KNS_INSTALL_COMMAND);
 			URL knsURL = new URL(url);
+			logger.info("Installing KNS " + url);
 			KBox.installKNS(knsURL);
 			logger.info("KNS installed.");
 		} else if (commands.containsKey(SPARQL_QUERY_COMMAND) && 
 				commands.containsKey(GRAPH_COMMAND)){
 			String sparql = commands.get(SPARQL_QUERY_COMMAND);
-			String stringGraphName = commands.get(GRAPH_COMMAND);
-			URL urlGraph = new URL(stringGraphName);
-			ResultSet rs = query(urlGraph, sparql);
-			ResultSetFormatter.out(System.out, rs);
+			String graphName = commands.get(GRAPH_COMMAND);
+			URL urlGraph = new URL(graphName);
+			try {
+				ResultSet rs = query(urlGraph, sparql);
+				ResultSetFormatter.out(System.out, rs);
+			} catch (KBNotFoundException e) {
+				logger.info("The knowledgebase " + graphName + " is not available.");
+				logger.info("You can install it by executing the command -kb-install.");
+			} catch (Exception e) {
+				logger.info("Error exectuting query.", e);
+			}
 		} else if (commands.containsKey(KNS_LIST_COMMAND)) {
-			System.out.println("KNS table list");
+			logger.info("KNS table list");
 			Iterable<String> it = listAvailableKNS();
 			for(String knsServer : it) {
-				System.out.println("\t - " + knsServer);
+				logger.info("\t - " + knsServer);
 			}
 		} else if (commands.containsKey(KB_LIST_COMMAND)) {
-			System.out.println("Knowledgebases table list");
+			logger.info("Knowledgebases table list");
 			Iterable<String> it = listAvailableKNS();
+			printKB(new URL(DEFAULT_KNS_TABLE_URL));
 			for(String knsServer : it) {
 				printKB(new URL(knsServer));
 			}
@@ -118,6 +133,14 @@ public class KBox extends org.aksw.kbox.KBox {
 			String knsURL = commands.get(KNS_REMOVE_COMMAND);
 			removeKNS(new URL(knsURL));
 			logger.info("KNS removed.");
+		} else if (commands.containsKey(RESOURCE_DIR_COMMAND)) {
+			String resourceDir = commands.get(RESOURCE_DIR_COMMAND);
+			try {
+				setResourceFolder(resourceDir);
+				logger.info("Resource dir redirected to " + resourceDir + ".");
+			} catch (Exception e) {
+				logger.error("Error changing KBox resource repository." + resourceDir + ".", e);
+			}
 		} else if (commands.containsKey(VERSION_COMMAND)) {
 			printVersion();
 		} else {
@@ -133,15 +156,17 @@ public class KBox extends org.aksw.kbox.KBox {
 		System.out.println("knox.jar <command> [option]");
 		System.out.println("Where [command] is:");
 		System.out.println("   * -createIndex <directory> \t - Create an index with the files in a given directory.");
+		System.out.println("                              \t ps: the directory might contain only RDF compatible file formats.");
 		System.out.println("   * -sparql <query> -graph <graph> \t - Query a given graph.");		
 		System.out.println("   * -kns-list \t - List all availables KNS services.");
 		System.out.println("   * -kns-install <kns-URL> \t - Install a given KNS service.");
 		System.out.println("   * -kns-remove <kns-URL> \t - Remove a given KNS service.");	
-		System.out.println("   * -r-install  <URL> \t - Install a given resource.");
+		System.out.println("   * -r-install  <URL> \t - Install a given resource in KBox.");
 		System.out.println("   * -kb-install  <kb-URL> \t - Install a given knowledgebase using the available KNS services to resolve it.");
 		System.out.println("   * -kb-install  <kb-URL> -index <indexFile> \t - Install a given index in a given knowledgebase URL.");
 		System.out.println("   * -kb-install  <kb-URL> -kns-server <kns-server-URL> \t - Install a knowledgebase from a a given KNS server.");
-		System.out.println("   * -kb-list \t - List all available KNS services and knowledgebases.");	
+		System.out.println("   * -kb-list \t - List all available KNS services and knowledgebases.");
+		System.out.println("   * -r-dir <resourceDir>\t - Change the current path of the KBox resource container.");
 		System.out.println("   * -version \t - display KBox version.");
 	}
 	
@@ -152,11 +177,10 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @return a Iterable containing all installed Knowledge Name Services.
 	 */
 	public static Iterable<String> listAvailableKNS() {
-		init();
 		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
 				+ File.separator 
 				+ KBox.KNS_FILE_NAME,
-				KBox.CONTEXT_NAME);				
+				KBox.CONTEXT_NAME);
 		return cs.iterable();
 	}
 	
@@ -167,7 +191,6 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param url the url of the KNS (Knwoledge Name Service)
 	 */
 	public static void installKNS(URL url) {
-		init();
 		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
 				+ File.separator 
 				+ KBox.KNS_FILE_NAME, 
@@ -179,7 +202,6 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * Remove the given url from your personal Knowledge Name Service.
 	 */
 	public static void removeKNS(URL url) {
-		init();
 		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
 				+ File.separator 
 				+ KBox.KNS_FILE_NAME, 
@@ -260,7 +282,10 @@ public class KBox extends org.aksw.kbox.KBox {
 		    KNS kns = null;
 			try {
 				kns = KNS.parse(line);
-				System.out.println("KNS:" + knsURL.toString() + "\t KB:" + kns.getName() + "\t DESC:" + kns.getDesc());
+				System.out.println("*****************************************************");
+				System.out.println("KNS:" + knsURL.toString());
+				System.out.println("KB:" + kns.getName());
+				System.out.println("DESC:" + kns.getDesc());
 			} catch (Exception e) {
 				logger.error("KNS Table entry could not be parsed: " + line, e);
 			}
@@ -363,7 +388,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 */
 	public static ResultSet query(URL knowledgebase, String sparql) throws Exception {
 		File localDataset = org.aksw.kbox.KBox.getResource(knowledgebase);
-		Exception e = new Exception("Dataset " + knowledgebase.toString() + " does not exist. You can install it using the command install.");
+		Exception e = new KBNotFoundException("Dataset " + knowledgebase.toString() + " does not exist. You can install it using the command install.");
 		if(localDataset == null || !localDataset.exists()) {
 			throw e;
 		}
