@@ -5,6 +5,11 @@ KBox is an abbreviation for Knowledge Box.
 The rationality behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances. 
 Moreover, working on top of RDF model, KBox is a natural extension of the Web on your computer.
 
+[Why use KBox?](https://github.com/AKSW/KBox#why-use-kbox)
+[What is possible to do with it?](https://github.com/AKSW/KBox#what-is-possible-to-do-with-it)
+[How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
+[How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
+
 ### Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated amog several applications.
 For instance, when using Starndford NLP library among different applications, the resources and knowledge inside the library is duplicated among different instances.
