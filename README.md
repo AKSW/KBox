@@ -7,8 +7,8 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 
 # Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated amog several applications.
-For instance, when a user uses Starndford NLP library among different applications, the resources and knowledge inside the library is duplicated among the instances.
-The idea is have a common knwlewdge box where users can persist and yet retrieve and share without duplication.
+For instance, when using Starndford NLP library among different applications, the resources and knowledge inside the library is duplicated among different instances.
+The idea is to have a common knwlewdge box where users can persist and yet retrieve and share without duplication.
 In order to do that, we bring the RDF concept to KBox.
 Thereafter, resource can be uniquely identified.
 
