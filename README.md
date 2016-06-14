@@ -5,24 +5,24 @@ KBox is an abbreviation for Knowledge Box.
 The rationality behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances. 
 Moreover, working on top of RDF model, KBox is a natural extension of the Web on your computer.
 
-# Why use KBox?
+## Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated amog several applications.
 For instance, when using Starndford NLP library among different applications, the resources and knowledge inside the library is duplicated among different instances.
 The idea is to have a common knowledge box where users can persist and yet retrieve and share resources without duplication.
 In order to do that, we bring the RDF concept to KBox.
 Thereafter, resource can be uniquely identified.
 
-# What is possible to do with it?
+## What is possible to do with it?
 With KBox you can share resources and knowledge among several applications, but not just that.
 In other to permit the easier knowledge dissemination, we have implemented Kibe library.
 The Kibe library allows applications to virtually install and query RDF knowledge graphs.
 It takes around ~10 minutes to start quering DBpedia on your computer, avoiding server overheads and faults.
 
-# How can I use KBox?
+## How can I use KBox?
 You can use KBox in command line or the library on your application.
 It is easy to plug and use it.
 
-# How can I execute KBox in command Line?
+## How can I execute KBox in command Line?
 
 * Download the library [here](https://github.com/AKSW/KBox/releases).
 
