@@ -22,7 +22,7 @@ It takes around ~10 minutes to start quering DBpedia on your computer, avoiding 
 You can use KBox in command line or the library on your application.
 It is easy to plug and use it.
 
-# How can I execute KBox in in command Line?
+# How can I execute KBox in command Line?
 
 
 ```
