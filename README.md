@@ -37,10 +37,10 @@ Where [command] is:
 * -kns-install <kns-URL>  - Install a given KNS service.
 * -kns-remove <kns-URL>  - Remove a given KNS service.
 * -r-install  <URL>  - Install a given resource in KBox.
-* -kb-install  <kb-URL> - Install a given knowledgebase using the available KNS services to resolve it.
-* -kb-install  <kb-URL> -index <indexFile> - Install a given index in a given knowledgebase URL.
-* -kb-install  <kb-URL> -kns-server <kns-server-URL> - Install a knowledgebase from a a given KNS server.
-* -kb-list  - List all available KNS services and knowledgebases.
+* -kb-install  <kb-URL> - Install a given knowledge base using the available KNS services to resolve it.
+* -kb-install  <kb-URL> -index <indexFile> - Install a given index in a given knowledge base URL.
+* -kb-install  <kb-URL> -kns-server <kns-server-URL> - Install a knowledge base from a a given KNS server.
+* -kb-list  - List all available KNS services and knowledge bases.
 * -r-dir <resourceDir> - Change the current path of the KBox resource container.
 * -version - display KBox version.
 ```
