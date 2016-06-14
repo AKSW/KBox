@@ -1,4 +1,4 @@
-package org.aksw.rbox.kibe.tdb;
+package org.aksw.kbox.kibe.tdb;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +17,7 @@ public class TDBTest {
 	@Test
 	public void testBulkLoad() throws URISyntaxException, IOException {
 		URL[] files = new URL[1];
-		URL url = TDBTest.class.getResource("/org/aksw/rbox/kibe/dbpedia_3.9.xml");
+		URL url = TDBTest.class.getResource("/org/aksw/kbox/kibe/dbpedia_3.9.xml");
 		files[0] = url;
 		java.nio.file.Path f = Files.createTempDirectory("kb");
 		TDB.bulkload(f.toFile().getPath(), files);

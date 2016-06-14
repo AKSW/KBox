@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.aksw.kbox.kibe.KBox;
-import org.aksw.rbox.kibe.tdb.TDBTest;
+import org.aksw.kbox.kibe.tdb.TDBTest;
 import org.junit.Test;
 
 import com.hp.hpl.jena.query.ResultSet;
@@ -16,16 +16,22 @@ public class KBoxTest {
 	
 	@Test
 	public void testPrintKBs() throws Exception {
-		URL serverURL = TDBTest.class.getResource("/org/aksw/rbox/kibe/");
+		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		KBox.printKB(serverURL);
+	}
+	
+	@Test
+	public void testResolveURLWithKBoxKNSService() throws Exception {
+		URL db = KBox.resolveURL(new URL("http://dbpedia.org/en/full"));
+		assertEquals(db.toString(), "http://vmdbpedia.informatik.uni-leipzig.de:3030/kbox.kb");
 	}
 	
 	@Test
 	public void testInstallProcess() throws Exception {
 		File indexFile = new File("knowledgebase.idx");
 		URL[] filesToIndex = new URL[1];
-		File file = new File("C:/Users/emarx/workspaces/rbox/kbox.kibe.test/src/test/resources/org/aksw/rbox/kibe/dbpedia_3.9.xml");
-		filesToIndex[0] = file.toURI().toURL();
+		URL url = TDBTest.class.getResource("/org/aksw/kbox/kibe/dbpedia_3.9.xml");
+		filesToIndex[0] = url;
 		KBox.createIndex(indexFile, filesToIndex);
 		KBox.installKB(new URL("http://my.knowledgebox"), 
 									indexFile.toURI().toURL());
@@ -73,7 +79,7 @@ public class KBoxTest {
 	
 	@Test
 	public void testResolveKNS() throws MalformedURLException, Exception {
-		URL serverURL = TDBTest.class.getResource("/org/aksw/rbox/kibe/");
+		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
 		URL fileURL = KBox.resolveURL(new URL("http://test.org"), serverURL);
 		assertEquals(fileURL.toString(), "http://target.org");
 	}
@@ -90,7 +96,7 @@ public class KBoxTest {
 	
 	@Test
 	public void listKNSServers2() throws MalformedURLException, Exception {
-		URL serverURL = TDBTest.class.getResource("/org/aksw/rbox/kibe/");
+		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
 		KBox.installKNS(serverURL);
 		Iterable<String> knsList = KBox.listAvailableKNS();
 		int i = 0;
