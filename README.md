@@ -24,8 +24,9 @@ It is easy to plug and use it.
 
 # How can I execute KBox in in command Line?
 
-java -jar knox.jar <command> [option]
+
 ```
+java -jar knox.jar <command> [option]
 Where [command] is:
 * -createIndex <directory> - Create an index with the files in a given directory.
  ps: the directory might contain only RDF compatible file formats.
