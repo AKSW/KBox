@@ -14,7 +14,7 @@ Thereafter, resource can be uniquely identified.
 
 # What is possible to do with it?
 With KBox you can share resources and knowledge among several applications, but not just that.
-In other to permit the easier knowledge decimination, we have implemented Kibe library.
+In other to permit the easier knowledge dissemination, we have implemented Kibe library.
 The Kibe library allows applications to virtually install and query RDF knowledge graphs.
 It takes around ~10 minutes to start quering DBpedia on your computer, avoiding server overheads and faults.
 
