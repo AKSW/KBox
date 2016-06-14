@@ -24,7 +24,9 @@ It is easy to plug and use it.
 
 # How can I execute KBox in command Line?
 
+* Download the library [here](https://github.com/AKSW/KBox/releases).
 
+* Type the following:
 ```
 java -jar kbox.jar <command> [option]
 Where [command] is:
