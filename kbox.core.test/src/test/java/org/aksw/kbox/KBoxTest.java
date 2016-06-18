@@ -9,30 +9,27 @@ import java.net.URL;
 import org.aksw.kbox.KBox;
 import org.junit.Test;
 
-public class RBoxTest {
+public class KBoxTest {
 
 	@Test
 	public void testResourceFolderMethods() throws MalformedURLException, Exception {
-		
-//		Files.deleteIfExists(new File(KBox.RBOX_DIR).toPath());
-		assertEquals(KBox.KBOX_DIR, KBox.getResourceFolder());
-
-		KBox.setResourceFolder("c:/");
-		assertEquals("c:/", KBox.getResourceFolder());
-
+		String currentResourceFolder = KBox.getResourceFolder();
+		KBox.setResourceFolder("c:" + File.separator);
+		assertEquals("c:" + File.separator, KBox.getResourceFolder());
 		KBox.setResourceFolder(KBox.KBOX_DIR);
+		KBox.setResourceFolder(currentResourceFolder);
 	}
 	
 	@Test
-	public void testFileMethods() throws MalformedURLException, Exception {		
-		File rboxedFile = KBox.getResource(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));		
+	public void testFileMethods() throws MalformedURLException, Exception {
+		File kboxedFile = KBox.getResource(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));		
 		String path = KBox.URLToPath(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));
 		KBox.install(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));
 		File inDisk = new File(KBox.getResourceFolder() + File.separator + path);
 		assertEquals(true, inDisk.exists());
-		assertEquals(rboxedFile.getPath(), inDisk.getPath());
+		kboxedFile = KBox.getResource(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));
+		assertEquals(kboxedFile.getPath(), inDisk.getPath());
 	}
-	
 	
 	@Test
 	public void testPublishMethods() throws MalformedURLException, Exception {

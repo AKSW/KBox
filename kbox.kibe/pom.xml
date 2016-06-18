@@ -16,14 +16,14 @@
   <parent>
   	<groupId>org.aksw.kbox</groupId>
   	<artifactId>parent</artifactId>
-  	<version>0.0.1-beta</version>
+  	<version>0.0.1-alpha1</version>
   	<relativePath>../pom.xml</relativePath>
   </parent>
   <dependencies>  	
   	<dependency>
     	<groupId>org.aksw.kbox</groupId>
 	    <artifactId>kbox.core</artifactId>
-	    <version>0.0.1-beta</version>
+	    <version>0.0.1-alpha1</version>
 	</dependency>
 	<dependency>
    		<groupId>org.apache.jena</groupId>
