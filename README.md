@@ -11,8 +11,8 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
 
 ### Why use KBox?
-Applications usually deal with resources and knowledge that are often duplicated amog several applications.
-For instance, when using Starndford NLP library among different applications, the resources and knowledge inside the library is duplicated among different instances.
+Applications usually deal with resources and knowledge that are often duplicated among several applications.
+For instance, when using Stanford NLP library among different applications, the resources and knowledge inside the library is duplicated among different instances.
 The idea is to have a common knowledge box where users can persist and yet retrieve and share resources without duplication.
 In order to do that, we bring the RDF concept to KBox.
 Thereafter, resource can be uniquely identified.
