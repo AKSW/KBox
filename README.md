@@ -49,3 +49,30 @@ Where [command] is:
 * -r-dir <resourceDir> - Change the current path of the KBox resource directory.
 * -version - display KBox version.
 ```
+
+### How can I use KBox in my project?
+
+* KBox is distributed over Maven.
+* You can add KBox to your project by importing the desired library:
+1) Add the following dependency on your project:
+```
+<dependency>
+  <groupId>org.aksw.openqa</groupId>
+  <artifactId>engine</artifactId>
+  <version>0.0.7-beta</version>
+</dependency>
+```
+2) Add the internal AKSW repository on your pom file:
+```
+<repositories>
+    <repository>
+      <id>maven.aksw.internal</id>
+      <name>University Leipzig, AKSW Maven2 Repository</name>
+      <url>http://maven.aksw.org/archiva/repository/internal</url>
+    </repository>
+  ...
+</repositories>
+```
+3) Rock it.. ;-)
+
+
