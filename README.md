@@ -58,9 +58,9 @@ Where [command] is:
 1) Add the following dependency on your project:
 ```
 <dependency>
-  <groupId>org.aksw.openqa</groupId>
-  <artifactId>engine</artifactId>
-  <version>0.0.7-beta</version>
+  <groupId>org.aksw.kbox</groupId>
+  <artifactId>kbox.core</artifactId>
+  <version>0.0.1-alpha1</version>
 </dependency>
 ```
 2) Add the internal AKSW repository on your pom file:
