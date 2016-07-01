@@ -1,12 +1,12 @@
 package org.aksw.kbox.kibe;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.aksw.kbox.kibe.KBox;
 import org.aksw.kbox.kibe.tdb.TDBTest;
 import org.junit.Test;
 
@@ -22,8 +22,14 @@ public class KBoxTest {
 	
 	@Test
 	public void testResolveURLWithKBoxKNSService() throws Exception {
-		URL db = KBox.resolveURL(new URL("http://dbpedia.org/en/full"));
+		URL db = KBox.resolveURL(new URL("http://dbpedia.org/3.9/en/full"));
 		assertEquals(db.toString(), "http://vmdbpedia.informatik.uni-leipzig.de:3030/kbox.kb");
+	}
+	
+	@Test
+	public void testNewDir() throws Exception {
+		File f = KBox.newDir(new URL("http://dbpedia.org/en/full"));
+		assertTrue(f.getAbsolutePath().endsWith("en\\full"));
 	}
 	
 	@Test
