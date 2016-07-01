@@ -134,13 +134,18 @@ public class KBox extends org.aksw.kbox.KBox {
 			removeKNS(new URL(knsURL));
 			logger.info("KNS removed.");
 		} else if (commands.containsKey(RESOURCE_DIR_COMMAND)) {
-			String resourceDir = commands.get(RESOURCE_DIR_COMMAND);
-			try {
-				setResourceFolder(resourceDir);
-				logger.info("Resource dir redirected to " + resourceDir + ".");
-			} catch (Exception e) {
-				logger.error("Error changing KBox resource repository." + resourceDir + ".", e);
-			}
+			String resourceDir = commands.get(RESOURCE_DIR_COMMAND);			
+			if(resourceDir != null) {
+				try {
+					setResourceFolder(resourceDir);
+					logger.info("Resource directory redirected to " + resourceDir + ".");
+				} catch (Exception e) {
+					logger.error("Error changing KBox resource repository." + resourceDir + ".", e);
+				}
+			} else {
+				resourceDir = getResourceFolder();
+				logger.info("Your current Resource directory is: " + resourceDir);					
+			}			
 		} else if (commands.containsKey(VERSION_COMMAND)) {
 			printVersion();
 		} else {

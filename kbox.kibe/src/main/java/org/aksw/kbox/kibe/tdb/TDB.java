@@ -19,21 +19,21 @@ import com.hp.hpl.jena.tdb.transaction.DatasetGraphTransaction;
 public class TDB {
 	
 	public static ResultSet query(String sparql, String dbDir) {
-		return query(sparql, null, dbDir);
+		Query query = QueryFactory.create(sparql);
+		return query(query, dbDir);
 	}
 
 	public static ResultSet query(String sparql, String graph, String dbDir) {
+		Query query = QueryFactory.create(sparql, graph);
+		return query(query, dbDir);
+	}
+	
+	public static ResultSet query(Query query, String dbDir) {
 		Dataset dataset = TDBFactory.createDataset(dbDir);
 		dataset.begin(ReadWrite.READ);
 		Model model = dataset.getDefaultModel();
 		model = ModelFactory.createRDFSModel(model);
 		dataset.end();
-		Query query = null;
-		if(graph != null) {
-			query = QueryFactory.create(sparql);
-		} else {
-			query = QueryFactory.create(sparql, graph);
-		}
 		QueryExecution qe = QueryExecutionFactory.create(query, model);
 		ResultSet results = qe.execSelect();
 		return results;
