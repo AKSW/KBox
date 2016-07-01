@@ -46,6 +46,6 @@ Where [command] is:
 * -kb-install  <kb-URL> -index <indexFile> - Install a given index in a given knowledge base URL.
 * -kb-install  <kb-URL> -kns-server <kns-server-URL> - Install a knowledge base from a a given KNS server.
 * -kb-list  - List all available KNS services and knowledge bases.
-* -r-dir <resourceDir> - Change the current path of the KBox resource container.
+* -r-dir <resourceDir> - Change the current path of the KBox resource directory.
 * -version - display KBox version.
 ```
