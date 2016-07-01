@@ -54,6 +54,7 @@ Where [command] is:
 
 * KBox is distributed over Maven.
 * You can add KBox to your project by importing the desired library:
+
 1) Add the following dependency on your project:
 ```
 <dependency>
