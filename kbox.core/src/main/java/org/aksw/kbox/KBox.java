@@ -77,7 +77,7 @@ public class KBox {
 		for(String pathDir : pathDirs) {
 			path += pathDir + File.separator;
 		}
-		path = path.substring(0, path.length()-2);
+		path = path.substring(0, path.length()-1);
 		return path;
 	}
 	
@@ -155,7 +155,7 @@ public class KBox {
 	 * the KBox resource lookup.
 	 */
 	public static File getResource(URL url) throws Exception {
-		return getResource(url, false, false);
+		return getResource(url, false);
 	}
 	
 	/**
@@ -166,18 +166,15 @@ public class KBox {
 	 * 
 	 * @param url - the remote URL of the resource to be retrieved.
 	 * @param install - specify if the resource should be installed in case in does no exist (true) or not (false).
-	 * @param overwrite - specify if the resource in the KBox should be overwritten in case it exist (true) or not (false).
 	 * @return a file pointing to a local materialization of the resource.
 	 * @throws Exception if the resource can not be located or some error occurs during
 	 * the local resource materialization.
 	 */
-	public static File getResource(URL url, boolean install, boolean overwrite) throws Exception {
+	public static File getResource(URL url, boolean install) throws Exception {
 		File resource = new File(URLToAbsolutePath(url));
 		if(!resource.exists() && !install) {
 			return null;
 		} else if(resource.exists() && !install) {
-			return resource;
-		} else if(resource.exists() && !overwrite) {
 			return resource;
 		}
 		install(url, url.openStream());		
@@ -196,7 +193,7 @@ public class KBox {
 	 * the local resource materialization.
 	 */
 	public static InputStream getResourceAsStream(URL url) throws Exception {
-		return getResourceAsStream(url, false, false);
+		return getResourceAsStream(url, false);
 	}
 	
 	/**
@@ -210,13 +207,12 @@ public class KBox {
 	 * 
 	 * @param url - the remote URL of the resource to be retrieved.
 	 * @param install - specify if the resource should be installed in case in does no exist (true) or not (false).
-	 * @param overwrite - specify if the resource in the KBox should be overwritten in case it exist (true) or not (false).
 	 * @return an InputStream pointing to a local materialization of the resource.
 	 * @throws Exception if the resource can not be located or some error occurs during
 	 * the local resource materialization.
 	 */
-	public static InputStream getResourceAsStream(URL url, boolean install, boolean overwrite) throws Exception {
-		return new FileInputStream(getResource(url, install, overwrite));
+	public static InputStream getResourceAsStream(URL url, boolean install) throws Exception {
+		return new FileInputStream(getResource(url, install));
 	}
 	
 	
@@ -253,7 +249,7 @@ public class KBox {
 	 * Publish the given input stream in the given path on your local Knowledge Box (KBox) resource folder.
 	 * This function allows KBox to serve files to applications, acting as proxy to the published file.
 	 * The file that is installed in a give URL u will be located when the client execute 
-	 * the function RBox.getResource(u). 
+	 * the function KBox.getResource(u). 
 	 * 
 	 * @param path - the path were the file is going to be published.
 	 * @param inputStream - the inputStream that is going to be published in the given URL.
