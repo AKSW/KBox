@@ -18,23 +18,32 @@ import com.hp.hpl.jena.tdb.transaction.DatasetGraphTransaction;
 
 public class TDB {
 	
-	public static ResultSet query(String sparql, String dbDir) {
+	public static ResultSet query(String sparql, String... dbDirs) {
 		Query query = QueryFactory.create(sparql);
-		return query(query, dbDir);
+		return query(query, dbDirs);
 	}
 
-	public static ResultSet query(String sparql, String graph, String dbDir) {
+	public static ResultSet queryGraph(String sparql, String graph, String dbDir) {
 		Query query = QueryFactory.create(sparql, graph);
 		return query(query, dbDir);
 	}
 	
-	public static ResultSet query(Query query, String dbDir) {
-		Dataset dataset = TDBFactory.createDataset(dbDir);
-		dataset.begin(ReadWrite.READ);
-		Model model = dataset.getDefaultModel();
-		model = ModelFactory.createRDFSModel(model);
+	public static ResultSet query(Query query, String... dbDirs) {
+		Model mainModel = null; 
+		Dataset dataset = null;
+		for(String dbDir : dbDirs) {
+			dataset = TDBFactory.createDataset(dbDir);
+			dataset.begin(ReadWrite.READ);
+			if(mainModel == null) {
+				mainModel = dataset.getDefaultModel();
+			} else {
+				Model secondaryModel = dataset.getDefaultModel();
+				mainModel = ModelFactory.createUnion(mainModel, secondaryModel);
+			}
+		}
+		mainModel = ModelFactory.createRDFSModel(mainModel);
 		dataset.end();
-		QueryExecution qe = QueryExecutionFactory.create(query, model);
+		QueryExecution qe = QueryExecutionFactory.create(query, mainModel);
 		ResultSet results = qe.execSelect();
 		return results;
 	}

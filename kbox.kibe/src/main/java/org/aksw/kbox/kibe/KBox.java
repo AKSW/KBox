@@ -25,13 +25,16 @@ public class KBox extends org.aksw.kbox.KBox {
 	
 	final static Logger logger = Logger.getLogger(KBox.class);
 	
-	private final static String VERSION = "v0.0.1-alpha";
+	// CONSTANTS	
+	private final static String VERSION = "v0.0.1-alpha2";
 	
 	public final static String KNS_FILE_NAME = "kbox.kibe.kns";
 	public final static String CONTEXT_NAME = "kbox.kibe";
 
 	public final static String FILE_SERVER_TABLE_FILE_NAME = "table.kns";
 	public final static String KB_GRAPH_DIR_NAME = "kbox.kb";
+	
+	public final static String KB_COMMAND_SEPARATOR = ",";
 	
 	// Default KNS table URL
 	private final static String DEFAULT_KNS_TABLE_URL = "https://raw.github.com/AKSW/kbox/master";
@@ -47,6 +50,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	private final static String SPARQL_QUERY_COMMAND = "-sparql";
 	private final static String GRAPH_COMMAND = "-graph";
 	private final static String INDEX_COMMAND = "-index";
+	private final static String INSTALL_COMMAND = "-install";
 	private final static String CREATE_INDEX_COMMAND = "-createIndex";
 	private final static String VERSION_COMMAND = "-version";
 	private final static String RESOURCE_DIR_COMMAND = "-r-dir";
@@ -105,14 +109,20 @@ public class KBox extends org.aksw.kbox.KBox {
 		} else if (commands.containsKey(SPARQL_QUERY_COMMAND) && 
 				commands.containsKey(GRAPH_COMMAND)){
 			String sparql = commands.get(SPARQL_QUERY_COMMAND);
-			String graphName = commands.get(GRAPH_COMMAND);
-			URL urlGraph = new URL(graphName);
+			String graphNamesList = commands.get(GRAPH_COMMAND);
+			String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
+			boolean install = commands.containsKey(INSTALL_COMMAND);
+			URL[] urls = new URL[graphNames.length];
+			for(int i=0; i < graphNames.length; i++) {
+				urls[i]  = new URL(graphNames[i]);
+			}
 			try {
-				ResultSet rs = query(urlGraph, sparql);
+				ResultSet rs = query(sparql, install, urls);
 				ResultSetFormatter.out(System.out, rs);
 			} catch (KBNotFoundException e) {
-				logger.info("The knowledgebase " + graphName + " is not available.");
-				logger.info("You can install it by executing the command -kb-install.");
+				logger.error("Knowledge graph not available", e);
+				logger.info("You can install it by executing the command -kb-install or "
+						+ "execute the query command adding -install paramenter.");
 			} catch (Exception e) {
 				logger.info("Error exectuting query.", e);
 			}
@@ -123,7 +133,7 @@ public class KBox extends org.aksw.kbox.KBox {
 				logger.info("\t - " + knsServer);
 			}
 		} else if (commands.containsKey(KB_LIST_COMMAND)) {
-			logger.info("Knowledgebases table list");
+			logger.info("Knowledge graphs table list");
 			Iterable<String> it = listAvailableKNS();
 			printKB(new URL(DEFAULT_KNS_TABLE_URL));
 			for(String knsServer : it) {
@@ -162,15 +172,16 @@ public class KBox extends org.aksw.kbox.KBox {
 		System.out.println("Where [command] is:");
 		System.out.println("   * -createIndex <directory> \t - Create an index with the files in a given directory.");
 		System.out.println("                              \t ps: the directory might contain only RDF compatible file formats.");
-		System.out.println("   * -sparql <query> -graph <graph> \t - Query a given graph.");		
+		System.out.println("   * -sparql <query> -graph <graph> [-install] \t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
+		System.out.println("                                               \t - ps: use -install in case you want to enable the auto-dereference.");	
 		System.out.println("   * -kns-list \t - List all availables KNS services.");
 		System.out.println("   * -kns-install <kns-URL> \t - Install a given KNS service.");
 		System.out.println("   * -kns-remove <kns-URL> \t - Remove a given KNS service.");	
 		System.out.println("   * -r-install  <URL> \t - Install a given resource in KBox.");
-		System.out.println("   * -kb-install  <kb-URL> \t - Install a given knowledgebase using the available KNS services to resolve it.");
-		System.out.println("   * -kb-install  <kb-URL> -index <indexFile> \t - Install a given index in a given knowledgebase URL.");
-		System.out.println("   * -kb-install  <kb-URL> -kns-server <kns-server-URL> \t - Install a knowledgebase from a a given KNS server.");
-		System.out.println("   * -kb-list \t - List all available KNS services and knowledgebases.");
+		System.out.println("   * -kb-install  <kb-URL> \t - Install a given knowledge graph using the available KNS services to resolve it.");
+		System.out.println("   * -kb-install  <kb-URL> -index <indexFile> \t - Install a given index in a given knowledge graph URL.");
+		System.out.println("   * -kb-install  <kb-URL> -kns-server <kns-server-URL> \t - Install a knowledge graph from a a given KNS server.");
+		System.out.println("   * -kb-list \t - List all available KNS services and knowledge graphs.");
 		System.out.println("   * -r-dir <resourceDir>\t - Change the current path of the KBox resource container.");
 		System.out.println("   * -version \t - display KBox version.");
 	}
@@ -190,10 +201,10 @@ public class KBox extends org.aksw.kbox.KBox {
 	}
 	
 	/**
-	 * Install the given url in your personal Knowledge Name Service.
+	 * Install the given URL in your personal Knowledge Name Service.
 	 * This service will be used to Lookup Knowledge bases.
 	 * 
-	 * @param url the url of the KNS (Knwoledge Name Service)
+	 * @param url the URL of the KNS (Knwoledge Name Service)
 	 */
 	public static void installKNS(URL url) {
 		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
@@ -204,7 +215,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	}
 	
 	/**
-	 * Remove the given url from your personal Knowledge Name Service.
+	 * Remove the given URL from your personal Knowledge Name Service.
 	 */
 	public static void removeKNS(URL url) {
 		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
@@ -215,9 +226,9 @@ public class KBox extends org.aksw.kbox.KBox {
 	}
 	
 	/**
-	 * 
-	 * @param args
-	 * @return
+	 * Command line parser.
+	 * @param args a set o arguments received by command line
+	 * @return a Map containing the parsed arguments
 	 */
 	public static Map<String, String> parse(String[] args) {
 		Map<String, String> map = new HashMap<String, String>();
@@ -331,20 +342,20 @@ public class KBox extends org.aksw.kbox.KBox {
 	
 	/**
 	 * Install the given knowledge base.
-	 * The installation try to resolve the knowledgebase by the available KNS.
+	 * The installation try to resolve the knowledge graph by the available KNS.
 	 * 
-	 * @param knowledgebase the URL of the knowledgebase
+	 * @param knowledge graph the URL of the knowledge graph
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static void installKB(URL knowledgebase) throws IOException {
-		URL file = resolveURL(knowledgebase);
-		KBox.installKB(knowledgebase, file);
+	public static void installKB(URL knowledgeFraph) throws IOException {
+		URL file = resolveURL(knowledgeFraph);
+		KBox.installKB(knowledgeFraph, file);
 	}
 
 	/**
-	 * Install a given index file in the given knowledgebase.
+	 * Install a given index file in the given knowledge graph.
 	 * 
-	 * @param knowledgebase the URL of the knowledgebase whereas the index will be installed.
+	 * @param knowledge graph the URL of the knowledge graph whereas the index will be installed.
 	 * @param indexFile the index file to be installed.
 	 * @throws IOException
 	 */
@@ -358,9 +369,9 @@ public class KBox extends org.aksw.kbox.KBox {
 	}
 	
 	/**
-	 * Install a given knowledgebase resolved by a given KNS service.
+	 * Install a given knowledge graph resolved by a given KNS service.
 	 * 
-	 * @param  knowledgebase the URL of the knowledgebase that is going to be installed.
+	 * @param  knowledge graph the URL of the knowledge graph that is going to be installed.
 	 * @param knsServer the URL of the KNS service that will be used to lookup.
 	 * @throws IOException
 	 */
@@ -373,7 +384,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * Create index on the given file with the given RDF files.
 	 * 
 	 * @param indexFile destiny file to store the index.
-	 * @param filesToIndex the files containing the knowledge base to be indexed.
+	 * @param filesToIndex the files containing the knowledge graph to be indexed.
 	 * @throws IOException if any error occurs during the indexing process.
 	 */
 	public static void createIndex(File indexFile, URL[] filesToIndex) throws IOException {
@@ -384,23 +395,45 @@ public class KBox extends org.aksw.kbox.KBox {
 	}
 
 	/**
-	 * Query the given knowledgebase.
+	 * Query the given knowledge graphs.
 	 * 
-	 * @param knowledgebase the knowledgebase to be queried.
 	 * @param sparql the SPARQL query.
+	 * @param install if true the knowledge graph is auto-dereferenced when not found or not otherwise.
+	 * * @param knowledgeGraphNames the Knowledge Graph Names to be queried.
 	 * @return a result set with the given query solution.
-	 * @throws Exception if the knowledgebase can not be found.
+	 * @throws Exception if any of the given knowledge graphs can not be found.
 	 */
-	public static ResultSet query(URL knowledgebase, String sparql) throws Exception {
-		File localDataset = org.aksw.kbox.KBox.getResource(knowledgebase);
-		Exception e = new KBNotFoundException("Dataset " + knowledgebase.toString() + " does not exist. You can install it using the command install.");
-		if(localDataset == null || !localDataset.exists()) {
-			throw e;
+	public static ResultSet query(String sparql, boolean install, URL... knowledgeGraphNames) throws Exception {
+		String[] knowledgeGraphsPaths = new String[knowledgeGraphNames.length];
+		int i = 0;
+		for(URL knowledgeGraph : knowledgeGraphNames) {
+			File localDataset = getResource(knowledgeGraph);
+			Exception e = new KBNotFoundException("Dataset " + knowledgeGraph.toString() + " does not exist. You can install it using the command install.");
+			if((localDataset == null || !localDataset.exists()) && !install) {
+				throw e;
+			} else if (localDataset == null || !localDataset.exists()) {
+				installKB(knowledgeGraph);
+				localDataset = getResource(knowledgeGraph);
+			}
+			File localDatasetGraph = new File(localDataset.getPath() + File.separator + KB_GRAPH_DIR_NAME);
+			if(!localDatasetGraph.exists() && !install) {
+				throw e;
+			}
+			knowledgeGraphsPaths[i] = localDatasetGraph.getAbsolutePath();
+			i++;
 		}
-		File localDatasetGraph = new File(localDataset.getPath() + File.separator + KB_GRAPH_DIR_NAME);
-		if(!localDatasetGraph.exists()) {
-			throw e;
-		}
-		return TDB.query(sparql, localDatasetGraph.getPath());
+		return TDB.query(sparql, knowledgeGraphsPaths);
+	}
+	
+	/**
+	 * Query the given knowledge graphs.
+	 * 
+	 * @param sparql the SPARQL query.
+	 * @param knowledgeGraphNames the Knowledge Graph Names to be queried.
+	 * @return a result set with the given query solution.
+	 * @throws Exception if any of the given knowledge graphs can not be found.
+	 */
+	public static ResultSet query(String sparql, URL... knowledgeGraphNames) throws Exception {		
+		return query(sparql, false, knowledgeGraphNames);
 	}
 }
