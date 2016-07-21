@@ -9,6 +9,7 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [What is possible to do with it?](https://github.com/AKSW/KBox#what-is-possible-to-do-with-it)
 - [How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
 - [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
+- [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
 
 ### Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated among several applications.
@@ -19,7 +20,7 @@ Thereafter, resource can be uniquely identified.
 
 ### What is possible to do with it?
 With KBox you can share resources and knowledge among several applications, but not just that.
-In order to permit the easier knowledge dissemination, we have implemented Kibe library.
+In order to allow the easier knowledge dissemination, we have implemented Kibe library.
 The Kibe library allows applications to virtually install and query RDF knowledge graphs.
 It takes around ~10 minutes to start quering DBpedia on your computer, avoiding server overheads and faults.
 
@@ -46,6 +47,34 @@ Where [command] is:
 * -kb-install  <kb-URL> -index <indexFile> - Install a given index in a given knowledge base URL.
 * -kb-install  <kb-URL> -kns-server <kns-server-URL> - Install a knowledge base from a a given KNS server.
 * -kb-list  - List all available KNS services and knowledge bases.
-* -r-dir <resourceDir> - Change the current path of the KBox resource container.
+* -r-dir <resourceDir> - Change the current path of the KBox resource directory.
 * -version - display KBox version.
 ```
+
+### How can I use KBox in my project?
+
+* KBox is distributed over Maven.
+* You can add KBox to your project by importing the desired library:
+
+1) Add the following dependency on your project:
+```
+<dependency>
+  <groupId>org.aksw.kbox</groupId>
+  <artifactId>kbox.core</artifactId>
+  <version>0.0.1-alpha1</version>
+</dependency>
+```
+2) Add the internal AKSW repository on your pom file:
+```
+<repositories>
+    <repository>
+      <id>maven.aksw.internal</id>
+      <name>University Leipzig, AKSW Maven2 Repository</name>
+      <url>http://maven.aksw.org/archiva/repository/internal</url>
+    </repository>
+  ...
+</repositories>
+```
+3) Rock it.. ;-)
+
+
