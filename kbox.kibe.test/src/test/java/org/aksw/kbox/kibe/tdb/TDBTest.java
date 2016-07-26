@@ -8,7 +8,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Date;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.hp.hpl.jena.query.ResultSet;
@@ -17,8 +17,8 @@ public class TDBTest {
 	
 	private static String graphPath = null;
 	
-	@Before
-	public void init() throws IOException {
+	@BeforeClass
+	public static void init() throws IOException {
 		URL[] files = new URL[1];
 		URL url = TDBTest.class.getResource("/org/aksw/kbox/kibe/dbpedia_3.9.xml");
 		files[0] = url;
