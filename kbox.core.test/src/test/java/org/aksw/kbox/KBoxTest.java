@@ -16,7 +16,6 @@ public class KBoxTest {
 		String currentResourceFolder = KBox.getResourceFolder();
 		KBox.setResourceFolder("c:" + File.separator);
 		assertEquals("c:" + File.separator, KBox.getResourceFolder());
-		KBox.setResourceFolder(KBox.KBOX_DIR);
 		KBox.setResourceFolder(currentResourceFolder);
 	}
 	
@@ -36,13 +35,13 @@ public class KBoxTest {
 		File test = KBox.getResource(new URL("http://tttt"));
 		assertEquals(null, test);
 		URL fileToInstall = new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt");
-		File rboxedFile = KBox.getResource(fileToInstall);
+		File kboxedFile = KBox.getResource(fileToInstall);
 		KBox.install(new URL("http://test.org/context.txt"), fileToInstall);
 		String path = KBox.URLToPath(new URL("http://test.org/context.txt"));
 		File inDisk = new File(KBox.getResourceFolder() + File.separator + path);
 		assertEquals(true, inDisk.exists());
-		rboxedFile =  KBox.getResource(new URL("http://test.org/context.txt"));
-		assertEquals(rboxedFile.getPath(), inDisk.getPath());
+		kboxedFile =  KBox.getResource(new URL("http://test.org/context.txt"));
+		assertEquals(kboxedFile.getPath(), inDisk.getPath());
 	}
 
 }

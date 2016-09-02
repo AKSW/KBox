@@ -188,6 +188,32 @@ public class KBox {
 	 * return it.
 	 * 
 	 * @param url - the remote URL of the resource to be retrieved.
+	 * @param install - specify if the resource should be installed (true) or not (false).
+	 * @param method - the method that will be used to install the resource 
+	 * in case it is not installed and install install param is set true.
+	 * 
+	 * @return a file pointing to a local materialization of the resource.
+	 * @throws Exception if the resource can not be located or some error occurs during
+	 * the local resource materialization.
+	 */
+	public static File getResource(URL url, Install method, boolean install) throws Exception {
+		File resource = new File(URLToAbsolutePath(url));
+		if(!resource.exists() && !install) {
+			return null;
+		} else if(resource.exists() && !install) {
+			return resource;
+		}
+		install(url, url, method);	
+		return resource;
+	}
+	
+	/**
+	 * Get a local representation of the remote resource.
+	 * If the representation of the resource already exists,
+	 * return it, otherwise create a local representation and 
+	 * return it.
+	 * 
+	 * @param url - the remote URL of the resource to be retrieved.
 	 * @return an - InputStream pointing to a local materialization of the resource.
 	 * @throws Exception if the resource can not be located or some error occurs during
 	 * the local resource materialization.
@@ -265,5 +291,45 @@ public class KBox {
 		try(FileOutputStream fos = new FileOutputStream(resource);) {
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		}
+	}
+	
+	/**
+	 * Publish a given file in a given URL local directory.
+	 * This function allows KBox to serve files to applications, acting as proxy to the publised file.
+	 * The file that is published in a give URL u will be located when the client execute 
+	 * the function KBox.getResource(u). 
+	 * 
+	 * @param source - the URL of the file that is going to be published at the given URL.
+	 * @param dest - the URL where the file is going to be published.	 * 
+	 * @param install - a customized method for installation.
+	 * 
+	 * @throws Exception if the resource does not exist or can not be copied or some error 
+	 * occurs during the resource publication.
+	 */
+	public static void install(URL source, URL dest, Install install) throws Exception {
+		install.install(source, dest);
+	}
+	
+	/**
+	 * Install a given ZIP file from a given URL.
+	 * 
+	 * @param source the source URL containing the ZIP file to be installed.
+	 * @param dest the URL whereas the source will be installed.
+	 * @throws Exception if an error occurs during the installation.
+	 */
+	public static void installFromZip(URL source, URL dest) throws Exception {
+		ZipInstall zipInstall = new ZipInstall();
+		install(source, dest, zipInstall);
+	}
+	
+	/**
+	 * Install a given ZIP file from a given URL.
+	 * 
+	 * @param source the source URL containing the ZIP file to be installed.
+	 * @throws Exception if an error occurs during the installation.
+	 */
+	public static void installFromZip(URL source) throws Exception {
+		ZipInstall zipInstall = new ZipInstall();
+		install(source, source, zipInstall);
 	}
 }
