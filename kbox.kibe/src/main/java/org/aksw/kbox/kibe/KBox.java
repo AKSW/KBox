@@ -144,7 +144,8 @@ public class KBox extends org.aksw.kbox.KBox {
 			removeKNS(new URL(knsURL));
 			logger.info("KNS removed.");
 		} else if (commands.containsKey(RESOURCE_DIR_COMMAND)) {
-			String resourceDir = commands.get(RESOURCE_DIR_COMMAND);			
+			String resourceDir = commands.get(RESOURCE_DIR_COMMAND);
+			logger.info(resourceDir);
 			if(resourceDir != null) {
 				try {
 					setResourceFolder(resourceDir);
@@ -227,14 +228,15 @@ public class KBox extends org.aksw.kbox.KBox {
 	
 	/**
 	 * Command line parser.
+	 * 
 	 * @param args a set o arguments received by command line
 	 * @return a Map containing the parsed arguments
 	 */
 	public static Map<String, String> parse(String[] args) {
 		Map<String, String> map = new HashMap<String, String>();
 		for(int i = 0; i < args.length ; i++) {
-			if(args[i].contains("-")) { // is a command
-				if(i+1 < args.length && !args[i+1].contains("-")) {
+			if(args[i].startsWith("-")) { // is a command				
+				if(i+1 < args.length && !args[i+1].startsWith("-")) {
 					map.put(args[i], args[i+1]);
 				} else {
 					map.put(args[i], null);
