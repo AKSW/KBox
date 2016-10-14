@@ -88,9 +88,9 @@ cbaron@informatik.uni-leipzig.de
 
 Information needed:
 
-1) Publisher: Your or your organization contact/URL;
+1) Publisher: Your or your organization's contact/URL;
 
-2) URL where the Dataset can be derreferenced;
+2) URL where the Dataset can be dereferenced;
 
 3) Dataset URL name: the URL name that will be shown to the users;
 
