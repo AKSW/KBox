@@ -10,6 +10,7 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
 - [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
 - [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
+- [How can I publish my dataset?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
 
 ### Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated among several applications.
@@ -77,4 +78,17 @@ Where [command] is:
 ```
 3) Rock it.. ;-)
 
+### How can I publish my own Dataset?
 
+Altought you can create your own KNS service and publish your Datasets, currently KBox does not allow you to directly publish content to other users.
+In order to do that you should contact us.
+
+Contact: 
+cbaron@informatik.uni-leipzig.de
+
+Information needed:
+1) Publisher: Your or your organization contact/URL;
+2) URL where the Dataset can be derreferenced;
+3) Dataset URL name: the URL name that will be shown to the users;
+4) Dataset description: Give us a few words to help others to know what your dataset is about;
+5) Tell us one reason why KBox is awesome. :)
