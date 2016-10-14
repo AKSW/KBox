@@ -80,8 +80,8 @@ Where [command] is:
 
 ### How can I publish my own Dataset?
 
-Altought you can create your own KNS service and publish your Datasets, currently KBox does not allow you to directly publish content to other users.
-In order to do that you should contact us.
+Although you can create your own KNS service and publish your Datasets, currently KBox does not allow you to directly publish content to other users.
+In order to do that, you should contact us.
 
 Contact: 
 cbaron@informatik.uni-leipzig.de
