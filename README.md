@@ -92,7 +92,7 @@ Information needed:
 
 2) The Publisher: Your or your organization's email/URL;
 
-3) The Creator: Who have created the Knowledge base e.g. DBpedia -> http://dbpedia.org;
+3) The Creator: Who has created the Knowledge base e.g. DBpedia -> http://dbpedia.org;
 
 4) The License: the dataset license;
 
