@@ -88,16 +88,18 @@ cbaron@informatik.uni-leipzig.de
 
 Information needed:
 
-1) The Publisher: Your or your organization's email/URL;
+1) Dataset Label;
 
-2) The Creator: Who have created the Knowledge base e.g. DBpedia -> http://dbpedia.org;
+2) The Publisher: Your or your organization's email/URL;
 
-3) The License: the dataset license;
+3) The Creator: Who have created the Knowledge base e.g. DBpedia -> http://dbpedia.org;
 
-4) The URL where the Dataset can be dereferenced;
+4) The License: the dataset license;
 
-5) The Dataset URL name: the URL name that will be shown to the users;
+5) The URL where the Dataset can be dereferenced;
 
-6) The Dataset description: Give us a few words to help others to know what your dataset is about;
+6) The Dataset URL name: the URL name that will be shown to the users;
 
-7) Tell us one reason why KBox is awesome. :)
+7) The Dataset description: Give us a few words to help others to know what your dataset is about;
+
+8) Tell us one reason why KBox is awesome. :-)
