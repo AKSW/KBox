@@ -87,8 +87,13 @@ Contact:
 cbaron@informatik.uni-leipzig.de
 
 Information needed:
+
 1) Publisher: Your or your organization contact/URL;
+
 2) URL where the Dataset can be derreferenced;
+
 3) Dataset URL name: the URL name that will be shown to the users;
+
 4) Dataset description: Give us a few words to help others to know what your dataset is about;
+
 5) Tell us one reason why KBox is awesome. :)
