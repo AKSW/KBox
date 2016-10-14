@@ -90,10 +90,14 @@ Information needed:
 
 1) The Publisher: Your or your organization's email/URL;
 
-2) The URL where the Dataset can be dereferenced;
+2) The Creator: Who have created the Knowledge base e.g. DBpedia -> http://dbpedia.org;
 
-3) The Dataset URL name: the URL name that will be shown to the users;
+3) The License: the dataset license;
 
-4) The Dataset description: Give us a few words to help others to know what your dataset is about;
+4) The URL where the Dataset can be dereferenced;
 
-5) Tell us one reason why KBox is awesome. :)
+5) The Dataset URL name: the URL name that will be shown to the users;
+
+6) The Dataset description: Give us a few words to help others to know what your dataset is about;
+
+7) Tell us one reason why KBox is awesome. :)
