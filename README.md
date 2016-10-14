@@ -23,7 +23,7 @@ Thereafter, resource can be uniquely identified.
 With KBox you can share resources and knowledge among several applications, but not just that.
 In order to allow the easier knowledge dissemination, we have implemented Kibe library.
 The Kibe library allows applications to virtually install and query RDF knowledge graphs.
-It takes around ~10 minutes to start quering DBpedia on your computer, avoiding server overheads and faults.
+It takes around ~50 minutes to start quering DBpedia on your computer, avoiding server overheads and faults.
 
 ### How can I use KBox?
 You can use KBox in command line or the library on your application.
