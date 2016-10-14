@@ -98,7 +98,7 @@ Information needed:
 
 5) The URL where the Dataset can be dereferenced;
 
-6) The Dataset URI name: the URI name that will be used to dereference your dataset;
+6) The Dataset URI name: the URI name that will be used by users to dereference your dataset;
 
 7) The Dataset description: Give us a few words to help others to know what your dataset is about;
 
