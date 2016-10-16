@@ -4,4 +4,4 @@
 {"name": "http://www.w3.org/1999/02/22-rdf-syntax-ns", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/rdf.kb", "desc": "This dataset contains the RDF ontology.", "publisher": "KBOX Team"}
 {"name": "https://www.w3.org/2000/01/rdf-schema", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/rdfs.kb", "desc": "This dataset contains the RDF Schema ontology.", "publisher": "KBOX Team"}
 {"name": "https://www.wikidata.org/20160801", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/kbox_wikidata.kb", "desc": "This dataset contains the Wikidata version 01.08.2016.", "publisher": "KBOX Team"}
-{"name": "http://xmlns.com/foaf", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/foaf.kb", "desc": "This dataset contains the FOAF ontology.", "publisher": "KBOX Team"}
+{"name": "http://xmlns.com/foaf/0.1", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/foaf.kb", "desc": "This dataset contains the FOAF ontology.", "publisher": "KBOX Team"}
