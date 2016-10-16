@@ -10,9 +10,9 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
 - [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
 - [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
+- [How can I query a published knowledge graph?](https://github.com/AKSW/KBox#how-can-i-query-a-published-dataset)
+- [How can I query multi-graphs?](https://github.com/AKSW/KBox#how-can-i-query-multi-graphs)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
-- [How can I query multi-graphs](https://github.com/AKSW/KBox/AKSW/KBox#how-can-i-query-multi-graphs)
-- [How can I query multi-graphs](https://github.com/AKSW/KBox#how-can-i-query-multi-graphs)
 
 ### Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated among several applications.
@@ -80,7 +80,7 @@ Where [command] is:
 ```
 3) Rock it.. ;-)
 
-### How can I query a published Dataset?
+### How can I query a published knowledge graph?
 
 Weeeelll.. its quite easy.
 Remember the commands listed on '[How can I execute KBox in command Line]'(https://github.com/AKSW/KBox/releases).
