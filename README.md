@@ -99,9 +99,9 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 
 Its very easy, you just need to add the knowledge graph that you want to query separated by comma as the command bellow:
 
-In the example bellow we query two knowledge graphs https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf.
+In the example bellow we query two knowledge graphs https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
 ```
-java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf" -install
+java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
 -------
 | n   |
 =======
