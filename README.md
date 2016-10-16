@@ -83,7 +83,7 @@ Where [command] is:
 ### How can I query a published knowledge graph?
 
 Weeeelll.. its quite easy.
-Remember the commands listed on '[How can I execute KBox in command Line]'(https://github.com/AKSW/KBox/releases).
+Remember the commands listed on '[How can I execute KBox in command Line](https://github.com/AKSW/KBox/releases)'.
 So its just execute the command line bellow (remember to add -install, so the KB is automatically derefereced):
 
 ```
@@ -100,8 +100,7 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n)
 
 Its very easy, you just need to add the knowledge graph that you want to query separated by comma as the command bellow:
 
-In the example bellow we query two knowledge graphs https://www.w3.org/2000/01/rdf-schema and http://xmlns.co
-m/foaf.
+In the example bellow we query two knowledge graphs https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf.
 ```
 java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n)
  where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema,http://xmlns.co
