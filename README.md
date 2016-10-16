@@ -83,7 +83,7 @@ Where [command] is:
 ### How can I query a published knowledge graph?
 
 Weeeelll.. its quite easy.
-Remember the commands listed on '[How can I execute KBox in command Line](https://github.com/AKSW/KBox/releases)'.
+Remember the commands listed on '[How can I execute KBox in command Line](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)'.
 So its just execute the command line bellow (remember to add -install, so the KB is automatically derefereced):
 
 ```
