@@ -130,7 +130,7 @@ Information needed:
 
 5) The License: the dataset license;
 
-6) The URL where the Dataset can be dereferenced;
+6) The URL where the knwoledge graph file can be dereferenced (please create the file using KBox createIndex command);
 
 7) The Dataset URI name: the URI name that will be used by users to dereference your dataset;
 
