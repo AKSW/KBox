@@ -177,7 +177,7 @@ public class KBox extends org.aksw.kbox.KBox {
 		System.out.println("Where [command] is:");
 		System.out.println("   * -createIndex <directory> \t - Create an index with the files in a given directory.");
 		System.out.println("                              \t ps: the directory might contain only RDF compatible file formats.");
-		System.out.println("   * -sparql <query> -graph <graph> [-install] \t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
+		System.out.println("   * -sparql <query> -graph <graph> [-install] [-json] \t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
 		System.out.println("                                               \t - ps: use -install in case you want to enable the auto-dereference.");	
 		System.out.println("   * -kns-list \t - List all availables KNS services.");
 		System.out.println("   * -kns-install <kns-URL> \t - Install a given KNS service.");
