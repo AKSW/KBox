@@ -48,6 +48,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	private final static String KNS_LIST_COMMAND = "-kns-list";
 	private final static String KB_LIST_COMMAND = "-kb-list";
 	private final static String SPARQL_QUERY_COMMAND = "-sparql";
+	private final static String SPARQL_QUERY_JSON_OUTPUT_FORMAT_COMMAND = "-json";
 	private final static String GRAPH_COMMAND = "-graph";
 	private final static String INDEX_COMMAND = "-index";
 	private final static String INSTALL_COMMAND = "-install";
@@ -118,7 +119,11 @@ public class KBox extends org.aksw.kbox.KBox {
 			}
 			try {
 				ResultSet rs = query(sparql, install, urls);
-				ResultSetFormatter.out(System.out, rs);
+				if(commands.containsKey(SPARQL_QUERY_JSON_OUTPUT_FORMAT_COMMAND)) {
+					ResultSetFormatter.outputAsJSON(System.out, rs);
+				} else {
+					ResultSetFormatter.out(System.out, rs);
+				}
 			} catch (KBNotFoundException e) {
 				logger.error("Knowledge graph not available", e);
 				logger.info("You can install it by executing the command -kb-install or "
@@ -145,7 +150,6 @@ public class KBox extends org.aksw.kbox.KBox {
 			logger.info("KNS removed.");
 		} else if (commands.containsKey(RESOURCE_DIR_COMMAND)) {
 			String resourceDir = commands.get(RESOURCE_DIR_COMMAND);
-			logger.info(resourceDir);
 			if(resourceDir != null) {
 				try {
 					setResourceFolder(resourceDir);
