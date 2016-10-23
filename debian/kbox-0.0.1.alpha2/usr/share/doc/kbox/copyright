@@ -1,0 +1,10 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: AKSW Kbox
+Source: https://github.com/AKSW/KBox
+
+Files: *
+Copyright:
+    2016 Ciro Baron
+    2016 Edgard Marx
+License: /usr/share/common-licenses/Apache-2.0
+
