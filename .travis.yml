@@ -1,0 +1,14 @@
+language: java
+jdk:
+  - oraclejdk7
+branches:
+  only:
+    - fusion
+notifications:
+  email:
+    recipients:
+      - marx@informatik.uni-leipzig.de
+    on_success: change
+    on_failure: change
+after_success:
+  - mvn clean 
