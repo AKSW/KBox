@@ -3,7 +3,7 @@ jdk:
   - oraclejdk7
 branches:
   only:
-    - fusion
+    - master
 notifications:
   email:
     recipients:
