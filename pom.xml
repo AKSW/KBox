@@ -54,7 +54,7 @@
 	<module>kbox.core.test</module>
 	<module>kbox.kibe</module>
 	<module>kbox.kibe.test</module>
-	<module>kbox.benchmark</module>
+	<!--module>kbox.benchmark</module-->
   </modules>
   <repositories>
     <repository>
