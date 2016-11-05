@@ -1,5 +1,5 @@
 # KBox
-
+[![Build Status](https://travis-ci.org/AKSW/KBox.svg?branch=master)](https://travis-ci.org/AKSW/KBox)
 [![Coverage Status](https://coveralls.io/repos/github/AKSW/KBox/badge.svg?branch=master)](https://coveralls.io/github/AKSW/KBox?branch=master)
 
 KBox is an abbreviation for Knowledge Box. 
