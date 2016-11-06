@@ -1,6 +1,7 @@
 # KBox
 [![Build Status](https://travis-ci.org/AKSW/KBox.svg?branch=master)](https://travis-ci.org/AKSW/KBox)
 [![Coverage Status](https://coveralls.io/repos/github/AKSW/KBox/badge.svg?branch=master)](https://coveralls.io/github/AKSW/KBox?branch=master)
+[![Join the chat at https://gitter.im/AKSW/DeFacto](https://badges.gitter.im/AKSW/KBox.svg)](https://gitter.im/AKSW/KBox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 KBox is an abbreviation for Knowledge Box. 
 The rationality behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances. 
