@@ -2,7 +2,9 @@
 [![Build Status](https://travis-ci.org/AKSW/KBox.svg?branch=master)](https://travis-ci.org/AKSW/KBox)
 [![Coverage Status](https://coveralls.io/repos/github/AKSW/KBox/badge.svg?branch=master)](https://coveralls.io/github/AKSW/KBox?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2beb954156c2410d8a05a0e7f36d62d4)](https://www.codacy.com/app/marx/KBox?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AKSW/KBox&amp;utm_campaign=Badge_Grade)
-[![Join the chat at https://gitter.im/AKSW/DeFacto](https://badges.gitter.im/AKSW/KBox.svg)](https://gitter.im/AKSW/KBox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/AKSW/KBox](https://badges.gitter.im/AKSW/KBox.svg)](https://gitter.im/AKSW/KBox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+<script type='text/javascript' src='https://www.openhub.net/p/knowledge-box/widgets/project_thin_badge?format=js'></script>
 
 KBox is an abbreviation for Knowledge Box. 
 The rationality behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances. 
