@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/AKSW/KBox.svg?branch=master)](https://travis-ci.org/AKSW/KBox)
 [![Coverage Status](https://coveralls.io/repos/github/AKSW/KBox/badge.svg?branch=master)](https://coveralls.io/github/AKSW/KBox?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2beb954156c2410d8a05a0e7f36d62d4)](https://www.codacy.com/app/marx/KBox?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AKSW/KBox&amp;utm_campaign=Badge_Grade)
+[![codebeat badge](https://codebeat.co/badges/33afd9bc-cc14-4fcc-bd3d-c1f57ed35190)](https://codebeat.co/projects/github-com-aksw-kbox)
 [![Join the chat at https://gitter.im/AKSW/KBox](https://badges.gitter.im/AKSW/KBox.svg)](https://gitter.im/AKSW/KBox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Project Stats](https://www.openhub.net/p/knowledge-box/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/knowledge-box)
 
