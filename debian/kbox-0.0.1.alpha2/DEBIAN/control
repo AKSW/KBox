@@ -1,0 +1,8 @@
+Package: kbox
+Version: 0.0.1-alpha2
+Section: web
+Priority: optional
+Architecture: all
+Maintainer: Edgard Marx <marx@informatik.uni-leipzig.de>
+Description: Natural extension of the Web on your computer
+ Single place to share resources among applications in RDF model
