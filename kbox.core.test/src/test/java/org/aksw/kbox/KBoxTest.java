@@ -14,9 +14,14 @@ public class KBoxTest {
 	@Test
 	public void testResourceFolderMethods() throws MalformedURLException, Exception {
 		String currentResourceFolder = KBox.getResourceFolder();
-		KBox.setResourceFolder("c:" + File.separator);
-		assertEquals("c:" + File.separator, KBox.getResourceFolder());
+		String newResourceFolder = currentResourceFolder + File.separator + "test";
+		File newResourceFolderFile = new File(newResourceFolder);
+		newResourceFolderFile.mkdir();
+		newResourceFolderFile.deleteOnExit();		
+		KBox.setResourceFolder(newResourceFolder);
+		assertEquals(newResourceFolder, KBox.getResourceFolder());
 		KBox.setResourceFolder(currentResourceFolder);
+		
 	}
 	
 	@Test
