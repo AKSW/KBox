@@ -10,6 +10,7 @@ import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 
 /**
+ * This class implements a persistent parameter map.
  * 
  * @author {@linkplain http://emarx.org}
  *
@@ -19,8 +20,8 @@ public class CustomParams implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 8598003281170345448L;
-	String context;
-	String path;
+	private String context;
+	private String path;
 	
 	public CustomParams(String path, String context) {
 		this.context = context;

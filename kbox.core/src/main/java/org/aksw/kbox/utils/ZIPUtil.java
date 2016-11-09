@@ -18,18 +18,18 @@ import java.util.zip.ZipOutputStream;
 
 public class ZIPUtil {
 
-	public static void zip(String dir, String dest, StreamListener streamListener) throws IOException {
+	public static void zip(String dir, String dest) throws IOException {
 		File sourceFile = new File(dir);
 		File destFile = new File(dest);
-		zip(sourceFile, destFile, streamListener);
+		zip(sourceFile, destFile);
 	}
 
-	public static void zip(File sourceFile, File destFile, StreamListener streamListener) throws IOException {
+	public static void zip(File sourceFile, File destFile) throws IOException {
 		URI base = sourceFile.toURI();
 		Deque<File> queue = new LinkedList<File>();
 		queue.push(sourceFile);
-		try (OutputStream out = new FileOutputStream(destFile);) {
-			try (ZipOutputStream zout = new ZipOutputStream(out);) {
+		try (OutputStream out = new FileOutputStream(destFile)) {
+			try (ZipOutputStream zout = new ZipOutputStream(out)) {
 				while (!queue.isEmpty()) {
 					File directory = queue.pop();
 					for (File kid : directory.listFiles()) {
@@ -40,7 +40,7 @@ public class ZIPUtil {
 							zout.putNextEntry(new ZipEntry(name));
 						} else {
 							zout.putNextEntry(new ZipEntry(name));
-							copy(kid, zout, streamListener);
+							copy(kid, zout);
 							zout.closeEntry();
 						}
 					}
@@ -49,7 +49,7 @@ public class ZIPUtil {
 		}
 	}
 
-	public static void unzip(File sourceZipfile, File directory, StreamListener streamListener) throws IOException {
+	public static void unzip(File sourceZipfile, File directory) throws IOException {
 		try(ZipFile zfile = new ZipFile(sourceZipfile);) {
 			Enumeration<? extends ZipEntry> entries = zfile.entries();
 			while (entries.hasMoreElements()) {
@@ -59,58 +59,74 @@ public class ZIPUtil {
 					file.mkdirs();
 				} else {
 					file.getParentFile().mkdirs();
-					try (InputStream in = zfile.getInputStream(entry);) {
-						copy(in, file, streamListener);
+					try (InputStream in = zfile.getInputStream(entry)) {
+						copy(in, file);
 					}
 				}
 			}
 		}
 	}
 
-	public static void unzip(String sourceZipFilePath, String destFilePath, StreamListener streamListener) throws IOException {
-		unzip(new File(sourceZipFilePath), new File(destFilePath), streamListener);
+	public static void unzip(String sourceZipFilePath, String destFilePath) throws IOException {
+		unzip(new File(sourceZipFilePath), new File(destFilePath));
 	}
 
-	private static void copy(InputStream in, OutputStream out, StreamListener streamListener)
+	private static void copy(InputStream in, OutputStream out)
 			throws IOException {
 		byte[] buffer = new byte[1024];
 		int readCount = 0;
-		streamListener.start();
 		while ((readCount = in.read(buffer)) >= 0) {			
 			out.write(buffer, 0, readCount);
-			streamListener.update(readCount);
 		}
-		streamListener.stop();
 	}
 
-	private static void copy(File file, OutputStream out, StreamListener streamListener) throws IOException {
+	private static void copy(File file, OutputStream out) throws IOException {
 		try(InputStream in = new FileInputStream(file)) {
-			copy(in, out, streamListener);
+			copy(in, out);
 		}
 	}
 
-	private static void copy(InputStream in, File file, StreamListener streamListener) throws IOException {
-		try (OutputStream out = new FileOutputStream(file);){
-			copy(in, out, streamListener);
+	private static void copy(InputStream in, File file) throws IOException {
+		try (OutputStream out = new FileOutputStream(file)){
+			copy(in, out);
 		}
 	}
 
-	public static void unzip(InputStream sourceStream, String destFilePath, StreamListener streamListener) throws IOException {
-		BufferedInputStream is = null;
+	public static void unzip(InputStream sourceStream, String destFilePath) throws IOException {
 		File destFile = new File(destFilePath);
 		try (ZipInputStream zipStream = new ZipInputStream(sourceStream)) {
 			ZipEntry entry = null;
-			is = new BufferedInputStream(zipStream);
-			while ((entry = zipStream.getNextEntry()) != null) {
-				File file = new File(destFile, entry.getName());
-				if (entry.isDirectory()) {
-					file.mkdirs();
-				} else {
-					file.getParentFile().mkdirs();
-					copy(is, file, streamListener);						
+			try(BufferedInputStream is = new BufferedInputStream(zipStream)) {
+				while ((entry = zipStream.getNextEntry()) != null) {
+					File file = new File(destFile, entry.getName());
+					if (entry.isDirectory()) {
+						file.mkdirs();
+					} else {
+						file.getParentFile().mkdirs();
+						copy(is, file);
+					}
 				}
 			}
-			is.close();
-		}		
+		}
+	}
+	
+	/**
+	 * Get the uncompressed size of an compressed input stream.
+	 * 
+	 * @param is the compressed input stream.
+	 * @return the size of the compressed input stream, or will be lower than 0 if it is unknown. 
+	 * @throws IOException in case the input stream is invalid.
+	 */
+	public static long getSize(InputStream is) throws IOException {
+		long size = 0;
+		try (ZipInputStream zipStream = new ZipInputStream(is)) {
+			ZipEntry entry = null;
+			try(BufferedInputStream bis = new BufferedInputStream(zipStream)) {
+				while ((entry = zipStream.getNextEntry()) != null) {
+					size += entry.getSize();
+				}
+			}
+		}
+		return size;
 	}
 }
