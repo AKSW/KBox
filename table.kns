@@ -1,6 +1,6 @@
 {"name": "http://dbpedia.org/3.9/en/full", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/kbox.kb", "desc": "This dataset contains the english version of the DBpedia 3.9 full.", "publisher": "KBOX Team"}
 {"name": "http://dbpedia.org/2015.10/en/full", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/kbox_dbpedia_2015_10.kb", "desc": "This dataset contains the english version of the DBpedia 2015 10 full.", "publisher": "KBOX Team"}
-{"name": "http://dbpedia.org/ontology", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/ontologies/dbpedia_ontology.kb", "desc": "This dataset contains the DBpedia ontology.", "publisher": "KBOX Team"}
+{"name": "http://dbpedia.org/ontology", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/dbpedia/dbpedia_ontology.kb", "desc": "This dataset contains the DBpedia ontology.", "publisher": "KBOX Team"}
 {"name": "http://www.w3.org/1999/02/22-rdf-syntax-ns", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/ontologies/rdf.kb", "desc": "This dataset contains the RDF ontology.", "publisher": "KBOX Team"}
 {"name": "https://www.w3.org/2000/01/rdf-schema", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/ontologies/rdfs.kb", "desc": "This dataset contains the RDF Schema ontology.", "publisher": "KBOX Team"}
 {"name": "https://www.wikidata.org/20160801", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/kbox_wikidata.kb", "desc": "This dataset contains the Wikidata version 01.08.2016.", "publisher": "KBOX Team"}
