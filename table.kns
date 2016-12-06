@@ -6,3 +6,4 @@
 {"name": "https://www.wikidata.org/20160801", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/kbox_wikidata.kb", "desc": "This dataset contains the Wikidata version 01.08.2016.", "publisher": "KBOX Team"}
 {"name": "http://xmlns.com/foaf/0.1", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/ontologies/foaf.kb", "desc": "This dataset contains the FOAF ontology.", "publisher": "KBOX Team"}
 {"name": "http://dbpedia.org/2015_10/yago_types", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/dbpedia/2015_10/yago_types.kb", "desc": "This dataset contains the Yago Types.", "publisher": "KBOX Team"}
+{"name": "http://stats.lod2.eu/30042016", "target": "http://vmdbpedia.informatik.uni-leipzig.de:3031/lodstats/30042016/lodstats.kb", "desc": "This dataset contains the Lodstats generated in 30/04/2016.", "publisher": "KBOX Team"}
