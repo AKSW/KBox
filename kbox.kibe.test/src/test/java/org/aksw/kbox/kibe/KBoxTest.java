@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -18,8 +17,8 @@ import com.hp.hpl.jena.query.ResultSet;
 public class KBoxTest {
 	
 	@BeforeClass
-	public static void setUp() throws IOException {
-		File indexFile = File.createTempFile("knowledgebase","idx");		
+	public static void setUp() throws Exception {
+		File indexFile = File.createTempFile("knowledgebase","idx");
 		URL[] filesToIndex = new URL[1];
 		URL url = TDBTest.class.getResource("/org/aksw/kbox/kibe/dbpedia_3.9.xml");
 		filesToIndex[0] = url;
@@ -40,13 +39,13 @@ public class KBoxTest {
 	@Test
 	public void testPrintKBs() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		KBox.printKB(serverURL);
+		Main.printKB(serverURL);
 	}
 	
 	@Test
 	public void testResolveURLWithKBoxKNSService() throws Exception {
 		URL db = KBox.resolveURL(new URL("http://dbpedia.org/3.9/en/full"));
-		assertEquals(db.toString(), "http://vmdbpedia.informatik.uni-leipzig.de:3030/kbox.kb");
+		assertEquals(db.toString(), "http://vmdbpedia.informatik.uni-leipzig.de:3031/kbox.kb");
 	}
 	
 	@Test
@@ -57,7 +56,7 @@ public class KBoxTest {
 	
 	@Test
 	public void testInstallProcess() throws Exception {		
-		ResultSet rs = KBox.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", 
+		ResultSet rs = KBox.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
 				new URL("http://dbpedia39"));
 		int i = 0;
 		while (rs != null && rs.hasNext()) {
@@ -68,8 +67,34 @@ public class KBoxTest {
 	}
 	
 	@Test
+	public void testDescribeQuery() throws Exception {
+		ResultSet rs = KBox.query("Describe <http://dbpedia.org/ontology/Place>",
+				new URL("http://dbpedia39"));
+		int i = 0;
+		while (rs != null && rs.hasNext()) {
+			rs.next();
+			i++;
+		}
+		assertEquals(19, i);
+	}
+	
+	@Test
+	public void testAskQuery() throws Exception {
+		ResultSet rs = KBox.query("ASK {  <http://dbpedia.org/ontology/Place> ?p ?o.  " +
+			" FILTER(?o = 'test') . }",
+			new URL("http://dbpedia39"));
+		int i = 0;
+		while (rs != null && rs.hasNext()) {
+			rs.next();
+			i++;
+		}
+		assertEquals(1, i);
+	}
+	
+	@Test
 	public void testQueryInstalledKB() throws Exception {
-		ResultSet rs = KBox.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", new URL("http://dbpedia39"));
+		ResultSet rs = KBox.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
+				new URL("http://dbpedia39"));
 		int i = 0;
 		while (rs != null && rs.hasNext()) {
 			rs.next();
@@ -78,7 +103,8 @@ public class KBoxTest {
 		assertEquals(19, i);
 		
 		rs = KBox.query( 
-				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", new URL("http://dbpedia39"));
+				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
+				new URL("http://dbpedia39"));
 		i = 0;
 		while (rs != null && rs.hasNext()) {
 		rs.next();
@@ -93,7 +119,8 @@ public class KBoxTest {
 		try {
 			@SuppressWarnings("unused")
 			ResultSet rs = KBox.query(
-					"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", new URL("http://dbpedia39.o"));
+					"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
+					new URL("http://dbpedia39.o"));
 		} catch (Exception e) {
 			exception = true;
 		}

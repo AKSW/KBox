@@ -8,6 +8,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Date;
 
+import javax.naming.OperationNotSupportedException;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,7 +30,7 @@ public class TDBTest {
 	}
 		
 	@Test
-	public void testBulkLoad() throws URISyntaxException, IOException {
+	public void testBulkLoad() throws URISyntaxException, IOException, OperationNotSupportedException {
 		URL[] files = new URL[1];
 		URL url = TDBTest.class.getResource("/org/aksw/kbox/kibe/dbpedia_3.9.xml");
 		files[0] = url;
@@ -48,7 +50,7 @@ public class TDBTest {
 	}
 	
 	@Test
-	public void testMultiGraphQuery() throws URISyntaxException, IOException {
+	public void testMultiGraphQuery() throws URISyntaxException, IOException, OperationNotSupportedException {
 		URL[] files = new URL[1];
 		URL url = TDBTest.class.getResource("/org/aksw/kbox/kibe/foaf.rdf");
 		files[0] = url;
@@ -79,7 +81,7 @@ public class TDBTest {
 	}
 	
 	@Test
-	public void testQuery2() throws URISyntaxException, IOException {
+	public void testQuery2() throws URISyntaxException, IOException, OperationNotSupportedException {
 		ResultSet rs = TDB.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", graphPath);
 		int i = 0;
 		while (rs != null && rs.hasNext()) {
