@@ -51,7 +51,7 @@ public class KBoxTest {
 	@Test
 	public void testNewDir() throws Exception {
 		File f = KBox.newDir(new URL("http://dbpedia.org/en/full"));
-		assertTrue(f.getAbsolutePath().endsWith("en\\full"));
+		assertTrue(f.getAbsolutePath().endsWith("en\\full") || f.getAbsolutePath().endsWith("en/full"));
 	}
 	
 	@Test
