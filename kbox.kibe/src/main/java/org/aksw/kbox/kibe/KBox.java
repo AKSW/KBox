@@ -214,30 +214,19 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @throws Exception if any of the given knowledge graphs can not be found.
 	 */
 	public static ResultSet query(String sparql, boolean install, InputStreamFactory factory, URL... knowledgeGraphNames) throws Exception {
-		String[] knowledgeGraphsPaths = new String[knowledgeGraphNames.length];
-		int i = 0;
-		for(URL knowledgeGraph : knowledgeGraphNames) {
-			URL databaseURL = new URL(knowledgeGraph.toString() + "/" + KB_GRAPH_DIR_NAME);
-			File localDataset = getResource(databaseURL);
-			if(localDataset == null && install) {
-				URL kbSource = resolveURL(knowledgeGraph);
-				installKB(knowledgeGraph, factory.get(kbSource));
-				localDataset = getResource(databaseURL);
-			} else if(!install){
-				Exception e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + " does not exist."
-						+ " You can install it using the command install.");
-				throw e;
-			}
-			knowledgeGraphsPaths[i] = localDataset.getAbsolutePath();
-			i++;
-		}
+		String[] knowledgeGraphsPaths = getResources(install, factory, knowledgeGraphNames);		
 		return TDB.query(sparql, knowledgeGraphsPaths);
 	}
 	
 	public static Model createModel(boolean install, InputStreamFactory factory, URL... knowledgeGraphNames) throws Exception {
-		String[] knowledgeGraphsPaths = new String[knowledgeGraphNames.length];
+		String[] knowledgeGraphsPaths = getResources(install, factory, knowledgeGraphNames);
+		return TDB.createModel(knowledgeGraphsPaths);
+	}
+	
+	private static String[] getResources(boolean install, InputStreamFactory factory, URL... urls) throws Exception {
+		String[] knowledgeGraphsPaths = new String[urls.length];
 		int i = 0;
-		for(URL knowledgeGraph : knowledgeGraphNames) {
+		for(URL knowledgeGraph : urls) {
 			URL databaseURL = new URL(knowledgeGraph.toString() + "/" + KB_GRAPH_DIR_NAME);
 			File localDataset = getResource(databaseURL);
 			if(localDataset == null && install) {
@@ -252,7 +241,7 @@ public class KBox extends org.aksw.kbox.KBox {
 			knowledgeGraphsPaths[i] = localDataset.getAbsolutePath();
 			i++;
 		}
-		return TDB.createModel(knowledgeGraphsPaths);
+		return knowledgeGraphsPaths;
 	}
 	
 	/**
