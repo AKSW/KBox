@@ -114,10 +114,10 @@ public class KBox extends org.aksw.kbox.KBox {
 		BufferedReader in = new BufferedReader(new InputStreamReader(is));
 		String line = null;
 		while((line = in.readLine()) != null) {
-		    KNS kns = null;
+		    KN kns = null;
 			try {
 				if(!line.isEmpty()) {
-					kns = KNS.parse(line);
+					kns = KN.parse(line);
 					if(kns.getName().equals(resourceURL.toString())) {
 					   return new URL(kns.getTarget());
 					}

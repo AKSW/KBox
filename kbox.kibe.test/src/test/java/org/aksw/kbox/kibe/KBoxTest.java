@@ -37,9 +37,11 @@ public class KBoxTest {
 	}
 	
 	@Test
-	public void testPrintKBs() throws Exception {
+	public void testVisitKBs() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		Main.printKB(serverURL);
+		MockKNSVisitor visitor = new MockKNSVisitor();
+		Main.visitKNS(serverURL, visitor);
+		assertEquals(1, visitor.getKNSVisitedList().size());
 	}
 	
 	@Test

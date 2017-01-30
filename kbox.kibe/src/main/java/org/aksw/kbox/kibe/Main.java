@@ -1,10 +1,7 @@
 package org.aksw.kbox.kibe;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -19,7 +16,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 
 public class Main {
-private final static Logger logger = Logger.getLogger(Main.class);	
+	private final static Logger logger = Logger.getLogger(Main.class);	
 	
 	// CONSTANTS	
 	private final static String VERSION = "v0.0.1-alpha3";
@@ -47,6 +44,8 @@ private final static Logger logger = Logger.getLogger(Main.class);
 	private final static String SPARQL_QUERY_JSON_OUTPUT_FORMAT_COMMAND = "-json";
 	private final static String GRAPH_COMMAND = "-graph";
 	private final static String INDEX_COMMAND = "-index";
+	private final static String INFO_COMMAND = "-info";
+	private final static String SEARCH_COMMAND = "-search";
 	private final static String INSTALL_COMMAND = "-install";
 	private final static String CREATE_INDEX_COMMAND = "-createIndex";
 	private final static String VERSION_COMMAND = "-version";
@@ -147,11 +146,8 @@ private final static Logger logger = Logger.getLogger(Main.class);
 			}
 		} else if (commands.containsKey(KB_LIST_COMMAND)) {
 			System.out.println("Knowledge graphs table list");
-			Iterable<String> it = KBox.listAvailableKNS();
-			printKB(new URL(DEFAULT_KNS_TABLE_URL));
-			for(String knsServer : it) {
-				printKB(new URL(knsServer));
-			}
+			ListKNSVisitor listAllVisitor = new ListKNSVisitor();
+			visitALLKNS(listAllVisitor);
 		} else if (commands.containsKey(KNS_REMOVE_COMMAND)) {
 			String knsURL = commands.get(KNS_REMOVE_COMMAND);
 			KBox.removeKNS(new URL(knsURL));
@@ -171,6 +167,14 @@ private final static Logger logger = Logger.getLogger(Main.class);
 				resourceDir = KBox.getResourceFolder();
 				System.out.println("Your current resource directory is: " + resourceDir);					
 			}			
+		} else if (commands.containsKey(SEARCH_COMMAND)) {
+			String pattern = commands.get(SEARCH_COMMAND);
+			SearchKBKNSVisitor searchVisitor = new SearchKBKNSVisitor(pattern);
+			visitALLKNS(searchVisitor);
+		} else if (commands.containsKey(INFO_COMMAND)) {
+			String graph = commands.get(INFO_COMMAND);
+			InfoKBKNSVisitor visitor = new InfoKBKNSVisitor(graph);
+			visitALLKNS(visitor);
 		} else if (commands.containsKey(VERSION_COMMAND)) {
 			printVersion();
 		} else {
@@ -197,36 +201,38 @@ private final static Logger logger = Logger.getLogger(Main.class);
 		System.out.println("   * -kb-install  <kb-URL> -index <indexFile> \t - Install a given index in a given knowledge graph URL.");
 		System.out.println("   * -kb-install  <kb-URL> -kns-server <kns-server-URL> \t - Install a knowledge graph from a a given KNS server.");
 		System.out.println("   * -kb-list \t - List all available KNS services and knowledge graphs.");
+		System.out.println("   * -info <kb-URL> \t - Gives the information about a specific KB.");
+		System.out.println("   * -search <kb-URL-pattern> \t - Search for all kb-URL containing a given pattern.");
 		System.out.println("   * -r-dir <resourceDir>\t - Change the current path of the KBox resource container.");
 		System.out.println("   * -version \t - display KBox version.");
 	}
 	
 	/**
-	 * Resolve a given resource with by the given KNS service.
+	 * Iterate over all Knowledge Names (KNs) of a given Knowledge Name Service (KNS).
 	 * 
-	 * @param knsURL the URL of KNS server that will resolve the given URL.
-	 * @param resourceURL the URL of the resource that will be resolved by the given KNS service.
-	 * @return the resolved URL.
+	 * @param KNSVisitor an implementation of KNSVisitor.
+	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL printKB(URL knsURL) throws IOException {
+	public static void visitKNS(URL knsURL, KNSVisitor visitor) throws IOException {
 		URL tableURL = new URL(knsURL.toString() + "/" + FILE_SERVER_TABLE_FILE_NAME);
-		InputStream is = tableURL.openStream();
-		BufferedReader in = new BufferedReader(new InputStreamReader(is));
-		String line = null;
-		while((line = in.readLine()) != null) {
-		    KNS kns = null;
-			try {
-				kns = KNS.parse(line);
-				System.out.println("*****************************************************");
-				System.out.println("KNS:" + knsURL.toString());
-				System.out.println("KB:" + kns.getName());
-				System.out.println("DESC:" + kns.getDesc());
-			} catch (Exception e) {
-				logger.error("KNS Table entry could not be parsed: " + line, e);
-			}
+		KNSTable table = new KNSTable(tableURL);
+		table.visit(visitor);
+	}
+	
+	/**
+	 * Iterate over all available KNS services with a given visitor.
+	 * 
+	 * @param KNSVisitor an implementation of KNSVisitor.
+	 * 
+	 * @throws IOException if any error occurs during the operation.
+	 */
+	public static void visitALLKNS(KNSVisitor visitor) throws IOException {
+		Iterable<String> it = KBox.listAvailableKNS();
+		visitKNS(new URL(DEFAULT_KNS_TABLE_URL), visitor);
+		for(String knsServer : it) {
+			visitKNS(new URL(knsServer), visitor);
 		}
-		return null;
 	}
 	
 
