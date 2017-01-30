@@ -16,6 +16,12 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 
 public class Main {
+
+	// setting default log path
+	static {
+		System.setProperty("kbox.logfile", KBox.KBOX_DIR);
+	}
+	
 	private final static Logger logger = Logger.getLogger(Main.class);	
 	
 	// CONSTANTS	
@@ -187,7 +193,7 @@ public class Main {
 	}
 	
 	public static void printHelp() {
-		System.out.println("knox.jar <command> [option]");
+		System.out.println("KBox.jar <command> [option]");
 		System.out.println("Where [command] is:");
 		System.out.println("   * -createIndex <directory> \t - Create an index with the files in a given directory.");
 		System.out.println("                              \t ps: the directory might contain only RDF compatible file formats.");

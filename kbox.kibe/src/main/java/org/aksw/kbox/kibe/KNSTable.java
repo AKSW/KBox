@@ -31,6 +31,7 @@ public class KNSTable {
 		    KN kn = null;
 			try {
 				String url = tableURL.toString();
+				url = url.replace("/" + KBox.FILE_SERVER_TABLE_FILE_NAME, "");
 				kn = KN.parse(line);
 				kn.setKNS(url);
 				visitor.visit(kn);
