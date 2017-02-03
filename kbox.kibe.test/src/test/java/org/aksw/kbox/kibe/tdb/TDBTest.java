@@ -19,6 +19,10 @@ public class TDBTest {
 	
 	private static String graphPath = null;
 	
+	public static String getGraphPath() {
+		return graphPath;
+	}
+	
 	@BeforeClass
 	public static void init() throws IOException {
 		URL[] files = new URL[1];

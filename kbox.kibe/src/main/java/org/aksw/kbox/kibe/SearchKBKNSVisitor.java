@@ -14,5 +14,4 @@ public class SearchKBKNSVisitor extends ListKNSVisitor {
 			print(System.out, kn);
 		}
 	}
-
 }

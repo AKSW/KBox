@@ -13,7 +13,8 @@ public class ListKNSVisitor implements KNSVisitor {
 		out.println("*****************************************************");
 		out.println("KNS:" + kn.getKNS());
 		out.println("KB:" + kn.getName());
-		out.println("DESC:" + kn.getDesc());
+		if(kn.getDesc() != null) {
+			out.println("DESC:" + kn.getDesc());
+		}
 	}
-
 }

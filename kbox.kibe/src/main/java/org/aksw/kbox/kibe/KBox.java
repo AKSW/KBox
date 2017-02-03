@@ -22,6 +22,11 @@ import org.apache.log4j.Logger;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 
+/**
+ * 
+ * @author {@linkplain http://emarx.org}
+ *
+ */
 public class KBox extends org.aksw.kbox.KBox {
 
 	private final static Logger logger = Logger.getLogger(KBox.class);
@@ -234,7 +239,7 @@ public class KBox extends org.aksw.kbox.KBox {
 				installKB(knowledgeGraph, factory.get(kbSource));
 				localDataset = getResource(databaseURL);
 			} else if(!install){
-				Exception e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + " does not exist."
+				KBNotFoundException e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + " does not exist."
 						+ " You can install it using the command install.");
 				throw e;
 			}
@@ -270,6 +275,19 @@ public class KBox extends org.aksw.kbox.KBox {
 	 */
 	public static ResultSet query(String sparql, Model model) throws Exception {
 		return TDB.query(sparql, model);
+	}
+	
+	/**
+	 * Query a given Query a given KBox service endpoints.
+	 * 
+	 * @param sparql the SPARQL query that will be used to query.
+	 * @param url the URL of the service.
+	 * 
+	 * @return a ResultSet containing the result to a given query
+	 * @throws Exception if some error occurs during the query execution.
+	 */
+	public static ResultSet query(String sparql, ServerAddress service) throws Exception {
+		return TDB.queryService(sparql, service);
 	}
 
 	/**

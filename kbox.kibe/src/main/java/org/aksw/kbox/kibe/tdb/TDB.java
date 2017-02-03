@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.aksw.kbox.kibe.ServerAddress;
+
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
@@ -22,7 +24,7 @@ import com.hp.hpl.jena.tdb.TDBLoader;
 import com.hp.hpl.jena.tdb.transaction.DatasetGraphTransaction;
 
 public class TDB {
-	
+		
 	public static ResultSet queryGraph(String sparql, String graph, String dbDir) throws Exception {
 		Query query = QueryFactory.create(sparql, graph);
 		return query(query, dbDir);
@@ -34,7 +36,7 @@ public class TDB {
 		for(String dbDir : dbDirs) {
 			dataset = TDBFactory.createDataset(dbDir);
 			if(mainModel == null) {
-				mainModel = dataset.getDefaultModel();
+				mainModel = dataset.getDefaultModel();				
 			} else {
 				Model secondaryModel = dataset.getDefaultModel();
 				mainModel = ModelFactory.createUnion(mainModel, secondaryModel);
@@ -95,5 +97,19 @@ public class TDB {
 			i++;
 		}
 		TDBLoader.load(dataset.getDatasetGraphToQuery(), Arrays.asList(stringURLs));
+	}
+
+	/**
+	 * Query a given KBox endpoint.
+	 * 
+	 * @param sparql a valid SPARQL query.
+	 * @param address the ServerAddress of the service that will be queried.
+	 * @return an ResultSet containing the elements retrieved by the given SPARQL query.
+	 */
+	public static ResultSet queryService(String sparql, ServerAddress address) {
+		QueryExecution qe = QueryExecutionFactory.sparqlService(
+				address.getQueryURL(), sparql);
+        ResultSet results = qe.execSelect();
+		return results;
 	}
 }

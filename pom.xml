@@ -53,7 +53,8 @@
     <module>kbox.core</module>
 	<module>kbox.core.test</module>
 	<module>kbox.kibe</module>
-	<module>kbox.kibe.test</module>
+	<module>kbox.kibe.test</module>	
+	<module>kbox.fusca</module>
 	<!--module>kbox.benchmark</module-->
   </modules>
   <repositories>

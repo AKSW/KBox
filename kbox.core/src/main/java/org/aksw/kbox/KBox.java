@@ -28,11 +28,6 @@ public class KBox {
 	public final static String KBOX_DIR = System.getProperty("user.home")
 			+ File.separator + KBOX_FOLDER;
 
-	// setting default log path
-	static {
-		System.setProperty("kbox.logfile", KBOX_DIR);
-	}
-
 	private final static Logger logger = Logger.getLogger(KBox.class);
 
 	private static String cachedResourceFolderPath = null;

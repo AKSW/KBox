@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>kbox.kibe.test</artifactId>
+  <artifactId>kbox.fusca</artifactId>
   <build>
     <plugins>
       <plugin>
@@ -20,21 +20,11 @@
   	<relativePath>../pom.xml</relativePath>
   </parent>
   <dependencies>
-    <dependency>
-    	<groupId>junit</groupId>
-	    <artifactId>junit</artifactId>
-	    <version>4.8.1</version>
-	</dependency>
 	<dependency>
-    	<groupId>org.aksw.kbox</groupId>
-	    <artifactId>kbox.kibe</artifactId>
-	    <version>0.0.1-alpha2</version>
-	</dependency>
-	<dependency>
-    	<groupId>org.aksw.kbox</groupId>
-	    <artifactId>kbox.fusca</artifactId>
-	    <version>0.0.1-alpha2</version>
-	</dependency>
+	    <groupId>org.apache.jena</groupId>
+	    <artifactId>jena-fuseki</artifactId>
+	    <version>1.1.1</version>
+	</dependency>	
   </dependencies>
   <repositories>
     <repository>

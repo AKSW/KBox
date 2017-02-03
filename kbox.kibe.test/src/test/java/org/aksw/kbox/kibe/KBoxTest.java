@@ -53,7 +53,7 @@ public class KBoxTest {
 	@Test
 	public void testNewDir() throws Exception {
 		File f = KBox.newDir(new URL("http://dbpedia.org/en/full"));
-		assertTrue(f.getAbsolutePath().endsWith("en\\full") || f.getAbsolutePath().endsWith("en/full"));
+		assertTrue(f.getAbsolutePath().endsWith("en" + File.separator + "full"));
 	}
 	
 	@Test
@@ -115,18 +115,13 @@ public class KBoxTest {
 		assertEquals(19, i);
 	}
 	
-	@Test
-	public void testQueryNotInstalledKB() throws Exception {
-		boolean exception = false;
-		try {
+	@Test(expected=Exception.class)
+	public void testQueryNotInstalledKB() throws Exception {	
 			@SuppressWarnings("unused")
 			ResultSet rs = KBox.query(
 					"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
 					new URL("http://dbpedia39.o"));
-		} catch (Exception e) {
-			exception = true;
-		}
-		Assert.assertTrue("The query should have returned an Exception.", exception);
+		Assert.fail("The query should have returned an Exception.");
 	}
 	
 	@Test
