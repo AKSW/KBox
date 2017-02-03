@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author http://emarx.org
  */
 public class ConsoleStreamListener implements InstallStreamListener {
-	String message = "loading";
+	private String message = "loading";
 	private long length = 0;
 	private int read = 0;
 	private long startTime = 0;
