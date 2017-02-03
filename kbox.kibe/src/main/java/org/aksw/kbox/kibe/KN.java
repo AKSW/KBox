@@ -36,9 +36,9 @@ public class KN {
 	}
 	
 	public static KN parse(String string) throws Exception {
-       org.json.simple.parser.JSONParser jsonParser = new JSONParser();
-       Reader stringReader = new StringReader(string);
-       JSONObject jsonObject = (JSONObject) jsonParser.parse(stringReader);
+		JSONParser jsonParser = new JSONParser();
+		Reader stringReader = new StringReader(string);
+		JSONObject jsonObject = (JSONObject) jsonParser.parse(stringReader);
 		String name = (String) jsonObject.get("name");
 		String target = (String) jsonObject.get("target");
 		String desc = (String) jsonObject.get("desc");
