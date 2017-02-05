@@ -41,7 +41,7 @@ public class KBoxTest {
 		assertEquals(null, test);
 		URL fileToInstall = new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt");
 		File kboxedFile = KBox.getResource(fileToInstall);
-		KBox.install(new URL("http://test.org/context.txt"), fileToInstall);
+		KBox.install(fileToInstall, new URL("http://test.org/context.txt"));
 		String path = KBox.URLToPath(new URL("http://test.org/context.txt"));
 		File inDisk = new File(KBox.getResourceFolder() + File.separator + path);
 		assertEquals(true, inDisk.exists());
