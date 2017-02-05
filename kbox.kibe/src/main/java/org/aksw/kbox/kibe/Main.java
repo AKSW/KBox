@@ -2,6 +2,7 @@ package org.aksw.kbox.kibe;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -72,11 +73,11 @@ public class Main {
 		} else if(commands.containsKey(RESOURCE_INSTALL_COMMAND) &&
 				commands.containsKey(GRAPH_COMMAND)) {
 			String url = commands.get(GRAPH_COMMAND);
-			URL resourceURL = new URL(url);
+			URL destURL = new URL(url);
 			String resource = commands.get(RESOURCE_INSTALL_COMMAND);
 			URL file = new URL(resource);
 			System.out.println("Installing resource " + resource);
-			KBox.install(resourceURL, file);
+			KBox.install(file, destURL);
 			System.out.println("Resource installed.");
 		} else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND) && 
@@ -87,7 +88,9 @@ public class Main {
 			File resourceFile = new File(resource);
 			URL file = resourceFile.toURI().toURL();
 			System.out.println("Installing KB " + kb2Install);
-			KBox.installKB(kbURL, inputStreamFactory.get(file));
+			try(InputStream is = inputStreamFactory.get(file)) {
+				KBox.installKB(is, kbURL);
+			}
 			System.out.println("KB installed.");
 		}  else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND) &&
@@ -114,7 +117,9 @@ public class Main {
 				System.out.println("KB could not be located in the available KNS services.");
 			} else {
 				System.out.println("Installing KB " + url);
-				KBox.installKB(kbNameURL, inputStreamFactory.get(kbURL));
+				try(InputStream is = inputStreamFactory.get(kbURL)) {
+					KBox.installKB(is, kbNameURL);
+				}
 				System.out.println("KB installed.");
 			}
 		} else if(commands.containsKey(INSTALL_COMMAND) && 

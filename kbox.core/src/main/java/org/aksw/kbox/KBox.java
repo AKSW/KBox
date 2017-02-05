@@ -2,11 +2,8 @@ package org.aksw.kbox;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.InvalidPathException;
 
 import org.apache.log4j.Logger;
@@ -94,7 +91,7 @@ public class KBox {
 	}
 
 	/**
-	 * Create a KBox directory representing the url.
+	 * Create a KBox directory representing the URL.
 	 * 
 	 * @param the KBox directory representing the given URL.
 	 */
@@ -142,10 +139,7 @@ public class KBox {
 	}
 
 	/**
-	 * Get a KBox representation of the given resource. If the representation of
-	 * the resource already exists in KBox, return it, otherwise create its
-	 * representation and return it.
-	 * 
+	 * Get a local mirror of the given resource. 
 	 * This method will not try to install the resource and will return null in
 	 * case it does not exists.
 	 * 
@@ -161,34 +155,38 @@ public class KBox {
 	}
 
 	/**
-	 * Get a local representation of the remote resource. If the representation
-	 * of the resource already exists, return it, otherwise create a local
-	 * representation and return it.
+	 * Get a local mirror of the remote resource or null 
+	 * if does not exist. 
+	 * If the flag install is set to true, returns a local copy 
+	 * of the resource if it already exists or create it otherwise.
 	 * 
 	 * @param url the remote URL of the resource to be retrieved.
 	 * @param install specify if the resource should be installed in case in does
-	 *            no exist (true) or not (false).
+	 *         no exist (true) or not (false).
 	 * 
-	 * @return a file pointing to a local materialization of the resource.
+	 * @return a file pointing to a local resource.
 	 * 
-	 * @throws Exception if the resource can not be located or some error occurs
-	 *             during the local resource materialization.
+	 * @throws Exception if the resource can not be located or some error 
+	 * 			occurs while creating the local mirror.
 	 */
 	public static File getResource(URL url, boolean install) throws Exception {
 		File resource = new File(URLToAbsolutePath(url));
-		if (!resource.exists() && !install) {
-			return null;
-		} else if (resource.exists() && !install) {
+		if(resource.exists()) {
 			return resource;
+		} else if (!install) {			
+			return null;
 		}
-		install(url, url.openStream());
+		try(InputStream is = url.openStream()) {
+			install(url.openStream(), url);
+		}
 		return resource;
 	}
 
 	/**
-	 * Get a local representation of the remote resource. If the representation
-	 * of the resource already exists, return it, otherwise create a local
-	 * representation and return it.
+	 * Get a local mirror of the remote resource or null 
+	 * if does not exist. 
+	 * If the flag install is set to true, returns a local copy 
+	 * of the resource if it already exists or create it otherwise.
 	 * 
 	 * @param url the remote URL of the resource to be retrieved.
 	 * @param install specify if the resource should be installed (true) or not
@@ -196,17 +194,15 @@ public class KBox {
 	 * @param method the method that will be used to install the resource in case
 	 *        it is not installed and install install param is set true.
 	 * 
-	 * @return a file pointing to a local materialization of the resource.
+	 * @return a file pointing to a local copy of the resource.
 	 * 
 	 * @throws Exception if the resource can not be located or some error occurs
-	 *             during the local resource materialization.
+	 *             while creating the local mirror.
 	 */
 	public static File getResource(URL url, Install method, boolean install)
 			throws Exception {
 		File resource = new File(URLToAbsolutePath(url));
-		if (!resource.exists() && !install) {
-			return null;
-		} else if (resource.exists() && !install) {
+		if (!install) {
 			return resource;
 		}
 		install(url, url, method);
@@ -214,26 +210,26 @@ public class KBox {
 	}
 
 	/**
-	 * Get a local representation of the remote resource. If the representation
-	 * of the resource already exists, return it, otherwise create a local
-	 * representation and return it.
+	 * Get a local mirror of the remote resource or null if it does 
+	 * not exist.
 	 * 
 	 * @param url the remote URL of the resource to be retrieved.
 	 * 
-	 * @return an InputStream pointing to a local materialization of the
+	 * @return an InputStream pointing to a local copy of the
 	 *         resource.
 	 *         
 	 * @throws Exception if the resource can not be located or some error occurs
-	 *             during the local resource materialization.
+	 *             while creating the local miror.
 	 */
 	public static InputStream getResourceAsStream(URL url) throws Exception {
 		return getResourceAsStream(url, false);
 	}
 
 	/**
-	 * Get a local representation of the remote resource. If the representation
-	 * of the resource already exists, return it, otherwise create a local
-	 * representation and return it.
+	 * Get a local representation of the remote resource or null 
+	 * if does not exist. 
+	 * If the flag install is set to true, returns a local copy 
+	 * of the resource if it already exists or create it otherwise.
 	 * 
 	 * This method will not try to install the resource and will return null in
 	 * case it does not exists.
@@ -241,11 +237,12 @@ public class KBox {
 	 * @param url the remote URL of the resource to be retrieved.
 	 * @param install specify if the resource should be installed in case in does
 	 *        no exist (true) or not (false).
-	 * @return an InputStream pointing to a local materialization of the
+	 * 
+	 * @return an InputStream pointing to a local copy of the
 	 *         resource.
 	 *         
 	 * @throws Exception if the resource can not be located or some error occurs
-	 *         during the local resource materialization.
+	 *         while copying the resource.
 	 */
 	public static InputStream getResourceAsStream(URL url, boolean install)
 			throws Exception {
@@ -257,17 +254,20 @@ public class KBox {
 	 * (KBox) resource folder. This function allows KBox to serve files to
 	 * applications, acting as proxy to the published file. The file that is
 	 * published in a give URL u will be located when the client execute the
-	 * function RBox.getResource(u).
+	 * function KBox.getResource(u).
 	 * 
-	 * @param path the path were the dereferenced file is going to be
-	 *            published.
-	 * @param file the URL of the file that is going to be published at the
+	 * @param source the URL of the file that is going to be published at the
 	 *            given URL.
+	 * @param dest the URL were the dereferenced file is going to be
+	 *            published.
+	 * 
 	 * @throws Exception if the resource does not exist or can not be copied 
 	 *         or some error occurs during the resource publication.
 	 */
-	public static void install(URL path, URL file) throws Exception {
-		install(path, file.openStream());
+	public static void install(URL source, URL dest) throws Exception {
+		try (InputStream is = source.openStream()) {
+			install(source.openStream(), dest);
+		}
 	}
 
 	/**
@@ -275,45 +275,43 @@ public class KBox {
 	 * Knowledge Box (KBox) resource folder. This function allows KBox to serve
 	 * files to applications, acting as proxy to the published file. The file
 	 * that is installed in a give URL u will be located when the client
-	 * executes the function RBox.getResource(u).
+	 * executes the function KBox.getResource(u).
 	 * 
 	 * @param url the URL of the resource that is going to be published at the
 	 *            given URL.
+	 * 
 	 * @throws Exception if the resource does not exist or can not be copied or some
 	 *             error occurs during the resource publication.
 	 */
 	public static void install(URL url) throws Exception {
-		install(url, url.openStream());
+		try (InputStream is = url.openStream()) {
+			install(url.openStream(), url);
+		}
 	}
 
 	/**
-	 * Publish the given input stream in the given path on your local Knowledge
+	 * Publish the given input stream in the given URL on your local Knowledge
 	 * Box (KBox) resource folder. This function allows KBox to serve files to
 	 * applications, acting as proxy to the published file. The file that is
 	 * installed in a give URL u will be located when the client execute the
 	 * function KBox.getResource(u).
 	 * 
-	 * @param path the path were the file is going to be published.
-	 * @param inputStream the inputStream that is going to be published in 
+	 * @param source the inputStream that is going to be published in 
 	 *        the given URL.
+	 * @param dest the URL were the file is going to be published. 
+	 * 
 	 * @throws Exception if the resource does not exist or can not be copied or 
 	 *         some error occurs during the resource publication.
 	 */
-	public static void install(URL url, InputStream inputStream)
+	public static void install(InputStream source, URL dest)
 			throws Exception {
-		File resource = new File(URLToAbsolutePath(url));
-		File resourceDir = resource.getParentFile();
-		resourceDir.mkdirs();
-		resource.createNewFile();
-		ReadableByteChannel rbc = Channels.newChannel(inputStream);
-		try (FileOutputStream fos = new FileOutputStream(resource);) {
-			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		}
+		ResourceInstall resourceInstall = new ResourceInstall();
+		install(source, dest, resourceInstall);
 	}
 
 	/**
-	 * Publish a given file in a given URL local directory. This function allows
-	 * KBox to serve files to applications, acting as proxy to the publised
+	 * Creates a mirror for the given file in a given URL. This function allows
+	 * KBox to serve files to applications, acting as proxy to the mirrored
 	 * file. The file that is published in a give URL u will be located when the
 	 * client execute the function KBox.getResource(u).
 	 * 
@@ -332,7 +330,7 @@ public class KBox {
 
 	/**
 	 * Publish a given file in a given URL local directory. This function allows
-	 * KBox to serve files to applications, acting as proxy to the publised
+	 * KBox to serve files to applications, acting as proxy to the published
 	 * file. The file that is published in a give URL u will be located when the
 	 * client execute the function KBox.getResource(u).
 	 * 
@@ -370,7 +368,6 @@ public class KBox {
 	 * @throws Exception if an error occurs during the installation.
 	 */
 	public static void installFromZip(URL source) throws Exception {
-		ZipInstall zipInstall = new ZipInstall();
-		install(source, source, zipInstall);
+		installFromZip(source, source);
 	}
 }

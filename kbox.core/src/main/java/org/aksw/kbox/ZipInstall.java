@@ -12,17 +12,10 @@ import org.aksw.kbox.utils.ZIPUtil;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class ZipInstall implements Install {	
-	
-	@Override
-	public void install(URL source, URL dest) throws Exception {
-		install(source.openStream(), dest);
-	}
-
+public class ZipInstall extends ResourceInstall {	
 	@Override
 	public void install(InputStream resource, URL dest) throws Exception {
 		File urlDir = KBox.newDir(dest);
 		ZIPUtil.unzip(resource, urlDir.getAbsolutePath());
 	}
-
 }

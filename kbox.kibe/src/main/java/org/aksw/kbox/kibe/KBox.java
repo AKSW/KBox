@@ -72,6 +72,8 @@ public class KBox extends org.aksw.kbox.KBox {
 	
 	/**
 	 * Remove the given URL from your personal Knowledge Name Service.
+	 * 
+	 * @param url the URL of the KNS (Knowledge Name Service)
 	 */
 	public static void removeKNS(URL url) {
 		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
@@ -115,20 +117,22 @@ public class KBox extends org.aksw.kbox.KBox {
 	 */
 	public static URL resolveURL(URL resourceURL, URL knsURL) throws IOException {
 		URL tableURL = new URL(knsURL.toString() + "/" + FILE_SERVER_TABLE_FILE_NAME);
-		InputStream is = tableURL.openStream();
-		BufferedReader in = new BufferedReader(new InputStreamReader(is));
-		String line = null;
-		while((line = in.readLine()) != null) {
-		    KN kns = null;
-			try {
-				if(!line.isEmpty()) {
-					kns = KN.parse(line);
-					if(kns.getName().equals(resourceURL.toString())) {
-					   return new URL(kns.getTarget());
+		try(InputStream is = tableURL.openStream()) {
+			try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
+				String line = null;
+				while((line = in.readLine()) != null) {
+				    KN kns = null;
+					try {
+						if(!line.isEmpty()) {
+							kns = KN.parse(line);
+							if(kns.getName().equals(resourceURL.toString())) {
+							   return new URL(kns.getTarget());
+							}
+						}
+					} catch (Exception e) {
+						logger.error("KNS Table entry could not be parsed: " + line, e);
 					}
 				}
-			} catch (Exception e) {
-				logger.error("KNS Table entry could not be parsed: " + line, e);
 			}
 		}
 		return null;
@@ -143,11 +147,11 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static void installKB(URL knowledgeGraph) throws Exception {
-		URL urlSource = resolveURL(knowledgeGraph);
-		if(urlSource == null) {
+		URL sourceURL = resolveURL(knowledgeGraph);
+		if(sourceURL == null) {
 			throw new KBNotFoundException("Knowledge base " + knowledgeGraph.toString() + " can not be resolved.");
 		}
-		installKB(knowledgeGraph, urlSource);
+		installKB(sourceURL, knowledgeGraph);
 	}
 
 	/**
@@ -157,7 +161,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param source the InputStream index file to be installed.
 	 * @throws IOException 
 	 */
-	public static void installKB(URL target, InputStream source) throws Exception {
+	public static void installKB(InputStream source, URL target) throws Exception {
 		URL finalDest = new URL(target.toString() + "/" + KB_GRAPH_DIR_NAME);
 		install(source, finalDest, new ZipInstall());
 	}
@@ -165,13 +169,15 @@ public class KBox extends org.aksw.kbox.KBox {
 	/**
 	 * Install a given index file in the given knowledge graph.
 	 * 
-	 * @param target the URL of the knowledge graph whereas the index will be installed.
 	 * @param source the URL of the index file to be installed.
+	 * @param target the URL of the knowledge graph whereas the index will be installed.
 	 * 
 	 * @throws Exception if any error occurs during the indexing process.
 	 */
-	public static void installKB(URL target, URL source) throws Exception {
-		installKB(target, source.openStream());
+	public static void installKB(URL source, URL target) throws Exception {
+		try(InputStream is = source.openStream()) {
+			installKB(is, target);
+		}
 	}
 	
 	/**
@@ -236,7 +242,9 @@ public class KBox extends org.aksw.kbox.KBox {
 			File localDataset = getResource(databaseURL);
 			if(localDataset == null && install) {
 				URL kbSource = resolveURL(knowledgeGraph);
-				installKB(knowledgeGraph, factory.get(kbSource));
+				try(InputStream is = factory.get(kbSource)) {
+					installKB(is, knowledgeGraph);
+				}
 				localDataset = getResource(databaseURL);
 			} else if(!install){
 				KBNotFoundException e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + " does not exist."

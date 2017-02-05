@@ -23,16 +23,14 @@ public class KBoxTest {
 		URL url = TDBTest.class.getResource("/org/aksw/kbox/kibe/dbpedia_3.9.xml");
 		filesToIndex[0] = url;
 		KBox.createIndex(indexFile, filesToIndex);
-		KBox.installKB(new URL("http://dbpedia39"),
-									indexFile.toURI().toURL());
+		KBox.installKB(indexFile.toURI().toURL(), new URL("http://dbpedia39"));
 		indexFile.deleteOnExit();
 		
 		indexFile = File.createTempFile("knowledgebase","idx");		
 		url = TDBTest.class.getResource("/org/aksw/kbox/kibe/foaf.rdf");
 		filesToIndex[0] = url;		
 		KBox.createIndex(indexFile, filesToIndex);
-		KBox.installKB(new URL("http://foaf"),
-									indexFile.toURI().toURL());
+		KBox.installKB(indexFile.toURI().toURL(), new URL("http://foaf"));
 		indexFile.deleteOnExit();
 	}
 	
