@@ -246,7 +246,7 @@ public class KBox extends org.aksw.kbox.KBox {
 					installKB(is, knowledgeGraph);
 				}
 				localDataset = getResource(databaseURL);
-			} else if(!install){
+			} else if(localDataset == null){
 				KBNotFoundException e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + " does not exist."
 						+ " You can install it using the command install.");
 				throw e;

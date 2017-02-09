@@ -24,19 +24,21 @@ public class Server {
 	private DatasetGraph dsg = null;
 	private String subDomain = null;
 	private String pagePath = null;
+	private Listener listener = null;
 	
-	public Server(int port, String pagePath, String subDomain, long timeout, Model model) {
-		this(port, pagePath, subDomain, model);
+	public Server(int port, String pagePath, String subDomain, long timeout, Model model, Listener listener) {
+		this(port, pagePath, subDomain, model, listener);
 		ARQ.getContext().set(ARQ.queryTimeout, Long.toString(timeout));
 	}
 
-	public Server(int port, String pagePath, String subDomain, Model model) {
+	public Server(int port, String pagePath, String subDomain, Model model, Listener listener) {
 		this.port = port;
 		this.subDomain = subDomain;
 		this.pagePath = pagePath;
 		Dataset dataset = TDBFactory.createDataset();
 		dataset.getDefaultModel().add(model);
 		this.dsg = dataset.asDatasetGraph();
+		this.listener = listener;
 	}
 	
 	public Server(int port, String pagePath, String subDomain, String datasetPath) {
@@ -64,7 +66,9 @@ public class Server {
 		SPARQLServer server = new SPARQLServer(serverConfig);
 		Fuseki.setServer(server);
 		try {
-			server.start();	        
+			listener.starting();
+			server.start();
+			listener.started();
 		} catch (FusekiException e) {
 			throw new ServerStartException("Failed to start the server.", e);
 		}

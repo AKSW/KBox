@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
@@ -42,7 +43,6 @@ public class Main {
 	private final static String DEFAULT_KNS_TABLE_URL = "https://raw.github.com/AKSW/kbox/master";
 
 	// COMMANDS	
-	private final static String RESOURCE_INSTALL_COMMAND = "-r-install";
 	private final static String INSTALL_COMMAND = "-install";
 	private final static String KB_COMMAND = "-kb";
 	private final static String KNS_COMMAND = "-kns";
@@ -70,14 +70,12 @@ public class Main {
 			System.out.println("Creating index.");
 			KBox.createIndex(indexFile, filePathsToURLs(new File(files).listFiles()));
 			System.out.println("Index created.");
-		} else if(commands.containsKey(RESOURCE_INSTALL_COMMAND) &&
-				commands.containsKey(GRAPH_COMMAND)) {
-			String url = commands.get(GRAPH_COMMAND);
-			URL destURL = new URL(url);
-			String resource = commands.get(RESOURCE_INSTALL_COMMAND);
-			URL file = new URL(resource);
+		} else if(commands.containsKey(INSTALL_COMMAND) &&
+				commands.size() == 1) {
+			String resource = commands.get(GRAPH_COMMAND);
+			URL url = new URL(resource);
 			System.out.println("Installing resource " + resource);
-			KBox.install(file, destURL);
+			KBox.install(url);
 			System.out.println("Resource installed.");
 		} else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND) && 
@@ -134,7 +132,7 @@ public class Main {
 				commands.containsKey(SERVER_COMMAND))) {
 			String sparql = commands.get(SPARQL_QUERY_COMMAND);
 			String graphNamesList = commands.get(GRAPH_COMMAND);
-			if(graphNamesList != null) {				
+			if(graphNamesList != null) {
 				String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
 				boolean install = commands.containsKey(INSTALL_COMMAND);
 				URL[] urls = new URL[graphNames.length];
@@ -175,13 +173,13 @@ public class Main {
 				System.out.println("\t - " + knsServer);
 			}
 		} else if (commands.containsKey(LIST_COMMAND) &&
-				commands.containsKey(KB_COMMAND)) {
+				!commands.containsKey(KNS_COMMAND)) {
 			System.out.println("Knowledge graphs table list");
 			ListKNSVisitor listAllVisitor = new ListKNSVisitor();
 			visitALLKNS(listAllVisitor);
 		} else if (commands.containsKey(REMOVE_COMMAND) && 
 				commands.containsKey(KNS_COMMAND)) {
-			String knsURL = commands.get(KNS_COMMAND);
+			String knsURL = commands.get(REMOVE_COMMAND);
 			KBox.removeKNS(new URL(knsURL));
 			System.out.println("KNS removed.");
 		} else if (commands.containsKey(RESOURCE_DIR_COMMAND)) {
@@ -209,7 +207,7 @@ public class Main {
 			visitALLKNS(visitor);
 		} else if (commands.containsKey(SERVER_COMMAND) && commands.containsKey(GRAPH_COMMAND)) {
 			int port = 8080;
-			String subDomain = ".";
+			String subDomain = "kbox";
 			if(commands.containsKey(SERVER_COMMAND_PORT)) {
 				port = Integer.parseInt(commands.get(SERVER_COMMAND_PORT));
 			} 
@@ -225,7 +223,18 @@ public class Main {
 			}
 			try {
 				Model model = KBox.createModel(install, new DefaultInputStreamFactory(), urls);
-				Server server = new Server(port, KBox.getResourceFolder(), subDomain, model);
+				final String serverAddress = "http://localhost:" + port + "/" + subDomain + "/query";				
+				Listener serverListener = new Listener() {
+					@Override
+					public void starting() {
+						System.out.println("Publishing service on " + serverAddress);
+					}					
+					@Override
+					public void started() {
+						System.out.println("Service running ;-) ...");
+					}
+				};
+				Server server = new Server(port, KBox.getResourceFolder(), subDomain, model, serverListener);
 				server.start();
 			} catch (KBNotFoundException e) {
 				System.out.println("Error installing Knowledge Graphs.");
@@ -263,14 +272,14 @@ public class Main {
 		System.out.println("   * -sparql <query> (-graph <graph> | -server <URL>) [-install] [-json] \t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
 		System.out.println("                                               \t - ps: use -install in case you want to enable the auto-dereference.");	
 		System.out.println("   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default .)] -graph <graph> [-install] \t - Start an SPARQL enpoint in the given subDomain containing the given graphs.");
-		System.out.println("   * -list -kns\t - List all availables KNS services.");
-		System.out.println("   * -list -kb\t - List all available KNS services and knowledge graphs.");
+		System.out.println("   * -list \t - List all available KNS services and knowledge graphs.");
+		System.out.println("   * -list -kns\t - List all availables KNS services.");		
 		System.out.println("   * -install -kns <kns-URL> \t - Install a given KNS service.");
 		System.out.println("   * -remove -kns <kns-URL> \t - Remove a given KNS service.");
-		System.out.println("   * -install -r <URL> \t - Install a given resource in KBox.");
-		System.out.println("   * -install -kb <kb-URL> \t - Install a given knowledge graph using the available KNS services to resolve it.");
+		System.out.println("   * -install <URL> \t - Install a given resource in KBox.");
+		System.out.println("   * -install -kb <kb-URL>\t - Install a given knowledge graph using the available KNS services to resolve it.");
 		System.out.println("   * -install -kb <kb-URL> -index <indexFile> \t - Install a given index in a given knowledge graph URL.");
-		System.out.println("   * -install -kb <kb-URL> -kns <kns-URL> \t - Install a knowledge graph from a a given KNS service.");		
+		System.out.println("   * -install -kb <kb-URL> -kns <kns-URL> -kb\t - Install a knowledge graph from a a given KNS service.");		
 		System.out.println("   * -info <kb-URL> \t - Gives the information about a specific KB.");
 		System.out.println("   * -search <kb-URL-pattern> \t - Search for all kb-URL containing a given pattern.");
 		System.out.println("   * -r-dir <resourceDir>\t - Change the current path of the KBox resource container.");
@@ -312,7 +321,6 @@ public class Main {
 			visitKNS(new URL(knsServer), visitor);
 		}
 	}
-	
 
 	/**
 	 * Command line parser.
