@@ -6,6 +6,15 @@
 [![Join the chat at https://gitter.im/AKSW/KBox](https://badges.gitter.im/AKSW/KBox.svg)](https://gitter.im/AKSW/KBox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Project Stats](https://www.openhub.net/p/knowledge-box/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/knowledge-box)
 
+```
+@InProceedings{ICSC/2017/KBOX/Marx,
+  Title                    = {{KBox}: {T}ransparently {S}hifting {Q}uery {E}xecution on {K}nowledge {G}raphs to the {E}dge},
+  Author                   = {Edgard Marx and Ciro Baron and Tommaso Soru and S\"oren Auer},
+  Booktitle                = {11th IEEE International Conference on Semantic Computing, Jan 30-Feb 1, 2017, San Diego, California, USA},
+  Year                     = {2017}
+}
+```
+
 KBox is an abbreviation for Knowledge Box. 
 The rationality behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances. 
 Moreover, working on top of RDF model, KBox is a natural extension of the Web on your computer.
