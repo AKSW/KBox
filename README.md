@@ -27,6 +27,7 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I query a published knowledge graph?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-graph)
 - [How can I query multi-graphs?](https://github.com/AKSW/KBox#how-can-i-query-multi-graphs)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
+- [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 
 ### Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated among several applications.
@@ -123,6 +124,26 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 -------
 ```
 
+### Using KBox with Docker
+
+You can also use KBox Docker container using the steps bellow:
+
+1) Install Docker in your machine.
+
+2) Pull KBox from AKSW hub repository.
+```
+docker aksw/kbox pull
+```
+
+3) Run it...
+```
+docker run aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema" -install
+------
+| n  |
+======
+| 32 |
+------
+```
 
 ### How can I publish my own Dataset?
 
