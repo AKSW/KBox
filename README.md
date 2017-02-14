@@ -26,8 +26,8 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
 - [How can I query a published knowledge graph?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-graph)
 - [How can I query multi-graphs?](https://github.com/AKSW/KBox#how-can-i-query-multi-graphs)
-- [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
+- [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 
 ### Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated among several applications.
