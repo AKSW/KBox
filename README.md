@@ -7,7 +7,7 @@
 [![Project Stats](https://www.openhub.net/p/knowledge-box/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/knowledge-box)
 
 ```
-@InProceedings{ICSC/2017/KBOX/Marx,
+@InProceedings{Marx/KBox/ICSC/2017,
   Title                    = {{KBox}: {T}ransparently {S}hifting {Q}uery {E}xecution on {K}nowledge {G}raphs to the {E}dge},
   Author                   = {Edgard Marx and Ciro Baron and Tommaso Soru and S\"oren Auer},
   Booktitle                = {11th IEEE International Conference on Semantic Computing, Jan 30-Feb 1, 2017, San Diego, California, USA},
