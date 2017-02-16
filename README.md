@@ -128,7 +128,12 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 
 You can also use KBox Docker container using the steps bellow:
 
-1) Install Docker in your machine.
+1) Install Docker in your machine (Consult the [guide](https://docs.docker.com/engine/installation/linux/ubuntu/) for more details).
+
+```
+sudo apt-get update
+sudo apt-get -y install docker-engine
+```
 
 2) Pull KBox from AKSW hub repository.
 ```
