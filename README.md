@@ -110,6 +110,12 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 ------
 ```
 
+Or using the java API..
+
+```
+KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", "https://www.w3.org/2000/01/rdf-schema"), true);
+```
+
 ### How can I query multi-graphs?
 
 Its very easy, you just need to add the knowledge graph that you want to query separated by comma as the command bellow:
@@ -122,6 +128,13 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 =======
 | 123 |
 -------
+```
+
+Or using the java API..
+```
+KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", 
+                   "https://www.w3.org/2000/01/rdf-schema", 
+                   "http://xmlns.com/foaf/0.1", true);
 ```
 
 ### Using KBox with Docker
