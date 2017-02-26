@@ -1,4 +1,4 @@
-package org.aksw.kbox.appel;
+package org.aksw.kbox.kns;
 
 import java.net.URL;
 
