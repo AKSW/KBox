@@ -76,8 +76,8 @@ public class CustomParams implements Serializable {
 		
 		for(String param : iterable) {
 			try {
-				boolean keep = visitor.visit(param);
-				if(!keep) {
+				boolean next = visitor.visit(param);
+				if(!next) {
 					break;
 				}
 			} catch (Exception e) {

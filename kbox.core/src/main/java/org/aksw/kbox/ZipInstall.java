@@ -14,8 +14,9 @@ import org.aksw.kbox.utils.ZIPUtil;
  */
 public class ZipInstall extends ResourceInstall {	
 	@Override
-	public void install(InputStream resource, URL dest) throws Exception {
-		File urlDir = KBox.newDir(dest);
-		ZIPUtil.unzip(resource, urlDir.getAbsolutePath());
+	public void install(InputStream resource, URL target) throws Exception {
+		File destPath = new File(URLToAbsolutePath(target));
+		destPath.mkdirs();
+		ZIPUtil.unzip(resource, destPath.getAbsolutePath());
 	}
 }

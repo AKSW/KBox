@@ -65,9 +65,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the indexing process.
 	 */
 	public static void installKB(URL source, URL target) throws Exception {
-		try(InputStream is = source.openStream()) {
-			installKB(is, target);
-		}
+		install(source, target, new KBInstall());
 	}
 	
 	/**

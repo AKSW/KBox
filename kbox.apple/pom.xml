@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>kbox.kibe</artifactId>
+  <artifactId>kbox.apple</artifactId>
   <build>
     <plugins>
       <plugin>
@@ -20,32 +20,12 @@
   	<relativePath>../pom.xml</relativePath>
   </parent>
   <dependencies>
-	<dependency>
-    	<groupId>org.aksw.kbox</groupId>
-	    <artifactId>kbox.apple</artifactId>
-	    <version>0.0.1-alpha2</version>
-	</dependency>
-	<dependency>
-    	<groupId>org.aksw.kbox</groupId>
-	    <artifactId>kbox.fusca</artifactId>
-	    <version>0.0.1-alpha2</version>
-	</dependency>
-	<dependency>
-   		<groupId>org.apache.jena</groupId>
-	  	<artifactId>jena-tdb</artifactId>
-	   	<version>1.1.2</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.googlecode.json-simple</groupId>	
-	    <artifactId>json-simple</artifactId>	
-	    <version>1.1</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.apache.commons</groupId>
-	    <artifactId>commons-lang3</artifactId>
-	    <version>3.5</version>
-	</dependency>
-  </dependencies>
+	  <dependency>
+	    	<groupId>org.aksw.kbox</groupId>
+		    <artifactId>kbox.kns</artifactId>
+		    <version>0.0.1-alpha2</version>
+	  </dependency>
+  </dependencies> 
   <repositories>
     <repository>
         <id>sonatype-snapshots</id>

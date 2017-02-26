@@ -194,17 +194,6 @@ public class KBox {
 		ResourceLocate resourceLocate = new ResourceLocate();
 		ResourceInstall resourceInstall = new ResourceInstall();
 		return getResource(url, resourceLocate, resourceInstall, install);
-//		
-//		File resource = resourceLocate.locate(url);
-//		if(resource.exists()) {
-//			return resource;
-//		} else if (!install) {			
-//			return null;
-//		}
-//		try(InputStream is = url.openStream()) {
-//			install(url.openStream(), url);
-//		}
-//		return resource;
 	}
 
 	/**
