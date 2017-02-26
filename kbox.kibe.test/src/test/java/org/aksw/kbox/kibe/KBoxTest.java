@@ -7,8 +7,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.aksw.kbox.appel.KNSSever;
 import org.aksw.kbox.kibe.tdb.TDBTest;
+import org.aksw.kbox.kns.KNSSever;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

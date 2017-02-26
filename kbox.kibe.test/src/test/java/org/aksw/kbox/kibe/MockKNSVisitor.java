@@ -3,8 +3,8 @@ package org.aksw.kbox.kibe;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aksw.kbox.appel.KN;
-import org.aksw.kbox.appel.KNSVisitor;
+import org.aksw.kbox.kns.KN;
+import org.aksw.kbox.kns.KNSVisitor;
 
 public class MockKNSVisitor implements KNSVisitor {
 	

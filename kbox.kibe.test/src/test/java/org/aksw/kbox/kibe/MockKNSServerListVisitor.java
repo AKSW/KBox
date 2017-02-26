@@ -1,6 +1,6 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.appel.KNSServerListVisitor;
+import org.aksw.kbox.kns.KNSServerListVisitor;
 
 public class MockKNSServerListVisitor implements KNSServerListVisitor {
 
