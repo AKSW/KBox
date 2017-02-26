@@ -7,7 +7,7 @@
 [![Project Stats](https://www.openhub.net/p/knowledge-box/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/knowledge-box)
 
 ```
-@InProceedings{ICSC/2017/KBOX/Marx,
+@InProceedings{Marx/KBox/ICSC/2017,
   Title                    = {{KBox}: {T}ransparently {S}hifting {Q}uery {E}xecution on {K}nowledge {G}raphs to the {E}dge},
   Author                   = {Edgard Marx and Ciro Baron and Tommaso Soru and S\"oren Auer},
   Booktitle                = {11th IEEE International Conference on Semantic Computing, Jan 30-Feb 1, 2017, San Diego, California, USA},
@@ -26,6 +26,7 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
 - [How can I query a published knowledge graph?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-graph)
 - [How can I query multi-graphs?](https://github.com/AKSW/KBox#how-can-i-query-multi-graphs)
+- [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 
 ### Why use KBox?
@@ -109,6 +110,12 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 ------
 ```
 
+Or using the java API..
+
+```
+KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", "https://www.w3.org/2000/01/rdf-schema", true);
+```
+
 ### How can I query multi-graphs?
 
 Its very easy, you just need to add the knowledge graph that you want to query separated by comma as the command bellow:
@@ -123,6 +130,38 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 -------
 ```
 
+Or using the java API..
+```
+KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", 
+                   "https://www.w3.org/2000/01/rdf-schema", 
+                   "http://xmlns.com/foaf/0.1", true);
+```
+
+### Using KBox with Docker
+
+You can also use KBox Docker container using the steps bellow:
+
+1) Install Docker in your machine (Consult the [guide](https://docs.docker.com/engine/installation/linux/ubuntu/) for more details).
+
+```
+sudo apt-get update
+sudo apt-get -y install docker-engine
+```
+
+2) Pull KBox from AKSW hub repository.
+```
+docker aksw/kbox pull
+```
+
+3) Run it...
+```
+docker run aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema" -install
+------
+| n  |
+======
+| 32 |
+------
+```
 
 ### How can I publish my own Dataset?
 
