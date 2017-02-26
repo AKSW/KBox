@@ -1,7 +1,7 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.appel.KNSServerList;
-import org.aksw.kbox.appel.KNSServerListVisitor;
+import org.aksw.kbox.kns.KNSServerList;
+import org.aksw.kbox.kns.KNSServerListVisitor;
 
 public class KibeKNSServerList extends KNSServerList {
 	

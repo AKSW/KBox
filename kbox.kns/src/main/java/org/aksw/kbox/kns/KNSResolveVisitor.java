@@ -16,9 +16,9 @@ public class KNSResolveVisitor implements KNSServerListVisitor {
 		URL url = KNSTable.resolve(resourceURL, new URL(knsServer));
 		if(url != null) {
 			resolvedURL = url;
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	public URL getResolvedURL() {

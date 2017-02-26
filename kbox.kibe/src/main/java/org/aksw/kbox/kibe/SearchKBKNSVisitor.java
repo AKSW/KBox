@@ -1,6 +1,6 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.appel.KN;
+import org.aksw.kbox.kns.KN;
 
 public class SearchKBKNSVisitor extends KNSListVisitor {
 	

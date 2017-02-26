@@ -3,10 +3,10 @@ package org.aksw.kbox.kibe;
 import java.io.PrintStream;
 import java.net.URL;
 
-import org.aksw.kbox.appel.KN;
-import org.aksw.kbox.appel.KNSServerListVisitor;
-import org.aksw.kbox.appel.KNSSever;
-import org.aksw.kbox.appel.KNSVisitor;
+import org.aksw.kbox.kns.KN;
+import org.aksw.kbox.kns.KNSServerListVisitor;
+import org.aksw.kbox.kns.KNSSever;
+import org.aksw.kbox.kns.KNSVisitor;
 
 public class KNSListVisitor implements KNSVisitor, KNSServerListVisitor {
 

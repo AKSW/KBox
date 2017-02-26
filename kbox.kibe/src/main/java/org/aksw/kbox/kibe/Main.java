@@ -7,9 +7,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.aksw.kbox.appel.KNSServerList;
-import org.aksw.kbox.appel.KNSServerListVisitor;
-import org.aksw.kbox.appel.ServerAddress;
 import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
@@ -17,6 +14,9 @@ import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
+import org.aksw.kbox.kns.KNSServerList;
+import org.aksw.kbox.kns.KNSServerListVisitor;
+import org.aksw.kbox.kns.ServerAddress;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.query.ResultSet;

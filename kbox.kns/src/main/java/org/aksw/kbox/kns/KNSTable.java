@@ -78,8 +78,8 @@ public class KNSTable {
 					url = url.replace("/" + FILE_SERVER_TABLE_FILE_NAME, "");
 					kn = KN.parse(line);
 					kn.setKNS(url);
-					boolean keep = visitor.visit(kn);
-					if(!keep) {
+					boolean next = visitor.visit(kn);
+					if(!next) {
 						return false;
 					}
 				} catch (Exception e) {

@@ -7,15 +7,15 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.aksw.kbox.appel.KNSServerListVisitor;
-import org.aksw.kbox.appel.KNSTable;
-import org.aksw.kbox.appel.ServerAddress;
 import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.stream.InputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
+import org.aksw.kbox.kns.KNSServerListVisitor;
+import org.aksw.kbox.kns.KNSTable;
+import org.aksw.kbox.kns.ServerAddress;
 
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -25,7 +25,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class KBox extends org.aksw.kbox.appel.KBox {
+public class KBox extends org.aksw.kbox.kns.KBox {
 		
 	public final static String KB_COMMAND_SEPARATOR = ",";
 	
