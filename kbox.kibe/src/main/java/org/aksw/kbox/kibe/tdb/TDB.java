@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
-import org.aksw.kbox.kibe.ServerAddress;
+import org.aksw.kbox.appel.ServerAddress;
 
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Dataset;

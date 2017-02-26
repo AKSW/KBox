@@ -7,6 +7,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.aksw.kbox.appel.KNSSever;
 import org.aksw.kbox.kibe.tdb.TDBTest;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -38,13 +39,13 @@ public class KBoxTest {
 	public void testVisitKBs() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		MockKNSVisitor visitor = new MockKNSVisitor();
-		Main.visitKNS(serverURL, visitor);
+		KNSSever.visit(serverURL, visitor);
 		assertEquals(1, visitor.getKNSVisitedList().size());
 	}
 	
 	@Test
 	public void testResolveURLWithKBoxKNSService() throws Exception {
-		URL db = KBox.resolveURL(new URL("http://dbpedia.org/3.9/en/full"));
+		URL db = KBox.resolve(new URL("http://dbpedia.org/3.9/en/full"));
 		assertEquals(db.toString(), "http://vmdbpedia.informatik.uni-leipzig.de:3031/kbox.kb");
 	}
 	
@@ -125,49 +126,28 @@ public class KBoxTest {
 	@Test
 	public void testResolveKNS() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		URL fileURL = KBox.resolveURL(new URL("http://test.org"), serverURL);
+		URL fileURL = KBox.resolve(new URL("http://test.org"), serverURL);
 		assertEquals(fileURL.toString(), "http://target.org");
 	}
 	
 	@Test
 	public void listKNSServers() throws MalformedURLException, Exception {
-		Iterable<String> knsList = KBox.listAvailableKNS();
-		int i = 0;
-		for(@SuppressWarnings("unused") String knsServer : knsList) {
-			i++;
-		}
-		assertEquals(0, i);
+		MockKNSServerListVisitor mockKNSVisitor = new MockKNSServerListVisitor();
+		KBox.visitALLKNSServers(mockKNSVisitor);
+		assertEquals(1, mockKNSVisitor.getVisits());
 	}
 	
 	@Test
 	public void listKNSServers2() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
 		KBox.installKNS(serverURL);
-		Iterable<String> knsList = KBox.listAvailableKNS();
-		int i = 0;
-		for(String knsServer : knsList) {
-			assertEquals(knsServer, serverURL.toString());
-			i++;
-		}
-		assertEquals(1, i);
+		MockKNSServerListVisitor mockKNSVisitor = new MockKNSServerListVisitor();
+		KBox.visitALLKNSServers(mockKNSVisitor);
+		assertEquals(2, mockKNSVisitor.getVisits());
 		KBox.removeKNS(serverURL);
-		knsList = KBox.listAvailableKNS();
-		i=0;
-		for(String knsServer : knsList) {
-			assertEquals(knsServer, serverURL.toString());
-			i++;
-		}
-		assertEquals(0, i);
-	}
-	
-	@Test
-	public void installKNSServers() throws MalformedURLException, Exception {
-		Iterable<String> knsList = KBox.listAvailableKNS();
-		int i = 0;
-		for(@SuppressWarnings("unused") String knsServer : knsList) {
-			i++;
-		}
-		assertEquals(0, i);
+		mockKNSVisitor = new MockKNSServerListVisitor();
+		KBox.visitALLKNSServers(mockKNSVisitor);
+		assertEquals(1, mockKNSVisitor.getVisits());
 	}
 	
 }

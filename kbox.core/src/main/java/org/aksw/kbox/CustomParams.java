@@ -61,43 +61,29 @@ public class CustomParams implements Serializable {
 			db.close();
 		}
 	}
-	
-	public synchronized Iterable<String> iterable() {
-		final DB db = getDB();
-		final Iterator<String> internalIterator = getSet(db).iterator();		
 		
+	public synchronized void visit(CustomParamVisitor visitor) {
+		final DB db = getDB();
+		final Iterator<String> internalIterator = getSet(db).iterator();
 		Iterable<String> iterable = new Iterable<String>(
 				) {
 			
 			@Override
 			public Iterator<String> iterator() {
-				return new Iterator<String>() {
-
-					@Override
-					public boolean hasNext() {
-						boolean hasNext = internalIterator.hasNext();
-						if(!hasNext) {
-							db.commit();
-							db.close();
-						}
-						return hasNext;
-					}
-
-					@Override
-					public String next() {
-						return internalIterator.next();
-					}
-
-					@Override
-					public void remove() {
-						internalIterator.remove();
-					}
-				};
+				return internalIterator;
 			}
 		};
 		
-		return iterable;
-		
+		for(String param : iterable) {
+			try {
+				boolean keep = visitor.visit(param);
+				if(!keep) {
+					break;
+				}
+			} catch (Exception e) {
+			}			
+		}
+		db.close();
 	}
 	
 	private HTreeMap<String, String> getMap(DB db) {

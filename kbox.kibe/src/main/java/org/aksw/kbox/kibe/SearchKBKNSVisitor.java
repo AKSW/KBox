@@ -1,6 +1,8 @@
 package org.aksw.kbox.kibe;
 
-public class SearchKBKNSVisitor extends ListKNSVisitor {
+import org.aksw.kbox.appel.KN;
+
+public class SearchKBKNSVisitor extends KNSListVisitor {
 	
 	private String kbNamePattern = null;
 	
@@ -9,9 +11,10 @@ public class SearchKBKNSVisitor extends ListKNSVisitor {
 	}
 
 	@Override
-	public void visit(KN kn) {
+	public boolean visit(KN kn) {
 		if(kn.getName().contains(kbNamePattern)) {
 			print(System.out, kn);
 		}
+		return true;
 	}
 }

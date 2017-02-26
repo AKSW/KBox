@@ -1,4 +1,4 @@
-package org.aksw.kbox.kibe;
+package org.aksw.kbox.appel;
 
 public class ServerAddress {
 	

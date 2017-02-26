@@ -77,6 +77,27 @@ public class KBox {
 		path = path.substring(0, path.length() - 1);
 		return path;
 	}
+	
+	/**
+	 * Returns the local resource path of the give URL.
+	 * 
+	 * @param url the resource URL
+	 * @return the URL of the local resource path.
+	 */
+	public static File locate(URL url) throws Exception {
+		ResourceLocate locate = new ResourceLocate();
+		return locate(url, locate);
+	}
+	
+	/**
+	 * Returns the local resource path given by the locate.
+	 * 
+	 * @param url the resource URL
+	 * @return the local path of the resource.
+	 */
+	public static File locate(URL url, Locate locate) throws Exception  {
+		return locate.locate(url);
+	}
 
 	/**
 	 * Converts an URL to an absolute local path.
@@ -170,16 +191,20 @@ public class KBox {
 	 * 			occurs while creating the local mirror.
 	 */
 	public static File getResource(URL url, boolean install) throws Exception {
-		File resource = new File(URLToAbsolutePath(url));
-		if(resource.exists()) {
-			return resource;
-		} else if (!install) {			
-			return null;
-		}
-		try(InputStream is = url.openStream()) {
-			install(url.openStream(), url);
-		}
-		return resource;
+		ResourceLocate resourceLocate = new ResourceLocate();
+		ResourceInstall resourceInstall = new ResourceInstall();
+		return getResource(url, resourceLocate, resourceInstall, install);
+//		
+//		File resource = resourceLocate.locate(url);
+//		if(resource.exists()) {
+//			return resource;
+//		} else if (!install) {			
+//			return null;
+//		}
+//		try(InputStream is = url.openStream()) {
+//			install(url.openStream(), url);
+//		}
+//		return resource;
 	}
 
 	/**
@@ -201,11 +226,40 @@ public class KBox {
 	 */
 	public static File getResource(URL url, Install method, boolean install)
 			throws Exception {
-		File resource = new File(URLToAbsolutePath(url));
+		ResourceLocate resourceLocate = new ResourceLocate();
+		return getResource(url, resourceLocate, method, install);
+//		File resource = resourceLocate.locate(url);
+//		if (!install) {
+//			return resource;
+//		}
+//		install(url, url, method);
+//		return resource;
+	}
+	
+	/**
+	 * Get a local mirror of the remote resource or null 
+	 * if does not exist. 
+	 * If the flag install is set to true, returns a local copy 
+	 * of the resource if it already exists or create it otherwise.
+	 * 
+	 * @param url the remote URL of the resource to be retrieved.
+	 * @param install specify if the resource should be installed (true) or not
+	 *            (false).
+	 * @param method the method that will be used to install the resource in case
+	 *        it is not installed and install install param is set true.
+	 * 
+	 * @return a file pointing to a local copy of the resource.
+	 * 
+	 * @throws Exception if the resource can not be located or some error occurs
+	 *             while creating the local mirror.
+	 */
+	public static File getResource(URL url, Locate locateMethod, Install installMethod, boolean install)
+			throws Exception {
+		File resource = locateMethod.locate(url);
 		if (!install) {
 			return resource;
 		}
-		install(url, url, method);
+		install(url, url, installMethod);
 		return resource;
 	}
 

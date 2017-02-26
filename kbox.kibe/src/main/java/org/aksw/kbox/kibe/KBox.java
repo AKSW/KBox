@@ -1,23 +1,21 @@
 package org.aksw.kbox.kibe;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.aksw.kbox.CustomParams;
-import org.aksw.kbox.ZipInstall;
+import org.aksw.kbox.appel.KNSServerListVisitor;
+import org.aksw.kbox.appel.KNSTable;
+import org.aksw.kbox.appel.ServerAddress;
 import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.stream.InputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
-import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -27,116 +25,9 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class KBox extends org.aksw.kbox.KBox {
-
-	private final static Logger logger = Logger.getLogger(KBox.class);
-	
-	public final static String KNS_FILE_NAME = "kbox.kibe.kns";
-	public final static String CONTEXT_NAME = "kbox.kibe";
-
-	public final static String FILE_SERVER_TABLE_FILE_NAME = "table.kns";
-	public final static String KB_GRAPH_DIR_NAME = "kbox.kb";
-	
-	public final static String KB_COMMAND_SEPARATOR = ",";
-	
-	// Default KNS table URL
-	private final static String DEFAULT_KNS_TABLE_URL = "https://raw.github.com/AKSW/kbox/master";	
-	
-	/**
-	 * 
-	 * List all available Knowledge Name Services (KNS).
-	 * 
-	 * @return a Iterable containing all installed Knowledge Name Services.
-	 */
-	public static Iterable<String> listAvailableKNS() {
-		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
-				+ File.separator 
-				+ KBox.KNS_FILE_NAME,
-				KBox.CONTEXT_NAME);
-		return cs.iterable();
-	}
-	
-	/**
-	 * Install the given URL in your personal Knowledge Name Service.
-	 * This service will be used to Lookup Knowledge bases.
-	 * 
-	 * @param url the URL of the KNS (Knowledge Name Service)
-	 */
-	public static void installKNS(URL url) {
-		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
-				+ File.separator 
-				+ KBox.KNS_FILE_NAME, 
-				KBox.CONTEXT_NAME);
-		cs.add(url.toString());
-	}
-	
-	/**
-	 * Remove the given URL from your personal Knowledge Name Service.
-	 * 
-	 * @param url the URL of the KNS (Knowledge Name Service)
-	 */
-	public static void removeKNS(URL url) {
-		CustomParams cs = new CustomParams(KBox.KBOX_DIR 
-				+ File.separator 
-				+ KBox.KNS_FILE_NAME, 
-				KBox.CONTEXT_NAME);
-		cs.remove(url.toString());
-	}
+public class KBox extends org.aksw.kbox.appel.KBox {
 		
-	/**
-	 * Resolve the given URL in the available KNS.
-	 * The first KNS to be checked is the default KNS, 
-	 * thereafter the user's KNS.
-	 * 
-	 * @param resourceURL the URL to be resolved by the KNS.
-	 * @return the resolved URL.
-	 * @throws IOException if any error occurs during the operation.
-	 */
-	public static URL resolveURL(URL resourceURL) throws IOException {
-		URL url = resolveURL(resourceURL, new URL(DEFAULT_KNS_TABLE_URL));
-		if(url != null) {
-			return url;
-		}
-		Iterable<String> userKNSTableList = listAvailableKNS();
-		for(String knsServers : userKNSTableList) {
-			url = resolveURL(new URL(knsServers), resourceURL);
-			if(url != null) {
-				return url;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Resolve a given resource with by the given KNS service.
-	 * 
-	 * @param knsURL the URL of KNS server that will resolve the given URL.
-	 * @param resourceURL the URL of the resource that will be resolved by the given KNS service.
-	 * @return the resolved URL.
-	 * @throws IOException if any error occurs during the operation.
-	 */
-	public static URL resolveURL(URL resourceURL, URL knsURL) throws IOException {
-		URL tableURL = new URL(knsURL.toString() + "/" + FILE_SERVER_TABLE_FILE_NAME);
-		try(InputStream is = tableURL.openStream()) {
-			try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
-				String line = null;
-				while((line = in.readLine()) != null) {
-				    KN kns = null;
-					try {
-						if(!line.isEmpty()) {
-							kns = KN.parse(line);
-							if(kns.getName().equals(resourceURL.toString())) {
-							   return new URL(kns.getTarget());
-							}
-						}
-					} catch (Exception e) {
-						logger.error("KNS Table entry could not be parsed: " + line, e);
-					}
-				}
-			}
-		}
-		return null;
-	}
+	public final static String KB_COMMAND_SEPARATOR = ",";
 	
 	/**
 	 * Install the given knowledge base.
@@ -147,7 +38,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static void installKB(URL knowledgeGraph) throws Exception {
-		URL sourceURL = resolveURL(knowledgeGraph);
+		URL sourceURL = resolve(knowledgeGraph);
 		if(sourceURL == null) {
 			throw new KBNotFoundException("Knowledge base " + knowledgeGraph.toString() + " can not be resolved.");
 		}
@@ -162,10 +53,9 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @throws IOException 
 	 */
 	public static void installKB(InputStream source, URL target) throws Exception {
-		URL finalDest = new URL(target.toString() + "/" + KB_GRAPH_DIR_NAME);
-		install(source, finalDest, new ZipInstall());
+		install(source, target, new KBInstall());
 	}
-	
+
 	/**
 	 * Install a given index file in the given knowledge graph.
 	 * 
@@ -191,7 +81,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
 	 */
 	public static void installKBFromKNSServer(URL dataset, URL knsServer) throws KBNotFoundException, Exception {
-		URL file = resolveURL(dataset, knsServer);
+		URL file = KNSTable.resolve(dataset, knsServer);
 		if(file == null) {
 			throw new KBNotResolvedException(dataset.toString());
 		}
@@ -238,14 +128,13 @@ public class KBox extends org.aksw.kbox.KBox {
 		String[] knowledgeGraphsPaths = new String[urls.length];
 		int i = 0;
 		for(URL knowledgeGraph : urls) {
-			URL databaseURL = new URL(knowledgeGraph.toString() + "/" + KB_GRAPH_DIR_NAME);
-			File localDataset = getResource(databaseURL);
+			File localDataset = locateKB(knowledgeGraph);
 			if(localDataset == null && install) {
-				URL kbSource = resolveURL(knowledgeGraph);
+				URL kbSource = resolve(knowledgeGraph);
 				try(InputStream is = factory.get(kbSource)) {
 					installKB(is, knowledgeGraph);
 				}
-				localDataset = getResource(databaseURL);
+				localDataset = locateKB(knowledgeGraph);
 			} else if(localDataset == null){
 				KBNotFoundException e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + " does not exist."
 						+ " You can install it using the command install.");
@@ -266,7 +155,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @return a Model containing the Knowledge Graphs.
 	 * 
 	 * @throws Exception if some error occurs during the knowledge graph 
-	 *         dereference or model instatiation. 
+	 *         dereference or model instantiation. 
 	 */
 	public static Model createModel(URL... knowledgeGraphNames) throws Exception {
 		return createModel(true, new DefaultInputStreamFactory(), knowledgeGraphNames);
@@ -324,5 +213,47 @@ public class KBox extends org.aksw.kbox.KBox {
 	public static ResultSet slice(String sparql, URL... knowledgeGraphNames) throws Exception {
 		Model model = createModel(true, new DefaultInputStreamFactory(), knowledgeGraphNames);
 		return query(sparql, model);
+	}
+
+	/**
+	 * Returns the local Knowledge Graph directory.
+	 * 
+	 * @param url that will be used to locate the Knowledge Graph
+	 * 
+	 * @return the local mirror directory of the knowledge Graph.
+	 *  
+	 * @throws Exception if any error occurs while locating the Knowledge Graph. 
+	 */
+	public static File locateKB(URL url) throws Exception {
+		KBLocate kbLocate = new KBLocate();
+		return locate(url, kbLocate);
+	}
+	
+	/**
+	 * Resolve the given URL in the available KNS.
+	 * The first KNS to be checked is the default KNS, 
+	 * thereafter the user's KNS.
+	 * 
+	 * @param resourceURL the URL to be resolved by the KNS.
+	 * 
+	 * @return the resolved URL.
+	 * 
+	 * @throws IOException if any error occurs during the operation.
+	 */
+	public static URL resolve(URL resourceURL) throws Exception {
+		KibeKNSServerList kibeKNSServerList = new KibeKNSServerList();
+		return resolve(kibeKNSServerList, resourceURL);
+	}
+		
+	/**
+	 * Iterate over all available KNS services with a given visitor.
+	 * 
+	 * @param KNSVisitor an implementation of KNSVisitor.
+	 * 
+	 * @throws IOException if any error occurs during the operation.
+	 */
+	public static void visitALLKNSServers(KNSServerListVisitor visitor) throws Exception {
+		KibeKNSServerList kibeKNSServerList = new KibeKNSServerList();
+		kibeKNSServerList.visit(visitor);
 	}
 }

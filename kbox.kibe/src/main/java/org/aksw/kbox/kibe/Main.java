@@ -1,13 +1,15 @@
 package org.aksw.kbox.kibe;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.aksw.kbox.appel.KNSServerList;
+import org.aksw.kbox.appel.KNSServerListVisitor;
+import org.aksw.kbox.appel.ServerAddress;
 import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
@@ -39,9 +41,6 @@ public class Main {
 	
 	public final static String KB_COMMAND_SEPARATOR = ",";
 	
-	// Default KNS table URL
-	private final static String DEFAULT_KNS_TABLE_URL = "https://raw.github.com/AKSW/kbox/master";
-
 	// COMMANDS	
 	private final static String INSTALL_COMMAND = "-install";
 	private final static String KB_COMMAND = "-kb";
@@ -59,6 +58,7 @@ public class Main {
 	private final static String VERSION_COMMAND = "-version";
 	private final static String RESOURCE_DIR_COMMAND = "-r-dir";
 	private final static String SERVER_COMMAND_PORT = "-port";
+	private final static String LOCATE_COMMAND = "-locate";
 	private final static String SEVER_COMMAND_SUBDOMAIN = "-subDomain";
 
 	public static void main(String[] args) throws Exception {
@@ -110,7 +110,7 @@ public class Main {
 				commands.containsKey(KB_COMMAND)) {
 			String url = commands.get(KB_COMMAND);
 			URL kbNameURL = new URL(url);
-			URL kbURL = KBox.resolveURL(kbNameURL);
+			URL kbURL = KBox.resolve(kbNameURL);
 			if(kbURL == null) {
 				System.out.println("KB could not be located in the available KNS services.");
 			} else {
@@ -159,7 +159,7 @@ public class Main {
 					ResultSet rs = KBox.query(sparql, serverURL);
 					out(commands, rs);
 				} catch (QueryExceptionHTTP e) {
-					String message = "An error occurs while trying to connect to server:" + url+"." +
+					String message = "An error occurs while trying to connect to server:" + url + "." +
 							" Check the URL address and try again.";
 					System.out.println(message);
 					logger.error(message, e);
@@ -168,16 +168,20 @@ public class Main {
 		} else if (commands.containsKey(LIST_COMMAND) &&
 				commands.containsKey(KNS_COMMAND)) {
 			System.out.println("KNS table list");
-			Iterable<String> it = KBox.listAvailableKNS();
-			for(String knsServer : it) {
-				System.out.println("\t - " + knsServer);
-			}
+			KNSServerList knsServerList = new KNSServerList();
+			knsServerList.visit(new KNSServerListVisitor() {
+				@Override
+				public boolean visit(String knsServerURL) throws Exception {
+					System.out.println("\t - " + knsServerURL);
+					return false;
+				}
+			});
 		} else if (commands.containsKey(LIST_COMMAND) &&
 				!commands.containsKey(KNS_COMMAND)) {
 			System.out.println("Knowledge graphs table list");
-			ListKNSVisitor listAllVisitor = new ListKNSVisitor();
-			visitALLKNS(listAllVisitor);
-		} else if (commands.containsKey(REMOVE_COMMAND) && 
+			KNSListVisitor listAllVisitor = new KNSListVisitor();
+			KBox.visitALLKNSServers(listAllVisitor);
+		} else if (commands.containsKey(REMOVE_COMMAND) &&
 				commands.containsKey(KNS_COMMAND)) {
 			String knsURL = commands.get(REMOVE_COMMAND);
 			KBox.removeKNS(new URL(knsURL));
@@ -195,17 +199,38 @@ public class Main {
 				}
 			} else {
 				resourceDir = KBox.getResourceFolder();
-				System.out.println("Your current resource directory is: " + resourceDir);					
+				System.out.println("Your current resource directory is: " + resourceDir);
 			}			
 		} else if (commands.containsKey(SEARCH_COMMAND)) {
 			String pattern = commands.get(SEARCH_COMMAND);
 			SearchKBKNSVisitor searchVisitor = new SearchKBKNSVisitor(pattern);
-			visitALLKNS(searchVisitor);
+			KBox.visitALLKNSServers(searchVisitor);
 		} else if (commands.containsKey(INFO_COMMAND)) {
 			String graph = commands.get(INFO_COMMAND);
 			InfoKBKNSVisitor visitor = new InfoKBKNSVisitor(graph);
-			visitALLKNS(visitor);
-		} else if (commands.containsKey(SERVER_COMMAND) && commands.containsKey(GRAPH_COMMAND)) {
+			KBox.visitALLKNSServers(visitor);
+		} else if (commands.containsKey(LOCATE_COMMAND) &&
+				!commands.containsKey(KB_COMMAND)) {
+			String resourceURI = commands.get(LOCATE_COMMAND);
+			try {
+				System.out.println(org.aksw.kbox.KBox.getResource(new URL(resourceURI)));
+			} catch (Exception e) {
+				String message = "An error occurred while resolving the resource: " + resourceURI;
+				System.out.println(message);
+				logger.error(message, e);
+			}
+		} else if(commands.containsKey(LOCATE_COMMAND) && 
+				commands.containsKey(KB_COMMAND)) {			
+			String kbURI = commands.get(KB_COMMAND);
+			try {
+				System.out.println(KBox.locateKB(new URL(kbURI)));
+			} catch (Exception e) {
+				String message = "An error occurred while resolving the KB: " + kbURI;
+				System.out.println(message);
+				logger.error(message, e);
+			}		
+		} else if (commands.containsKey(SERVER_COMMAND) &&
+				commands.containsKey(GRAPH_COMMAND)) {
 			int port = 8080;
 			String subDomain = "kbox";
 			if(commands.containsKey(SERVER_COMMAND_PORT)) {
@@ -222,8 +247,9 @@ public class Main {
 				urls[i]  = new URL(graphNames[i]);
 			}
 			try {
+				System.out.println("Loading Model...");
 				Model model = KBox.createModel(install, new DefaultInputStreamFactory(), urls);
-				final String serverAddress = "http://localhost:" + port + "/" + subDomain + "/query";				
+				final String serverAddress = "http://localhost:" + port + "/" + subDomain + "/query";
 				Listener serverListener = new Listener() {
 					@Override
 					public void starting() {
@@ -237,9 +263,9 @@ public class Main {
 				Server server = new Server(port, KBox.getResourceFolder(), subDomain, model, serverListener);
 				server.start();
 			} catch (KBNotFoundException e) {
-				System.out.println("Error installing Knowledge Graphs.");
-				System.out.println("The Knowledge Graph could not be found.");
-				System.out.println("You can install it by executing the command -kb-install or "
+				System.out.println("Error installing Knowledge Graph: "
+						+ "The Knowledge Graph could not be found.");				
+				System.out.println("You can install it by executing the command -install -kb or "
 						+ "execute the query command adding -install paramenter.");
 				logger.error(e);
 			} catch (ServerStartException e) {
@@ -271,7 +297,7 @@ public class Main {
 		System.out.println("                              \t ps: the directory might contain only RDF compatible file formats.");
 		System.out.println("   * -sparql <query> (-graph <graph> | -server <URL>) [-install] [-json] \t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
 		System.out.println("                                               \t - ps: use -install in case you want to enable the auto-dereference.");	
-		System.out.println("   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default .)] -graph <graph> [-install] \t - Start an SPARQL enpoint in the given subDomain containing the given graphs.");
+		System.out.println("   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -graph <graph> [-install] \t - Start an SPARQL enpoint in the given subDomain containing the given graphs.");
 		System.out.println("   * -list \t - List all available KNS services and knowledge graphs.");
 		System.out.println("   * -list -kns\t - List all availables KNS services.");		
 		System.out.println("   * -install -kns <kns-URL> \t - Install a given KNS service.");
@@ -279,8 +305,10 @@ public class Main {
 		System.out.println("   * -install <URL> \t - Install a given resource in KBox.");
 		System.out.println("   * -install -kb <kb-URL>\t - Install a given knowledge graph using the available KNS services to resolve it.");
 		System.out.println("   * -install -kb <kb-URL> -index <indexFile> \t - Install a given index in a given knowledge graph URL.");
-		System.out.println("   * -install -kb <kb-URL> -kns <kns-URL> -kb\t - Install a knowledge graph from a a given KNS service.");		
+		System.out.println("   * -install -kb <kb-URL> -kns <kns-URL> \t - Install a knowledge graph from a a given KNS service.");
 		System.out.println("   * -info <kb-URL> \t - Gives the information about a specific KB.");
+		System.out.println("   * -locate <URL>\t - returns the local address of the given resource.");
+		System.out.println("   * -locate -kb <kb-URL>\t - returns the local address of the given KB.");		
 		System.out.println("   * -search <kb-URL-pattern> \t - Search for all kb-URL containing a given pattern.");
 		System.out.println("   * -r-dir <resourceDir>\t - Change the current path of the KBox resource container.");
 		System.out.println("   * -version \t - display KBox version.");
@@ -295,34 +323,6 @@ public class Main {
 	}
 	
 	/**
-	 * Iterate over all Knowledge Names (KNs) of a given Knowledge Name Service (KNS).
-	 * 
-	 * @param KNSVisitor an implementation of KNSVisitor.
-	 * 
-	 * @throws IOException if any error occurs during the operation.
-	 */
-	public static void visitKNS(URL knsURL, KNSVisitor visitor) throws IOException {
-		URL tableURL = new URL(knsURL.toString() + "/" + FILE_SERVER_TABLE_FILE_NAME);
-		KNSTable table = new KNSTable(tableURL);
-		table.visit(visitor);
-	}
-	
-	/**
-	 * Iterate over all available KNS services with a given visitor.
-	 * 
-	 * @param KNSVisitor an implementation of KNSVisitor.
-	 * 
-	 * @throws IOException if any error occurs during the operation.
-	 */
-	public static void visitALLKNS(KNSVisitor visitor) throws IOException {
-		Iterable<String> it = KBox.listAvailableKNS();
-		visitKNS(new URL(DEFAULT_KNS_TABLE_URL), visitor);
-		for(String knsServer : it) {
-			visitKNS(new URL(knsServer), visitor);
-		}
-	}
-
-	/**
 	 * Command line parser.
 	 * 
 	 * @param args a set o arguments received by command line
@@ -331,7 +331,7 @@ public class Main {
 	public static Map<String, String> parse(String[] args) {
 		Map<String, String> map = new HashMap<String, String>();
 		for(int i = 0; i < args.length ; i++) {
-			if(args[i].startsWith("-")) { // is a command				
+			if(args[i].startsWith("-")) { // is it a command				
 				if(i+1 < args.length && !args[i+1].startsWith("-")) {
 					map.put(args[i], args[i+1]);
 				} else {

@@ -9,6 +9,7 @@ import org.apache.jena.fuseki.server.ServerConfig;
 
 import com.hp.hpl.jena.query.ARQ;
 import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.DatasetGraph;
 import com.hp.hpl.jena.tdb.TDBFactory;
@@ -35,8 +36,7 @@ public class Server {
 		this.port = port;
 		this.subDomain = subDomain;
 		this.pagePath = pagePath;
-		Dataset dataset = TDBFactory.createDataset();
-		dataset.getDefaultModel().add(model);
+		Dataset dataset = DatasetFactory.create(model);
 		this.dsg = dataset.asDatasetGraph();
 		this.listener = listener;
 	}
@@ -45,38 +45,37 @@ public class Server {
 		this.port = port;
 		this.subDomain = subDomain;
 		this.pagePath = pagePath;
-		this.dsg = TDBFactory.createDatasetGraph(datasetPath);		
+		this.dsg = TDBFactory.createDatasetGraph(datasetPath);
 	}
 
 	public void start() throws ServerStartException {
-		String staticContentDir = pagePath + Fuseki.PagesStatic;		
-		ServerConfig serverConfig = FusekiConfig.defaultConfiguration(subDomain, dsg,
-					false, false);
-		
-		serverConfig.port = port;
-		serverConfig.pages = staticContentDir;
-		serverConfig.mgtPort = 9090;
-		serverConfig.pagesPort = port;
-		serverConfig.loopback = false;
-		serverConfig.enableCompression = true;
-		serverConfig.jettyConfigFile = null;
-		serverConfig.authConfigFile = null;
-		serverConfig.verboseLogging = false;
-
-		SPARQLServer server = new SPARQLServer(serverConfig);
-		Fuseki.setServer(server);
 		try {
 			listener.starting();
+			String staticContentDir = pagePath + Fuseki.PagesStatic;
+			ServerConfig serverConfig = FusekiConfig.defaultConfiguration(subDomain, dsg,
+						false, false);
+			
+			serverConfig.port = port;
+			serverConfig.pages = staticContentDir;
+			serverConfig.mgtPort = -1;
+			serverConfig.pagesPort = port;
+			serverConfig.loopback = false;
+			serverConfig.enableCompression = true;
+			serverConfig.jettyConfigFile = null;
+			serverConfig.authConfigFile = null;
+			serverConfig.verboseLogging = false;
+
+			SPARQLServer server = new SPARQLServer(serverConfig);
+			Fuseki.setServer(server);
 			server.start();
 			listener.started();
+			try {
+				server.getServer().join();
+			} catch (Exception e) {			
+			}
+			System.exit(0);		
 		} catch (FusekiException e) {
 			throw new ServerStartException("Failed to start the server.", e);
 		}
-
-		try {
-			server.getServer().join();
-		} catch (Exception e) {			
-		}
-		System.exit(0);
 	}
 }
