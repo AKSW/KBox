@@ -65,6 +65,8 @@ public class KN {
 		out.println("*****************************************************");
 		out.println("KNS:" + getKNS());
 		out.println("KB:" + getName());
-		out.println("DESC:" + getDesc());
+		if(getDesc() != null) {
+			out.println("DESC:" + getDesc());
+		}
 	}
 }

@@ -5,12 +5,18 @@ import java.net.URL;
 
 public class KNSSever {
 	
-	KNSTable table = null;
+	private KNSTable table = null;
 	
 	public KNSSever(URL url) throws Exception {
 		this.table = new KNSTable(url);
 	}
 	
+	/**
+	 * Iterate over all Knowledge Names (KNs).
+	 * 
+	 * @param visitor a KNSVisitor.
+	 * @throws IOException if any error occurs during the operation.
+	 */
 	public void visit(KNSVisitor visitor) throws IOException {
 		visit(table, visitor);
 	}
@@ -18,19 +24,21 @@ public class KNSSever {
 	/**
 	 * Iterate over all Knowledge Names (KNs) of a given Knowledge Name Service (KNS).
 	 * 
-	 * @param KNSVisitor an implementation of KNSVisitor.
+	 * @param knsServerURL a KNSTable URL.
+	 * @param visitor a KNSVisitor.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
 	public static void visit(URL knsServerURL, KNSVisitor visitor) throws IOException {
 		KNSTable table = new KNSTable(knsServerURL);
-		table.visit(visitor);
+		visit(table, visitor);
 	}
 	
 	/**
 	 * Iterate over all Knowledge Names (KNs) of a given Knowledge Name Service (KNS).
 	 * 
-	 * @param KNSVisitor an implementation of KNSVisitor.
+	 * @param table a KNSTable.
+	 * @param visitor a KNSVisitor.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */

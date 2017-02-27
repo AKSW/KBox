@@ -67,7 +67,7 @@ public class KNSTable {
 		return null;
 	}
 	
-	public boolean visit(KNSVisitor visitor) throws IOException {
+	public void visit(KNSVisitor visitor) throws IOException {
 		InputStream is = tableURL.openStream();
 		try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
 			String line = null;
@@ -80,13 +80,12 @@ public class KNSTable {
 					kn.setKNS(url);
 					boolean next = visitor.visit(kn);
 					if(!next) {
-						return false;
+						break;
 					}
 				} catch (Exception e) {
 					logger.error("KNS Table entry could not be parsed: " + line, e);
 				}
 			}
-			return true;
 		}
 	}
 }
