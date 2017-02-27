@@ -17,12 +17,7 @@ public class KNSListVisitor implements KNSVisitor, KNSServerListVisitor {
 	}
 	
 	public void print(PrintStream out, KN kn) {
-		out.println("*****************************************************");
-		out.println("KNS:" + kn.getKNS());
-		out.println("KB:" + kn.getName());
-		if(kn.getDesc() != null) {
-			out.println("DESC:" + kn.getDesc());
-		}
+		kn.print(out);
 	}
 
 	@Override
