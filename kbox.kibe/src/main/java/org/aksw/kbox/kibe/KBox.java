@@ -7,6 +7,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
@@ -54,6 +55,19 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static void installKB(InputStream source, URL target) throws Exception {
 		install(source, target, new KBInstall());
+	}
+	
+	/**
+	 * Install a given index file in the given knowledge graph.
+	 * 
+	 * @param source the URL of the index file to be installed.
+	 * @param target the URL of the knowledge graph whereas the index will be installed.
+	 * @param isFactory the InputStreamFactory.
+	 * 
+	 * @throws Exception if any error occurs during the indexing process.
+	 */
+	public static void installKB(URL source, URL target, InputStreamFactory isFactory) throws Exception {
+		install(source, target, new KBInstall(isFactory));
 	}
 
 	/**
@@ -112,29 +126,36 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @return a result set with the given query solution.
 	 * @throws Exception if any of the given knowledge graphs can not be found.
 	 */
-	public static ResultSet query(String sparql, boolean install, InputStreamFactory factory, URL... knowledgeGraphNames) throws Exception {
-		String[] knowledgeGraphsPaths = getResources(install, factory, knowledgeGraphNames);		
+	public static ResultSet query(String sparql, InputStreamFactory factory, boolean install, URL... knowledgeGraphNames) throws Exception {
+		String[] knowledgeGraphsPaths = getResources(factory, install, knowledgeGraphNames);
 		return TDB.query(sparql, knowledgeGraphsPaths);
 	}
 	
-	public static Model createModel(boolean install, InputStreamFactory factory, URL... knowledgeGraphNames) throws Exception {
-		String[] knowledgeGraphsPaths = getResources(install, factory, knowledgeGraphNames);
+	public static Model createModel(InputStreamFactory factory, boolean install, URL... knowledgeGraphNames) throws Exception {
+		String[] knowledgeGraphsPaths = getResources(factory, install, knowledgeGraphNames);
 		return TDB.createModel(knowledgeGraphsPaths);
 	}
 	
-	private static String[] getResources(boolean install, InputStreamFactory factory, URL... urls) throws Exception {
+	private static String[] getResources(InputStreamFactory factory, boolean install, URL... urls) throws Exception {
 		String[] knowledgeGraphsPaths = new String[urls.length];
 		int i = 0;
 		for(URL knowledgeGraph : urls) {
 			File localDataset = locateKB(knowledgeGraph);
 			if(localDataset == null && install) {
 				URL kbSource = resolve(knowledgeGraph);
+				if(kbSource == null) {
+					KBNotFoundException e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + 
+							" could not be found in any of the availables KNS servers.");
+					throw e;
+				}
 				try(InputStream is = factory.get(kbSource)) {
 					installKB(is, knowledgeGraph);
+				} catch (Exception e) {
+					throw new KBDereferencingException(knowledgeGraph.toString());
 				}
 				localDataset = locateKB(knowledgeGraph);
 			} else if(localDataset == null){
-				KBNotFoundException e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + " does not exist."
+				KBNotFoundException e = new KBNotFoundException("Knowledge graph " + knowledgeGraph.toString() + " is not installed."
 						+ " You can install it using the command install.");
 				throw e;
 			}
@@ -156,7 +177,24 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 *         dereference or model instantiation. 
 	 */
 	public static Model createModel(URL... knowledgeGraphNames) throws Exception {
-		return createModel(true, new DefaultInputStreamFactory(), knowledgeGraphNames);
+		return createModel(new DefaultInputStreamFactory(), true, knowledgeGraphNames);
+	}
+	
+	/**
+	 * Create a Model with a given Knowledge Graph Names.
+	 * 
+	 * 
+	 * @param install install a given knowledge graph in case it does not exist.
+	 * @param knowledgeGraphNames the Knowledge Graph Names to be queried.
+	 *        Warning: This method automatically dereference Knowledge Graphs. 
+	 * 
+	 * @return a Model containing the Knowledge Graphs.
+	 * 
+	 * @throws Exception if some error occurs during the knowledge graph 
+	 *         dereference or model instantiation. 
+	 */
+	public static Model createModel(boolean install, URL... knowledgeGraphNames) throws Exception {
+		return createModel(new DefaultInputStreamFactory(), install, knowledgeGraphNames);
 	}
 	
 	/**
@@ -195,7 +233,22 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any of the given knowledge graphs can not be found.
 	 */
 	public static ResultSet query(String sparql, URL... knowledgeGraphNames) throws Exception {
-		Model model = createModel(true, new DefaultInputStreamFactory(), knowledgeGraphNames);
+		Model model = createModel(new DefaultInputStreamFactory(), true, knowledgeGraphNames);
+		return query(sparql, model);
+	}
+	
+	/**
+	 * Query the given knowledge graphs.
+	 * 
+	 * @param sparql the SPARQL query.
+	 * @param install specify if the knowledge Graph should be installed (true) or not (false).
+	 * @param knowledgeGraphNames the Knowledge Graph Names to be queried.
+	 * 
+	 * @return a result set with the given query solution. 
+	 * @throws Exception if any of the given knowledge graphs can not be found.
+	 */
+	public static ResultSet query(String sparql, boolean install, URL... knowledgeGraphNames) throws Exception {
+		Model model = createModel(new DefaultInputStreamFactory(), install, knowledgeGraphNames);
 		return query(sparql, model);
 	}
 	
@@ -209,7 +262,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any of the given knowledge graphs can not be found.
 	 */
 	public static ResultSet slice(String sparql, URL... knowledgeGraphNames) throws Exception {
-		Model model = createModel(true, new DefaultInputStreamFactory(), knowledgeGraphNames);
+		Model model = createModel(new DefaultInputStreamFactory(), true, knowledgeGraphNames);
 		return query(sparql, model);
 	}
 

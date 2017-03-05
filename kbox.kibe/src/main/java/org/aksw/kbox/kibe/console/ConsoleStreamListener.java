@@ -97,17 +97,20 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	    	logCurrent = (int) (Math.log10(current));
 	    }
 	    int percent = (int) (current * 100 / total);
+	    int blocks = (percent*size/100);
+	    
 	    string
 	        .append('\r')
 	        .append(message)
 	        .append(StringUtils.join(Collections.nCopies(percent == 0 ? 2 : 2 - (int) (Math.log10(percent)), " "), ""))
 	        .append(String.format(" %d%% [", percent))
-	        .append(StringUtils.join(Collections.nCopies((percent/(percent/size)), "="), ""))
+	        .append(StringUtils.join(Collections.nCopies(blocks, "="), ""))
 	        .append('>')
-	        .append(StringUtils.join(Collections.nCopies(size-(percent/(percent/size)), " "), ""))
+	        .append(StringUtils.join(Collections.nCopies(size-(blocks), " "), ""))
 	        .append(']')
 	        .append(StringUtils.join(Collections.nCopies((int) (Math.log10(total)) - logCurrent, " "), ""))
 	        .append(String.format(" %d/%d, ETA: %s", current, total, etaHms));
+		
 	    System.out.print(string);
 	}
 	

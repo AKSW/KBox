@@ -1,7 +1,6 @@
 package org.aksw.kbox.kibe;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
+import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
@@ -86,9 +86,7 @@ public class Main {
 			File resourceFile = new File(resource);
 			URL file = resourceFile.toURI().toURL();
 			System.out.println("Installing KB " + kb2Install);
-			try(InputStream is = inputStreamFactory.get(file)) {
-				KBox.installKB(is, kbURL);
-			}
+			KBox.installKB(file, kbURL, inputStreamFactory);
 			System.out.println("KB installed.");
 		}  else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND) &&
@@ -115,9 +113,7 @@ public class Main {
 				System.out.println("KB could not be located in the available KNS services.");
 			} else {
 				System.out.println("Installing KB " + url);
-				try(InputStream is = inputStreamFactory.get(kbURL)) {
-					KBox.installKB(is, kbNameURL);
-				}
+				KBox.installKB(kbURL, kbNameURL, inputStreamFactory);				
 				System.out.println("KB installed.");
 			}
 		} else if(commands.containsKey(INSTALL_COMMAND) && 
@@ -140,13 +136,17 @@ public class Main {
 					urls[i]  = new URL(graphNames[i]);
 				}
 				try {
-					ResultSet rs = KBox.query(sparql, install, inputStreamFactory, urls);
+					ResultSet rs = KBox.query(sparql, inputStreamFactory, install, urls);
 					out(commands, rs);
 				} catch (KBNotFoundException e) {
 					System.out.println("Error exectuting query.");
-					System.out.println("The knowledge graph could not be found.");
-					System.out.println("You can install it by executing the command -kb-install or "
-							+ "execute the query command adding -install paramenter.");			
+					System.out.println(e.getMessage());
+				} catch (KBDereferencingException e) {					
+					String message = "Error exectuting query: " + sparql ;
+					System.out.println(message);
+					System.out.println(e.getMessage());
+					System.out.println("Contact our support at cbaron@informatik.uni-leipzig.de");
+					logger.error(message, e);
 				} catch (Exception e) {
 					String message = "Error exectuting query: " + sparql ;
 					System.out.println(message);
@@ -248,7 +248,7 @@ public class Main {
 			}
 			try {
 				System.out.println("Loading Model...");
-				Model model = KBox.createModel(install, new DefaultInputStreamFactory(), urls);
+				Model model = KBox.createModel(new DefaultInputStreamFactory(), install, urls);
 				final String serverAddress = "http://localhost:" + port + "/" + subDomain + "/query";
 				Listener serverListener = new Listener() {
 					@Override
