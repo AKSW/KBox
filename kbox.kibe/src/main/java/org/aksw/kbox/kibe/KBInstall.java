@@ -22,8 +22,12 @@ public class KBInstall extends AppZipInstall {
 	
 	@Override
 	public void install(URL source, URL dest) throws Exception {
-		try(InputStream is = isFactory.get(source)) {
-			install(is, dest);
+		if(isFactory != null) {
+			try(InputStream is = isFactory.get(source)) {
+				install(is, dest);
+			}
+		} else {
+			super.install(source, dest);
 		}
 	}
 }
