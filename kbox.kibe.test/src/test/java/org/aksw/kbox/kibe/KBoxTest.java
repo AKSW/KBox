@@ -27,6 +27,9 @@ public class KBoxTest {
 		KBox.installKB(indexFile.toURI().toURL(), new URL("http://dbpedia39"));
 		indexFile.deleteOnExit();
 		
+		KBox.installKB(indexFile.toURI().toURL(), new URL("http://dbpedia.org/3.9"));
+		indexFile.deleteOnExit();
+		
 		indexFile = File.createTempFile("knowledgebase","idx");		
 		url = TDBTest.class.getResource("/org/aksw/kbox/kibe/foaf.rdf");
 		filesToIndex[0] = url;		
@@ -46,7 +49,7 @@ public class KBoxTest {
 	@Test
 	public void testResolveURLWithKBoxKNSService() throws Exception {
 		URL db = KBox.resolve(new URL("http://dbpedia.org/3.9/en/full"));
-		assertEquals(db.toString(), "http://vmdbpedia.informatik.uni-leipzig.de:3031/kbox.kb");
+		assertEquals(db.toString(), "http://vmdbpedia.informatik.uni-leipzig.de:3031/dbpedia/3.9/kbox.kb");
 	}
 	
 	@Test
@@ -93,6 +96,18 @@ public class KBoxTest {
 	}
 	
 	@Test
+	public void testQueryInstalledKB2() throws Exception {
+		ResultSet rs = KBox.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
+				new URL("http://dbpedia.org/3.9"));
+		int i = 0;
+		while (rs != null && rs.hasNext()) {
+			rs.next();
+			i++;
+		}
+		assertEquals(19, i);
+	}
+	
+	@Test
 	public void testQueryInstalledKB() throws Exception {
 		ResultSet rs = KBox.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
 				new URL("http://dbpedia39"));
@@ -133,7 +148,7 @@ public class KBoxTest {
 	@Test
 	public void listKNSServers() throws MalformedURLException, Exception {
 		MockKNSServerListVisitor mockKNSVisitor = new MockKNSServerListVisitor();
-		KBox.visitALLKNSServers(mockKNSVisitor);
+		KBox.visit(mockKNSVisitor);
 		assertEquals(1, mockKNSVisitor.getVisits());
 	}
 	
@@ -142,11 +157,11 @@ public class KBoxTest {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
 		KBox.installKNS(serverURL);
 		MockKNSServerListVisitor mockKNSVisitor = new MockKNSServerListVisitor();
-		KBox.visitALLKNSServers(mockKNSVisitor);
+		KBox.visit(mockKNSVisitor);
 		assertEquals(2, mockKNSVisitor.getVisits());
 		KBox.removeKNS(serverURL);
 		mockKNSVisitor = new MockKNSServerListVisitor();
-		KBox.visitALLKNSServers(mockKNSVisitor);
+		KBox.visit(mockKNSVisitor);
 		assertEquals(1, mockKNSVisitor.getVisits());
 	}
 	

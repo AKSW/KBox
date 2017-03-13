@@ -27,8 +27,6 @@ import com.hp.hpl.jena.rdf.model.Model;
  *
  */
 public class KBox extends org.aksw.kbox.kns.KBox {
-		
-	public final static String KB_COMMAND_SEPARATOR = ",";
 	
 	/**
 	 * Install the given knowledge base.
@@ -289,7 +287,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @return the resolved URL.
 	 * 
-	 * @throws IOException if any error occurs during the operation.
+	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static URL resolve(URL resourceURL) throws Exception {
 		KibeKNSServerList kibeKNSServerList = new KibeKNSServerList();
@@ -303,7 +301,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static void visitALLKNSServers(KNSServerListVisitor visitor) throws Exception {
+	public static void visit(KNSServerListVisitor visitor) throws Exception {
 		KibeKNSServerList kibeKNSServerList = new KibeKNSServerList();
 		kibeKNSServerList.visit(visitor);
 	}

@@ -17,7 +17,7 @@ public class KNSListVisitor implements KNSVisitor, KNSServerListVisitor {
 	}
 	
 	public void print(PrintStream out, KN kn) {
-		kn.print(out);
+		kn.printURL(out);
 	}
 
 	@Override

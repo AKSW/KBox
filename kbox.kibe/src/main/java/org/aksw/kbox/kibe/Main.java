@@ -3,6 +3,7 @@ package org.aksw.kbox.kibe;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,6 @@ import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
-import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
@@ -37,8 +37,9 @@ public class Main {
 	public final static String CONTEXT_NAME = "kbox.kibe";
 
 	public final static String FILE_SERVER_TABLE_FILE_NAME = "table.kns";
-	public final static String KB_GRAPH_DIR_NAME = "kbox.kb";
+	public final static String KB_GRAPH_FILE_NAME = "kbox.kb";
 	
+	public final static String COMMAND_PRAGMA = "-";
 	public final static String KB_COMMAND_SEPARATOR = ",";
 	
 	// COMMANDS	
@@ -61,33 +62,51 @@ public class Main {
 	private final static String LOCATE_COMMAND = "-locate";
 	private final static String SEVER_COMMAND_SUBDOMAIN = "-subDomain";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		Map<String, String> commands = parse(args);
 		ConsoleIntallInputStreamFactory inputStreamFactory = new ConsoleIntallInputStreamFactory();
 		if(commands.containsKey(CREATE_INDEX_COMMAND)) {
 			String files = commands.get(CREATE_INDEX_COMMAND);
-			File indexFile = new File(KB_GRAPH_DIR_NAME);
+			File indexFile = new File(KB_GRAPH_FILE_NAME);
 			System.out.println("Creating index.");
-			KBox.createIndex(indexFile, filePathsToURLs(new File(files).listFiles()));
-			System.out.println("Index created.");
+			try {
+				KBox.createIndex(indexFile, filePathsToURLs(new File(files).listFiles()));
+				System.out.println("Index created.");
+			} catch (Exception e) {
+				String message = "An error occurred while creating the index: " + e.getMessage();
+				System.out.println(message);
+				logger.error(message, e);
+			}
 		} else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.size() == 1) {
 			String resource = commands.get(GRAPH_COMMAND);
-			URL url = new URL(resource);
-			System.out.println("Installing resource " + resource);
-			KBox.install(url);
-			System.out.println("Resource installed.");
+			try {
+				URL url = new URL(resource);
+				System.out.println("Installing resource " + resource);
+				KBox.install(url);
+				System.out.println("Resource installed.");
+			} catch (Exception e) {
+				String message = "Error installing the resource " + resource +": " + e.getMessage();
+				System.out.println(message);
+				logger.error(message, e);
+			}
 		} else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND) && 
 				commands.containsKey(INDEX_COMMAND)) {
 			String kb2Install = commands.get(KB_COMMAND);
-			URL kbURL = new URL(kb2Install);
-			String resource = commands.get(INDEX_COMMAND);
-			File resourceFile = new File(resource);
-			URL file = resourceFile.toURI().toURL();
-			System.out.println("Installing KB " + kb2Install);
-			KBox.installKB(file, kbURL, inputStreamFactory);
-			System.out.println("KB installed.");
+			try {
+				URL kbURL = new URL(kb2Install);
+				String resource = commands.get(INDEX_COMMAND);
+				File resourceFile = new File(resource);
+				URL file = resourceFile.toURI().toURL();
+				System.out.println("Installing KB " + kb2Install);
+				KBox.installKB(file, kbURL, inputStreamFactory);
+				System.out.println("KB installed.");
+			} catch (Exception e) {
+				String message = "Error installing the knowledge base " + kb2Install +": " + e.getMessage();
+				System.out.println(message);
+				logger.error(message, e);
+			}
 		}  else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND) &&
 				commands.containsKey(KNS_COMMAND)) {
@@ -96,6 +115,9 @@ public class Main {
 			System.out.println("Installing KB " + kbURL + " from KNS " + knsServer);
 			try{
 				KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer));
+			} catch (MalformedURLException e){
+				System.out.println(e.getMessage());
+				logger.error(e);
 			} catch (KBNotResolvedException e) {
 				System.out.println("The knowledge base " + kbURL + " is not available in " + knsServer);								
 			} catch (Exception e) {
@@ -107,22 +129,37 @@ public class Main {
 		} else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND)) {
 			String url = commands.get(KB_COMMAND);
-			URL kbNameURL = new URL(url);
-			URL kbURL = KBox.resolve(kbNameURL);
-			if(kbURL == null) {
-				System.out.println("KB could not be located in the available KNS services.");
-			} else {
-				System.out.println("Installing KB " + url);
-				KBox.installKB(kbURL, kbNameURL, inputStreamFactory);				
-				System.out.println("KB installed.");
-			}
+			try {
+				URL kbNameURL = new URL(url);
+				URL kbURL = KBox.resolve(kbNameURL);
+				if(kbURL == null) {
+					System.out.println("KB could not be located in the available KNS services.");
+				} else {
+					System.out.println("Installing KB " + url);
+					KBox.installKB(kbURL, kbNameURL, inputStreamFactory);				
+					System.out.println("KB installed.");
+				}
+			} catch (KBNotResolvedException e) {
+				System.out.println("The knowledge base " + url + " could not be found.");							
+			} catch (MalformedURLException e){
+				System.out.println(e.getMessage());
+				logger.error(e);
+			} catch (Exception e) {
+				String message =  "An error occurred while installing the knowledge base " + url + ": " + e.getMessage();
+				System.out.println(message);				
+			} 
 		} else if(commands.containsKey(INSTALL_COMMAND) && 
 				commands.containsKey(KNS_COMMAND)) {
 			String url = commands.get(KNS_COMMAND);
-			URL knsURL = new URL(url);
-			System.out.println("Installing KNS " + url);
-			KBox.installKNS(knsURL);
-			System.out.println("KNS installed.");
+			try {
+				URL knsURL = new URL(url);
+				System.out.println("Installing KNS " + url);
+				KBox.installKNS(knsURL);
+				System.out.println("KNS installed.");
+			} catch (MalformedURLException e){
+				System.out.println(e.getMessage());
+				logger.error(e);
+			} 
 		} else if (commands.containsKey(SPARQL_QUERY_COMMAND) &&
 				(commands.containsKey(GRAPH_COMMAND) ||
 				commands.containsKey(SERVER_COMMAND))) {
@@ -132,23 +169,14 @@ public class Main {
 				String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
 				boolean install = commands.containsKey(INSTALL_COMMAND);
 				URL[] urls = new URL[graphNames.length];
-				for(int i=0; i < graphNames.length; i++) {
-					urls[i]  = new URL(graphNames[i]);
-				}
 				try {
+					for(int i=0; i < graphNames.length; i++) {
+						urls[i]  = new URL(graphNames[i]);
+					}				
 					ResultSet rs = KBox.query(sparql, inputStreamFactory, install, urls);
 					out(commands, rs);
-				} catch (KBNotFoundException e) {
-					System.out.println("Error exectuting query.");
-					System.out.println(e.getMessage());
-				} catch (KBDereferencingException e) {					
-					String message = "Error exectuting query: " + sparql ;
-					System.out.println(message);
-					System.out.println(e.getMessage());
-					System.out.println("Contact our support at cbaron@informatik.uni-leipzig.de");
-					logger.error(message, e);
 				} catch (Exception e) {
-					String message = "Error exectuting query: " + sparql ;
+					String message = "Error exectuting query '" + sparql + "': " + e.getMessage();
 					System.out.println(message);
 					logger.error(message, e);
 				}
@@ -156,11 +184,15 @@ public class Main {
 				String url = commands.get(SERVER_COMMAND);
 				ServerAddress serverURL = new ServerAddress(url);
 				try {
-					ResultSet rs = KBox.query(sparql, serverURL);
+					ResultSet rs = KBox.query(sparql, serverURL);					
 					out(commands, rs);
 				} catch (QueryExceptionHTTP e) {
 					String message = "An error occurs while trying to connect to server:" + url + "." +
 							" Check the URL address and try again.";
+					System.out.println(message);
+					logger.error(message, e);
+				} catch (Exception e) {
+					String message = "An error occurred while querying the server: " + url;
 					System.out.println(message);
 					logger.error(message, e);
 				}
@@ -169,23 +201,45 @@ public class Main {
 				commands.containsKey(KNS_COMMAND)) {
 			System.out.println("KNS table list");
 			KNSServerList knsServerList = new KNSServerList();
-			knsServerList.visit(new KNSServerListVisitor() {
-				@Override
-				public boolean visit(String knsServerURL) throws Exception {
-					System.out.println("\t - " + knsServerURL);
-					return false;
-				}
-			});
+			try {
+				knsServerList.visit(new KNSServerListVisitor() {
+					@Override
+					public boolean visit(String knsServerURL) throws Exception {
+						System.out.println("\t - " + knsServerURL);
+						return false;
+					}
+				});
+			} catch (Exception e) {
+				String message = "An error occurred while listing the available knowledge bases: " + e.getCause().getMessage();
+				System.out.println(message);
+				logger.error(message, e);
+			}
 		} else if (commands.containsKey(LIST_COMMAND) &&
 				!commands.containsKey(KNS_COMMAND)) {
 			System.out.println("Knowledge graphs table list");
 			KNSListVisitor listAllVisitor = new KNSListVisitor();
-			KBox.visitALLKNSServers(listAllVisitor);
+			try {
+				KBox.visit(listAllVisitor);
+			} catch (UnknownHostException e) {
+				String message = "An error occurred while listing the available KGs. Check your connection.";
+				System.out.println(message);
+				logger.error(message, e);
+			} catch (Exception e) {
+				String message = "An error occurred while listing the available KGs: " + e.getMessage();
+				System.out.println(message);
+				logger.error(message, e);
+			}
 		} else if (commands.containsKey(REMOVE_COMMAND) &&
 				commands.containsKey(KNS_COMMAND)) {
 			String knsURL = commands.get(REMOVE_COMMAND);
-			KBox.removeKNS(new URL(knsURL));
-			System.out.println("KNS removed.");
+			try {
+				KBox.removeKNS(new URL(knsURL));			
+				System.out.println("KNS removed.");
+			} catch (Exception e) {
+				String message = "An error occurred while removing the KNS: " + knsURL + ".";
+				System.out.println(message);
+				logger.error(message, e);
+			}
 		} else if (commands.containsKey(RESOURCE_DIR_COMMAND)) {
 			String resourceDir = commands.get(RESOURCE_DIR_COMMAND);
 			if(resourceDir != null) {
@@ -204,11 +258,23 @@ public class Main {
 		} else if (commands.containsKey(SEARCH_COMMAND)) {
 			String pattern = commands.get(SEARCH_COMMAND);
 			SearchKBKNSVisitor searchVisitor = new SearchKBKNSVisitor(pattern);
-			KBox.visitALLKNSServers(searchVisitor);
+			try {
+				KBox.visit(searchVisitor);
+			} catch (Exception e) {
+				String message = "An error occurs while enquiring searching using the pattern: " + pattern;
+				System.out.println(message);
+				logger.error(message, e);
+			}	
 		} else if (commands.containsKey(INFO_COMMAND)) {
 			String graph = commands.get(INFO_COMMAND);
 			InfoKBKNSVisitor visitor = new InfoKBKNSVisitor(graph);
-			KBox.visitALLKNSServers(visitor);
+			try {
+				KBox.visit(visitor);
+			} catch (Exception e) {
+				String message = "An error occurs while enquiring information from the graph " + graph;
+				System.out.println(message);
+				logger.error(message, e);
+			}
 		} else if (commands.containsKey(LOCATE_COMMAND) &&
 				!commands.containsKey(KB_COMMAND)) {
 			String resourceURI = commands.get(LOCATE_COMMAND);
@@ -243,10 +309,10 @@ public class Main {
 			String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
 			boolean install = commands.containsKey(INSTALL_COMMAND);
 			URL[] urls = new URL[graphNames.length];
-			for(int i=0; i < graphNames.length; i++) {
-				urls[i]  = new URL(graphNames[i]);
-			}
 			try {
+				for(int i=0; i < graphNames.length; i++) {
+					urls[i]  = new URL(graphNames[i]);
+				}			
 				System.out.println("Loading Model...");
 				Model model = KBox.createModel(new DefaultInputStreamFactory(), install, urls);
 				final String serverAddress = "http://localhost:" + port + "/" + subDomain + "/query";
@@ -274,6 +340,9 @@ public class Main {
 						+ "application or if the parameters are valid.";
 				System.out.println(message);
 				logger.error(message, e);
+			} catch (MalformedURLException e){
+				System.out.println(e.getMessage());
+				logger.error(e);
 			} catch (Exception e) {
 				String message = "Error installing the Knowledge Graphs." ;
 				System.out.println(message);
@@ -331,8 +400,8 @@ public class Main {
 	public static Map<String, String> parse(String[] args) {
 		Map<String, String> map = new HashMap<String, String>();
 		for(int i = 0; i < args.length ; i++) {
-			if(args[i].startsWith("-")) { // is it a command				
-				if(i+1 < args.length && !args[i+1].startsWith("-")) {
+			if(args[i].startsWith(COMMAND_PRAGMA)) { // is it a command				
+				if(i+1 < args.length && !args[i+1].startsWith(COMMAND_PRAGMA)) {
 					map.put(args[i], args[i+1]);
 				} else {
 					map.put(args[i], null);

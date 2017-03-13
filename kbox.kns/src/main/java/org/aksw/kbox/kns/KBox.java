@@ -35,7 +35,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * 
 	 * @return the resolved URL.
 	 * 
-	 * @throws IOException if any error occurs during the operation.
+	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static URL resolve(KNSServerList knsServerList, URL resourceURL) throws Exception {
 		KNSResolveVisitor resolveVisitor = new KNSResolveVisitor(resourceURL);

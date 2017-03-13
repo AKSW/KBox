@@ -12,10 +12,20 @@ public class KN {
 	private String target;
 	private String desc;
 	private String kns;
+	private String license;
+	private String subsets;
 	
 	public KN(String name, String target, String desc) {
 		this.name = name;
 		this.target = target;
+		this.desc = desc;
+	}
+	
+	public KN(String name, String target, String license, String subsets, String desc) {
+		this.name = name;
+		this.target = target;
+		this.license = license;
+		this.subsets = subsets;
 		this.desc = desc;
 	}
 	
@@ -41,8 +51,18 @@ public class KN {
 		JSONObject jsonObject = (JSONObject) jsonParser.parse(stringReader);
 		String name = (String) jsonObject.get("name");
 		String target = (String) jsonObject.get("target");
-		String desc = (String) jsonObject.get("desc");
-		return new KN(name, target, desc);
+		String desc = (String) jsonObject.get("description");
+		Object o = jsonObject.get("license");
+		String license = null;
+		if(o!= null) {
+			license = o.toString().replace("\\", "");
+		}		
+		o = jsonObject.get("subsets");
+		String subsets = null;
+		if(o != null) {
+			subsets = o.toString().replace("\\", "");
+		}
+		return new KN(name, target, license, subsets, desc);
 	}
 	
 	public void setDesc(String desc) {
@@ -61,12 +81,41 @@ public class KN {
 		return this.kns;
 	}
 	
+	public String getLicense() {
+		return license;
+	}
+	
+	public void setLicense(String license) {
+		this.license = license;
+	}
+
+	public String getSubsets() {
+		return subsets;
+	}
+	
+	public void setSubsets(String subsets) {
+		this.subsets = subsets;
+	}
+	
 	public void print(PrintStream out) {
 		out.println("*****************************************************");
 		out.println("KNS:" + getKNS());
 		out.println("KB:" + getName());
-		if(getDesc() != null) {
-			out.println("DESC:" + getDesc());
+		String description = getDesc();
+		String subsets = getSubsets();
+		String license = getLicense();
+		if(subsets != null) {
+			out.println("Subsets:" + subsets);
 		}
+		if(license != null) {
+			out.println("License:" + license);
+		}
+		if(description != null) {
+			out.println("Description:" + description);
+		}		
+	}
+
+	public void printURL(PrintStream out) {
+		out.println(getName());
 	}
 }

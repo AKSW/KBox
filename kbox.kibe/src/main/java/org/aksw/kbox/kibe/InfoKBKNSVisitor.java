@@ -13,7 +13,7 @@ public class InfoKBKNSVisitor extends KNSListVisitor {
 	@Override
 	public boolean visit(KN kn) {
 		if(kn.getName().equals(kbName)) {
-			print(System.out, kn);
+			kn.print(System.out);
 		}
 		return true;
 	}
