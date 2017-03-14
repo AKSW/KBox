@@ -144,7 +144,7 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}",
 ```
 You might want to setup the model before start to execute multiple queries on it:
 ```
-Model model = KBox.createModel("https://www.w3.org/2000/01/rdf-schema", 
+Model model = KBox.createModel(new URL("https://www.w3.org/2000/01/rdf-schema"),
                    new URL("http://xmlns.com/foaf/0.1"));
 KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 ```
