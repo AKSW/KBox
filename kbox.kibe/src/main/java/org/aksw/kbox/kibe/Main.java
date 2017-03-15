@@ -53,7 +53,6 @@ public class Main {
 	private final static String LIST_COMMAND = "-list";
 	private final static String SPARQL_QUERY_COMMAND = "-sparql";
 	private final static String SPARQL_QUERY_JSON_OUTPUT_FORMAT_COMMAND = "-json";
-	private final static String GRAPH_COMMAND = "-graph";
 	private final static String INDEX_COMMAND = "-index";
 	private final static String INFO_COMMAND = "-info";
 	private final static String SEARCH_COMMAND = "-search";
@@ -94,7 +93,7 @@ public class Main {
 			}
 		} else if(commands.containsKey(INSTALL_COMMAND) &&
 				commands.size() == 1) {
-			String resource = commands.get(GRAPH_COMMAND);
+			String resource = commands.get(INSTALL_COMMAND);
 			try {				
 				System.out.println("Installing resource " + resource);
 				URL url = new URL(resource);
@@ -188,10 +187,10 @@ public class Main {
 				logger.error(e);
 			} 
 		} else if (commands.containsKey(SPARQL_QUERY_COMMAND) &&
-				(commands.containsKey(GRAPH_COMMAND) ||
+				(commands.containsKey(KB_COMMAND) ||
 				commands.containsKey(SERVER_COMMAND))) {
 			String sparql = commands.get(SPARQL_QUERY_COMMAND);
-			String graphNamesList = commands.get(GRAPH_COMMAND);
+			String graphNamesList = commands.get(KB_COMMAND);
 			if(graphNamesList != null) {
 				String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
 				boolean install = commands.containsKey(INSTALL_COMMAND);				 
@@ -330,7 +329,7 @@ public class Main {
 				logger.error(message, e);
 			}		
 		} else if (commands.containsKey(SERVER_COMMAND) &&
-				commands.containsKey(GRAPH_COMMAND)) {
+				commands.containsKey(KB_COMMAND)) {
 			int port = 8080;
 			String subDomain = "kbox";
 			if(commands.containsKey(SERVER_COMMAND_PORT)) {
@@ -339,7 +338,7 @@ public class Main {
 			if(commands.containsKey(SEVER_COMMAND_SUBDOMAIN)) {
 				subDomain = commands.get(SEVER_COMMAND_SUBDOMAIN);
 			}			
-			String graphNamesList = commands.get(GRAPH_COMMAND);
+			String graphNamesList = commands.get(KB_COMMAND);
 			String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
 			boolean install = commands.containsKey(INSTALL_COMMAND);
 			URL[] urls = new URL[graphNames.length];
@@ -399,9 +398,9 @@ public class Main {
 		System.out.println("   * -createIndex <directory> \t - Create an index with the files in a given directory.");
 		System.out.println("                              \t ps: the directory might contain only RDF compatible file formats.");
 		System.out.println("   * -serialize <directory> \t - Serialize the content of a directory to be served in a KNS system.");
-		System.out.println("   * -sparql <query> (-graph <graph> | -server <URL>) [-install] [-json] \t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
+		System.out.println("   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json] \t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
 		System.out.println("                                               \t - ps: use -install in case you want to enable the auto-dereference.");	
-		System.out.println("   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -graph <graph> [-install] \t - Start an SPARQL enpoint in the given subDomain containing the given graphs.");
+		System.out.println("   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install] \t - Start an SPARQL enpoint in the given subDomain containing the given graphs.");
 		System.out.println("   * -list \t - List all available KNS services and knowledge graphs.");
 		System.out.println("   * -list -kns\t - List all availables KNS services.");	
 		System.out.println("   * -install <URL> \t - Install a given resource in KBox.");

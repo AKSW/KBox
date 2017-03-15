@@ -64,6 +64,8 @@ public class KN {
 		String name = (String) jsonObject.get("name");
 		String target = (String) jsonObject.get("target");
 		String desc = (String) jsonObject.get("description");
+		String version = (String) jsonObject.get("version");
+		String format = (String) jsonObject.get("format");		
 		Object o = jsonObject.get("license");
 		String license = null;
 		if(o != null) {
@@ -74,7 +76,7 @@ public class KN {
 		if(o != null) {
 			subsets = o.toString().replace("\\", "");
 		}
-		return new KN(name, target, license, subsets, desc);
+		return new KN(name, target, format, version, license, subsets, desc);
 	}
 	
 	public void setDesc(String desc) {
