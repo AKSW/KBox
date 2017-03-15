@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.aksw.kbox.kibe.stream.InputStreamFactory;
+import org.aksw.kbox.InputStreamFactory;
 import org.aksw.kbox.kibe.stream.InputStreamInstaller;
 
 public class ConsoleIntallInputStreamFactory implements InputStreamFactory {

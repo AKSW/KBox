@@ -9,10 +9,25 @@ import java.nio.channels.ReadableByteChannel;
 
 public abstract class AbstractInstall implements Install, Locator {
 	
+	private InputStreamFactory isFactory = null;
+	
+	public AbstractInstall() {		
+	}
+	
+	public AbstractInstall(InputStreamFactory isFactory) {
+		this.isFactory = isFactory;
+	}
+	
 	@Override
 	public void install(URL source, URL dest) throws Exception {
-		try(InputStream is = source.openStream()) {
-			install(source.openStream(), dest);
+		if(isFactory == null) {
+			try(InputStream is = source.openStream()) {
+				install(source.openStream(), dest);
+			}
+		} else {
+			try(InputStream is = isFactory.get(source)) {
+				install(source.openStream(), dest);
+			}
 		}
 	}
 

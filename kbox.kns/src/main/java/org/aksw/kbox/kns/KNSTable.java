@@ -45,6 +45,22 @@ public class KNSTable {
 	 * @throws IOException if any error occurs during the operation.
 	 */
 	public static URL resolve(URL resourceURL, URL knsServerURL) throws IOException {
+		return resolve(resourceURL, knsServerURL, null, null);
+	}
+	
+	/**
+	 * Resolve a given resource with by the given KNS service.
+	 * 
+	 * @param knsServerURL the URL of KNS server that will resolve the given URL.
+	 * @param resourceURL the URL of the resource that will be resolved by the given KNS service.
+	 * @param format the KB format. 
+	 * @param version the KB version.
+	 * 
+	 * @return the resolved URL.
+	 * 
+	 * @throws IOException if any error occurs during the operation.
+	 */
+	public static URL resolve(URL resourceURL, URL knsServerURL, String format, String version) throws IOException {
 		URL tableURL = new URL(knsServerURL.toString() + "/" + FILE_SERVER_TABLE_FILE_NAME);
 		try(InputStream is = tableURL.openStream()) {
 			try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
@@ -54,7 +70,7 @@ public class KNSTable {
 					try {
 						if(!line.isEmpty()) {
 							kns = KN.parse(line);
-							if(kns.getName().equals(resourceURL.toString())) {
+							if(kns.equals(resourceURL.toString(), format, version)) {
 							   return new URL(kns.getTarget());
 							}
 						}

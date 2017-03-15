@@ -1,4 +1,4 @@
-package org.aksw.kbox;
+package org.aksw.kbox.utils;
 
 /**
  * 

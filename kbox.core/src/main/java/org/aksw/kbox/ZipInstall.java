@@ -12,7 +12,15 @@ import org.aksw.kbox.utils.ZIPUtil;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class ZipInstall extends ResourceInstall {	
+public class ZipInstall extends ResourceInstall {
+	
+	public ZipInstall() {
+	}
+	
+	public ZipInstall(InputStreamFactory isFactory) {
+		super(isFactory);
+	}
+	
 	@Override
 	public void install(InputStream resource, URL target) throws Exception {
 		File destPath = new File(URLToAbsolutePath(target));

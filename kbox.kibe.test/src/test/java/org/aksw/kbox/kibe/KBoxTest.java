@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.aksw.kbox.kibe.tdb.TDBTest;
+import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSSever;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -44,6 +45,36 @@ public class KBoxTest {
 		MockKNSVisitor visitor = new MockKNSVisitor();
 		KNSSever.visit(serverURL, visitor);
 		assertEquals(1, visitor.getKNSVisitedList().size());
+	}
+	
+	@Test
+	public void testKNEquals() throws Exception {
+		KN kn = new KN("teste", "a", "b", null, null, null, null);
+		assertTrue(kn.equals("teste"));
+	}
+	
+	@Test
+	public void testKNEqualsWithFormat() throws Exception {
+		KN kn = new KN("teste", "a", "b", "c", null, null, null);
+		assertTrue(kn.equals("teste","b", "c"));
+	}
+	
+	@Test
+	public void testKNEqualsWithFormatWithNull1() throws Exception {
+		KN kn = new KN("teste", "a", "b", "d", null, null, null);
+		assertTrue(!kn.equals("teste","b", "e"));
+	}
+	
+	@Test
+	public void testKNEqualsWithFormatWithNull2() throws Exception {
+		KN kn = new KN("teste", "a", "b", "c", null, null, null);
+		assertTrue(kn.equals("teste","b", null));
+	}
+	
+	@Test
+	public void testKNEqualsWithFormatWithNull3() throws Exception {
+		KN kn = new KN("teste", "a", "b", "c", null, null, null);
+		assertTrue(!kn.equals("teste", "b", "d"));
 	}
 	
 	@Test

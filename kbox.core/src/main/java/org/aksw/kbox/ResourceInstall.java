@@ -9,11 +9,17 @@ import java.net.URL;
  *
  */
 public class ResourceInstall extends AbstractInstall {
+	
+	public ResourceInstall() {		
+	}
+	
+	public ResourceInstall(InputStreamFactory isFactory) {
+		super(isFactory);
+	}
 
 	@Override
 	public String URLToAbsolutePath(URL url) {
 		return KBox.URLToAbsolutePath(url);
-	}
-	
+	}	
 
 }

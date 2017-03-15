@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
 
+import org.aksw.kbox.utils.ArrayUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -217,12 +218,6 @@ public class KBox {
 			throws Exception {
 		ResourceLocate resourceLocate = new ResourceLocate();
 		return getResource(url, resourceLocate, method, install);
-//		File resource = resourceLocate.locate(url);
-//		if (!install) {
-//			return resource;
-//		}
-//		install(url, url, method);
-//		return resource;
 	}
 	
 	/**

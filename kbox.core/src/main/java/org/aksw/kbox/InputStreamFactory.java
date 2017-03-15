@@ -1,4 +1,4 @@
-package org.aksw.kbox.kibe.stream;
+package org.aksw.kbox;
 
 import java.io.InputStream;
 import java.net.URL;
