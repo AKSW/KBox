@@ -2,6 +2,7 @@ package org.aksw.kbox;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
@@ -25,6 +26,8 @@ public class KBox {
 	public final static String KBOX_CONFIG_FILE = ".config";
 	public final static String KBOX_DIR = System.getProperty("user.home")
 			+ File.separator + KBOX_FOLDER;
+	
+	private static final String CHK = ".chk";
 
 	private final static Logger logger = Logger.getLogger(KBox.class);
 
@@ -407,5 +410,19 @@ public class KBox {
 	 */
 	public static void installFromZip(URL source) throws Exception {
 		installFromZip(source, source);
+	}
+	
+	public static void check(File dir) throws IOException {
+		check(dir.getAbsolutePath());
+	}
+	
+	public static void check(String path) throws IOException {
+		File file = new File(path + File.separator + CHK);
+		file.createNewFile();
+	}
+	
+	public static boolean isChecked(String path) {
+		File file = new File(path + File.separator + CHK);
+		return file.exists();
 	}
 }

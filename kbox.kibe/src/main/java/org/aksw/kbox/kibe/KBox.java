@@ -32,8 +32,6 @@ import com.hp.hpl.jena.rdf.model.Model;
  */
 public class KBox extends org.aksw.kbox.kns.KBox {
 	
-	private static final String CHK = ".chk";
-	
 	/**
 	 * Install the given knowledge base.
 	 * The installation try to resolve the knowledge base by the available KNS.
@@ -317,16 +315,6 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 			i++;
 		}
 		return knowledgeBasesPaths;
-	}
-	
-	private static void check(String path) throws IOException {
-		File file = new File(path + File.separator + CHK);
-		file.createNewFile();
-	}
-	
-	private static boolean isChecked(String path) {
-		File file = new File(path + File.separator + CHK);
-		return file.exists();
 	}
 	
 	/**
