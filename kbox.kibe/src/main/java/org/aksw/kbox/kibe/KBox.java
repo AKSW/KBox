@@ -32,6 +32,8 @@ import com.hp.hpl.jena.rdf.model.Model;
  */
 public class KBox extends org.aksw.kbox.kns.KBox {
 	
+	private static final String CHK = ".chk";
+	
 	/**
 	 * Install the given knowledge base.
 	 * The installation try to resolve the knowledge base by the available KNS.
@@ -46,6 +48,23 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 			throw new KBNotFoundException("Knowledge base " + knowledgeBase.toString() + " can not be resolved.");
 		}
 		installKB(sourceURL, knowledgeBase);
+	}
+	
+	/**
+	 * Install the given knowledge base.
+	 * The installation try to resolve the knowledge base by the available KNS.
+	 * 
+	 * @param knowledgeBase the URL of the knowledge base.
+	 * @param isFactory the InputStreamFactory that will be used to open stream with the target knowledge base.
+	 * 
+	 * @throws Exception if any error occurs during the operation.
+	 */
+	public static void installKB(URL knowledgeBase, InputStreamFactory isFactory) throws Exception {
+		URL sourceURL = resolve(knowledgeBase);
+		if(sourceURL == null) {
+			throw new KBNotFoundException("Knowledge base " + knowledgeBase.toString() + " can not be resolved.");
+		}
+		installKB(sourceURL, knowledgeBase, isFactory);
 	}
 	
 	/**
@@ -85,6 +104,24 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static void installKB(URL source, URL target, InputStreamFactory isFactory) throws Exception {
 		install(source, target, new KBInstall(isFactory));
+	}
+	
+	/**
+	 * Install a given index file in the given knowledge base.
+	 * 
+	 * @param knowledgeBase the URL of the index file to be installed.
+	 * @param format the KB format.
+	 * @param version the KB version.
+	 * @param isFactory the InputStreamFactory.
+	 * 
+	 * @throws Exception if any error occurs during the indexing process.
+	 */
+	public static void installKB(URL knowledgeBase, String format, String version, InputStreamFactory isFactory) throws Exception {
+		URL sourceURL = resolve(knowledgeBase);
+		if(sourceURL == null) {
+			throw new KBNotFoundException("Knowledge base " + knowledgeBase.toString() + " can not be resolved.");
+		}
+		install(sourceURL, knowledgeBase, new AppZipInstall(format, version, isFactory));
 	}
 	
 	/**
@@ -131,19 +168,56 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Install a given knowledge base resolved by a given KNS service.
 	 * 
-	 * @param knowledge base the URL of the knowledge base that is going to be installed.
+	 * @param knowledgebase the URL of the knowledge base that is going to be installed.
 	 * @param knsServer the URL of the KNS service that will be used to lookup.
 	 * @param streamListener the listener to be invoked when the knowledge base get dereferenced.
 	 * 
 	 * @throws Exception if any error occurs during the indexing process.
 	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
 	 */
-	public static void installKBFromKNSServer(URL dataset, URL knsServer) throws KBNotFoundException, Exception {
-		URL file = KNSTable.resolve(dataset, knsServer);
+	public static void installKBFromKNSServer(URL knowledgebase, URL knsServer) throws KBNotFoundException, Exception {
+		URL file = KNSTable.resolve(knowledgebase, knsServer);
 		if(file == null) {
-			throw new KBNotResolvedException(dataset.toString());
+			throw new KBNotResolvedException(knowledgebase.toString());
 		}
-		installKB(dataset, file);
+		installKB(knowledgebase, file);
+	}
+	
+	/**
+	 * Install a given knowledge base resolved by a given KNS service.
+	 * 
+	 * @param knowledgebase the URL of the knowledge base that is going to be installed.
+	 * @param knsServer the URL of the KNS service that will be used to lookup.
+	 * @param streamListener the listener to be invoked when the knowledge base get dereferenced.
+	 * @param isFactory stream factory to be used to open stream with the source knowledge base.
+	 * 
+	 * @throws Exception if any error occurs during the indexing process.
+	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
+	 */
+	public static void installKBFromKNSServer(URL knowledgebase, URL knsServer, InputStreamFactory isFactory) throws KBNotFoundException, Exception {
+		URL file = KNSTable.resolve(knowledgebase, knsServer);
+		if(file == null) {
+			throw new KBNotResolvedException(knowledgebase.toString());
+		}
+		installKB(knowledgebase, file, isFactory);
+	}
+	
+	/**
+	 * Install a given knowledge base resolved by a given KNS service.
+	 * 
+	 * @param knowledgebase the URL of the knowledge base that is going to be installed.
+	 * @param knsServer the URL of the KNS service that will be used to lookup.
+	 * @param streamListener the listener to be invoked when the knowledge base get dereferenced.
+	 * 
+	 * @throws Exception if any error occurs during the indexing process.
+	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
+	 */
+	public static void installKBFromKNSServer(URL knowledgebase, URL knsServer, String format, String version) throws KBNotFoundException, Exception {
+		URL file = KNSTable.resolve(knowledgebase, knsServer, format, version);
+		if(file == null) {
+			throw new KBNotResolvedException(knowledgebase.toString());
+		}
+		installKB(knowledgebase, file, format, version);
 	}
 	
 	/**
@@ -152,16 +226,17 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param knowledge base the URL of the knowledge base that is going to be installed.
 	 * @param knsServer the URL of the KNS service that will be used to lookup.
 	 * @param streamListener the listener to be invoked when the knowledge base get dereferenced.
+	 * @param isFactory stream factory to be used to open stream with the source knowledge base.
 	 * 
-	 * @throws Exception if any error occurs during the indexing process.
 	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
+	 * @throws Exception if any error occurs during the indexing process.
 	 */
-	public static void installKBFromKNSServer(URL dataset, URL knsServer, String format, String version) throws KBNotFoundException, Exception {
-		URL file = KNSTable.resolve(dataset, knsServer, format, version);
+	public static void installKBFromKNSServer(URL knowledgebase, URL knsServer, String format, String version, InputStreamFactory isFactory) throws KBNotFoundException, Exception {
+		URL file = KNSTable.resolve(knowledgebase, knsServer, format, version);
 		if(file == null) {
-			throw new KBNotResolvedException(dataset.toString());
+			throw new KBNotResolvedException(knowledgebase.toString());
 		}
-		installKB(dataset, file, format, version);
+		installKB(knowledgebase, file, format, version, isFactory);
 	}
 	
 	/**
@@ -195,8 +270,19 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		return TDB.query(sparql, knowledgeBasesPaths);
 	}
 	
-	public static Model createModel(InputStreamFactory factory, boolean install, URL... knowledgeNames) throws Exception {
-		String[] knowledgeBasesPaths = getResources(factory, install, knowledgeNames);
+	/**
+	 * 
+	 * Query the given knowledge bases.
+	 * 
+	 * @param isFactory a InputStreamFactory to stream the given KB in case they are not locally available.
+	 * @param install when true the knowledge base is auto-dereferenced when not found or not otherwise.
+	 * @param knowledgeNames the Knowledge base Names to be queried.
+	 * 
+	 * @return a model with the given RDF KB names.
+	 * @throws Exception if any of the given knowledge bases can not be found.
+	 */
+	public static Model createModel(InputStreamFactory isFactory, boolean install, URL... knowledgeNames) throws Exception {
+		String[] knowledgeBasesPaths = getResources(isFactory, install, knowledgeNames);
 		return TDB.createModel(knowledgeBasesPaths);
 	}
 	
@@ -205,6 +291,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		int i = 0;
 		for(URL knowledgeBase : urls) {
 			File localDataset = locateKB(knowledgeBase);
+			if(localDataset != null && !isChecked(localDataset.getAbsolutePath())) {
+				localDataset = null;
+			}
 			if(localDataset == null && install) {
 				URL kbSource = resolve(knowledgeBase);
 				if(kbSource == null) {
@@ -218,6 +307,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 					throw new KBDereferencingException(knowledgeBase.toString());
 				}
 				localDataset = locateKB(knowledgeBase);
+				check(localDataset.getAbsolutePath());
 			} else if(localDataset == null){
 				KBNotFoundException e = new KBNotFoundException("Knowledge base " + knowledgeBase.toString() + " is not installed."
 						+ " You can install it using the command install.");
@@ -229,11 +319,21 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		return knowledgeBasesPaths;
 	}
 	
+	private static void check(String path) throws IOException {
+		File file = new File(path + File.separator + CHK);
+		file.createNewFile();
+	}
+	
+	private static boolean isChecked(String path) {
+		File file = new File(path + File.separator + CHK);
+		return file.exists();
+	}
+	
 	/**
 	 * Create a Model with a given Knowledge base Names.
+	 * Warning: This method automatically dereference Knowledge Bases.
 	 * 
-	 * @param knowledgeNames the Knowledge base Names to be queried.
-	 *        Warning: This method automatically dereference Knowledge bases. 
+	 * @param knowledgeNames the Knowledge base Names to be queried.        
 	 * 
 	 * @return a Model containing the Knowledge bases.
 	 * 
@@ -249,8 +349,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * 
 	 * @param install install a given knowledge base in case it does not exist.
-	 * @param knowledgeNames the Knowledge base Names to be queried.
-	 *        Warning: This method automatically dereference Knowledge bases. 
+	 * @param knowledgeNames the RDF Knowledge base Names to be queried.
 	 * 
 	 * @return a Model containing the Knowledge bases.
 	 * 
@@ -353,8 +452,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * Returns the local Knowledge base directory.
 	 * 
 	 * @param url that will be used to locate the Knowledge base.
-	 * @param format the format of the KB file.
-	 * @param version the version of the KB file.
+	 * @param format the KB format.
+	 * @param version the KB version.
 	 * 
 	 * @return the local mirror directory of the knowledge base.
 	 *  

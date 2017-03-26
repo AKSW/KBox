@@ -13,7 +13,6 @@ import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
-import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.utils.URLUtils;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.KNSServerList;
@@ -130,7 +129,11 @@ public class Main {
 			String version = commands.get(VERSION_COMMAND);
 			try{
 				System.out.println("Installing KB " + kbURL + " from KNS " + knsServer);
-				KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), format, version);
+				if(format == null && version == null) {
+					KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), inputStreamFactory);					
+				} else {
+					KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), format, version, inputStreamFactory);
+				}
 				System.out.println("KB installed.");
 			} catch (MalformedURLException e){
 				System.out.println(e.getMessage());
@@ -149,18 +152,13 @@ public class Main {
 			String version = commands.get(VERSION_COMMAND);
 			try {
 				URL kbNameURL = new URL(url);
-				URL kbURL = KBox.resolve(kbNameURL);
-				if(kbURL == null) {
-					System.out.println("KB could not be located in the available KNS services.");
+				System.out.println("Installing KB " + url);
+				if(format == null && version == null) {
+					KBox.installKB(kbNameURL, inputStreamFactory);
 				} else {
-					System.out.println("Installing KB " + url);
-					if(format == null && version == null) {
-						KBox.installKB(kbURL, kbNameURL, inputStreamFactory);
-					} else {
-						KBox.installKB(kbURL, kbNameURL, format, version, inputStreamFactory);
-					}
-					System.out.println("KB installed.");
+					KBox.installKB(kbNameURL, format, version, inputStreamFactory);
 				}
+				System.out.println("KB installed.");				
 			} catch (KBNotResolvedException e) {
 				String message = "The knowledge base " + url + " could not be found.";
 				System.out.println(message);
@@ -256,6 +254,7 @@ public class Main {
 				commands.containsKey(KNS_COMMAND)) {
 			String knsURL = commands.get(REMOVE_COMMAND);
 			try {
+				System.out.println("Removing KNS " + knsURL);
 				KBox.removeKNS(new URL(knsURL));			
 				System.out.println("KNS removed.");
 			} catch (Exception e) {
@@ -347,7 +346,7 @@ public class Main {
 					urls[i]  = new URL(graphNames[i]);
 				}			
 				System.out.println("Loading Model...");
-				Model model = KBox.createModel(new DefaultInputStreamFactory(), install, urls);
+				Model model = KBox.createModel(inputStreamFactory, install, urls);
 				final String serverAddress = "http://localhost:" + port + "/" + subDomain + "/query";
 				Listener serverListener = new Listener() {
 					@Override

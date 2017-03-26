@@ -17,17 +17,14 @@ public abstract class IteratorResultSet<T> implements com.hp.hpl.jena.query.Resu
 	private static final String PREDICATE = "predicate";
 	private static final String OBJECT = "object";
 	
-	private List<String> vars = new ArrayList<String>(); 
-	{
-		vars.add(SUBJECT);
-		vars.add(PREDICATE);
-		vars.add(OBJECT);
-	}
-	
+	private List<String> vars = new ArrayList<String>();	
 	private Iterator<T> triples = null;
 	
 	IteratorResultSet(Iterator<T> triples) {
 		this.triples = triples;
+		this.vars.add(SUBJECT);
+		this.vars.add(PREDICATE);
+		this.vars.add(OBJECT);
 	}
 
 	@Override
