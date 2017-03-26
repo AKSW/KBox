@@ -18,7 +18,6 @@ import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
-import org.aksw.kbox.kns.KNSServerList;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.KNSTable;
 import org.aksw.kbox.kns.ServerAddress;
