@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.apache.log4j.Logger;
 
@@ -71,7 +72,14 @@ public class KNSTable {
 						if(!line.isEmpty()) {
 							kns = KN.parse(line);
 							if(kns.equals(resourceURL.toString(), format, version)) {
-							   return new URL(kns.getTarget());
+							   URL target = new URL(kns.getTarget());
+							   try {
+								   URLConnection conn = target.openConnection();
+								   conn.connect();
+								   return target;
+							   } catch (Exception e) {
+								   logger.warn("Invalid KNS entry", e);  
+							   } 
 							}
 						}
 					} catch (Exception e) {

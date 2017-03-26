@@ -18,6 +18,7 @@ import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
+import org.aksw.kbox.kns.KNSServerList;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.KNSTable;
 import org.aksw.kbox.kns.ServerAddress;
@@ -464,7 +465,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static URL resolve(URL resourceURL) throws Exception {
-		KibeKNSServerList kibeKNSServerList = new KibeKNSServerList();
+		KBKNSServerList kibeKNSServerList = new KBKNSServerList();
 		return resolve(kibeKNSServerList, resourceURL);
 	}
 		
@@ -476,7 +477,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws IOException if any error occurs during the operation.
 	 */
 	public static void visit(KNSServerListVisitor visitor) throws Exception {
-		KibeKNSServerList kibeKNSServerList = new KibeKNSServerList();
+		KBKNSServerList kibeKNSServerList = new KBKNSServerList();
 		kibeKNSServerList.visit(visitor);
 	}
 }
