@@ -305,7 +305,6 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 					throw new KBDereferencingException(knowledgeBase.toString());
 				}
 				localDataset = locateKB(knowledgeBase);
-				check(localDataset.getAbsolutePath());
 			} else if(localDataset == null){
 				KBNotFoundException e = new KBNotFoundException("Knowledge base " + knowledgeBase.toString() + " is not installed."
 						+ " You can install it using the command install.");
@@ -321,7 +320,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * Create a Model with a given Knowledge base Names.
 	 * Warning: This method automatically dereference Knowledge Bases.
 	 * 
-	 * @param knowledgeNames the Knowledge base Names to be queried.        
+	 * @param knowledgeNames the RDF KB Names to be queried.        
 	 * 
 	 * @return a Model containing the Knowledge bases.
 	 * 
@@ -337,7 +336,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * 
 	 * @param install install a given knowledge base in case it does not exist.
-	 * @param knowledgeNames the RDF Knowledge base Names to be queried.
+	 * @param knowledgeNames the RDF KB Names to be queried.
 	 * 
 	 * @return a Model containing the Knowledge bases.
 	 * 
@@ -380,7 +379,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * Query the given knowledge bases.
 	 * 
 	 * @param sparql the SPARQL query.
-	 * @param knowledgeNames the Knowledge base Names to be queried.
+	 * @param knowledgeNames the knowledge base names to be queried.
 	 * 
 	 * @return a result set with the given query solution.
 	 * 
@@ -396,7 +395,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param sparql the SPARQL query.
 	 * @param install specify if the knowledge base should be installed (true) or not (false).
-	 * @param knowledgeNames the Knowledge base Names to be queried.
+	 * @param knowledgeNames the KB names to be queried.
 	 * 
 	 * @return a result set with the given query solution.
 	 * 
@@ -411,7 +410,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * Returns a slice of the given knowledge base representing by the Construct or Describe query.
 	 * 
 	 * @param sparql a Construct or Describe query.
-	 * @param knowledgeNames the Knowledge base Names that are going to be sliced.
+	 * @param knowledgeNames the KB Names that are going to be sliced.
 	 * 
 	 * @return a result set with the given query solution.
 	 * 

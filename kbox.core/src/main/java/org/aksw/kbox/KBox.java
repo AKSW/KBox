@@ -417,12 +417,12 @@ public class KBox {
 	}
 	
 	public static void check(String path) throws IOException {
-		File file = new File(path + File.separator + CHK);
+		File file = new File(path + CHK);
 		file.createNewFile();
 	}
 	
 	public static boolean isChecked(String path) {
-		File file = new File(path + File.separator + CHK);
+		File file = new File(path + CHK);
 		return file.exists();
 	}
 }

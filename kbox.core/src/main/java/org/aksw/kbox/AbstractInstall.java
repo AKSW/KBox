@@ -45,7 +45,7 @@ public abstract class AbstractInstall implements Install, Locator {
 		check(destFile);
 	}
 	
-	public void check(File destDir) throws IOException {
-		KBox.check(destDir);
+	public void check(File destFile) throws IOException {
+		KBox.check(destFile);
 	}
 }

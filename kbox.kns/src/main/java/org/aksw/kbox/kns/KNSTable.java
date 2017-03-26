@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -72,14 +73,16 @@ public class KNSTable {
 						if(!line.isEmpty()) {
 							kns = KN.parse(line);
 							if(kns.equals(resourceURL.toString(), format, version)) {
-							   URL target = new URL(kns.getTarget());
-							   try {
-								   URLConnection conn = target.openConnection();
-								   conn.connect();
+							   URL target = new URL(kns.getTarget());						
+							   URLConnection conn = target.openConnection();
+							   HttpURLConnection huc =  (HttpURLConnection) target.openConnection(); 
+							   huc.setRequestMethod("HEAD");								   
+							   conn.connect();
+							   if(huc.getResponseCode() != 404) {
 								   return target;
-							   } catch (Exception e) {
-								   logger.warn("Invalid KNS entry", e);  
-							   } 
+							   } else {
+								   logger.warn("Invalid KNS target: " + target);
+							   }
 							}
 						}
 					} catch (Exception e) {
