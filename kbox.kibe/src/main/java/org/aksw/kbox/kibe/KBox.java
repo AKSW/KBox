@@ -318,11 +318,11 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	
 	/**
 	 * Create a Model with a given Knowledge base Names.
-	 * Warning: This method automatically dereference Knowledge Bases.
+	 * Warning: This method automatically dereference the RDF KBs.
 	 * 
 	 * @param knowledgeNames the RDF KB Names to be queried.        
 	 * 
-	 * @return a Model containing the Knowledge bases.
+	 * @return a Model containing the RDF KBs.
 	 * 
 	 * @throws Exception if some error occurs during the knowledge base 
 	 *         dereference or model instantiation. 
@@ -338,9 +338,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param install install a given knowledge base in case it does not exist.
 	 * @param knowledgeNames the RDF KB Names to be queried.
 	 * 
-	 * @return a Model containing the Knowledge bases.
+	 * @return a Model containing the RDF KBs.
 	 * 
-	 * @throws Exception if some error occurs during the knowledge base 
+	 * @throws Exception if some error occurs during the KB 
 	 *         dereference or model instantiation. 
 	 */
 	public static Model createModel(boolean install, URL... knowledgeNames) throws Exception {

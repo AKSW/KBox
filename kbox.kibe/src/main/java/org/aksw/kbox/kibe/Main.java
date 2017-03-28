@@ -145,7 +145,8 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if(commands.containsKey(INSTALL_COMMAND) &&
+		} else if(!commands.containsKey(SERVER_COMMAND) &&
+				commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND)) {
 			String url = commands.get(KB_COMMAND);
 			String format = commands.get(FORMAT_COMMAND);
@@ -326,7 +327,7 @@ public class Main {
 				String message = "An error occurred while resolving the KB: " + kbURI;
 				System.out.println(message);
 				logger.error(message, e);
-			}		
+			}
 		} else if (commands.containsKey(SERVER_COMMAND) &&
 				commands.containsKey(KB_COMMAND)) {
 			int port = 8080;
