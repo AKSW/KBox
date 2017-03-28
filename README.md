@@ -16,7 +16,7 @@
 ```
 
 KBox is an abbreviation for Knowledge Box. 
-The rationality behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances. 
+The rationale behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances. 
 Moreover, working on top of RDF model, KBox is a natural extension of the Web on your computer.
 
 - [Why use KBox?](https://github.com/AKSW/KBox#why-use-kbox)
@@ -31,19 +31,19 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 
 ### Why use KBox?
 Applications usually deal with resources and knowledge that are often duplicated among several applications.
-For instance, when using Stanford NLP library among different applications, the resources and knowledge inside the library is duplicated among different instances.
+For instance, when using the Stanford NLP library among different applications, the resources and knowledge inside the library are duplicated among different instances.
 The idea is to have a common knowledge box where users can persist and yet retrieve and share resources without duplication.
 In order to do that, we bring the RDF concept to KBox.
-Thereafter, resource can be uniquely identified.
+Thereafter, resources can be uniquely identified.
 
 ### What is possible to do with it?
 With KBox you can share resources and knowledge among several applications, but not just that.
-In order to allow the easier knowledge dissemination, we have implemented Kibe library.
+In order to allow an easier knowledge dissemination, we have implemented Kibe library.
 The Kibe library allows applications to virtually install and query RDF knowledge graphs.
-It takes around ~50 minutes to start quering DBpedia on your computer, avoiding server overheads and faults.
+It takes around ~50 minutes to start quering DBpedia on your computer to avoid server overheads and faults.
 
 ### How can I use KBox?
-You can use KBox in command line or the library on your application.
+You can use KBox either as a command-line program or a library in your application.
 It is easy to plug and use it.
 
 ### How can I execute KBox in command Line?
@@ -82,7 +82,7 @@ Where [command] is:
   <version>0.0.1-alpha1</version>
 </dependency>
 ```
-2) Add the internal AKSW repository on your pom file:
+2) Add the internal AKSW repository to your pom file:
 ```
 <repositories>
     <repository>
@@ -97,9 +97,9 @@ Where [command] is:
 
 ### How can I query a published knowledge graph?
 
-Weeeelll.. its quite easy.
+Weeeelll... it's quite easy.
 Remember the commands listed on '[How can I execute KBox in command Line](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)'.
-So its just execute the command line bellow (remember to add -install, so the knowledge graph is automatically derefereced):
+It's just about executing the command line below. Remember to add `-install`, so the knowledge graph is automatically dereferenced.
 
 ```
 java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema" -install
@@ -110,13 +110,13 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 ------
 ```
 
-Or using the java API..
+Or using the java API...
 
 ```
 KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", true, new URL("https://www.w3.org/2000/01/rdf-schema"));
 ```
 
-You might want to setup the model before start to execute multiple queries on it:
+You might want to setup the model before starting to execute multiple queries on it:
 
 ```
 Model model = KBox.createModel(new URL("https://www.w3.org/2000/01/rdf-schema"));
@@ -125,9 +125,9 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 
 ### How can I query multi-graphs?
 
-Its very easy, you just need to add the knowledge graph that you want to query separated by comma as the command bellow:
+It's very easy, as you just need to add the knowledge graph you want to query separated by commas as the command below:
 
-In the given example, we query two knowledge graphs https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
+In the given example, we query two knowledge graphs, https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
 ```
 java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
 -------
@@ -136,13 +136,13 @@ java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) wher
 | 123 |
 -------
 ```
-Or using the java API..
+Or using the java API...
 ```
 KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", 
                    true, new URL("https://www.w3.org/2000/01/rdf-schema"), 
                    new URL("http://xmlns.com/foaf/0.1"));
 ```
-You might want to setup the model before start to execute multiple queries on it:
+You might want to setup the model before starting to execute multiple queries on it:
 ```
 Model model = KBox.createModel(new URL("https://www.w3.org/2000/01/rdf-schema"),
                    new URL("http://xmlns.com/foaf/0.1"));
@@ -151,7 +151,7 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 
 ### Using KBox with Docker
 
-You can also use KBox Docker container using the steps bellow:
+You can also use KBox Docker container by following the steps below:
 
 1) Install Docker in your machine (Consult the [guide](https://docs.docker.com/engine/installation/linux/ubuntu/) for more details).
 
@@ -177,28 +177,20 @@ docker run aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}
 
 ### How can I publish my own Dataset?
 
-Although you can create your own KNS service and publish your Datasets, currently KBox does not allow you to directly publish content to other users.
-In order to do that, you should contact us.
+Although you can create your own KNS service and publish your datasets, currently KBox does not allow you to directly publish content to make them available to other users.
+In order to do that, you must contact us.
 
 Contact: 
 cbaron@informatik.uni-leipzig.de
 
 Information needed:
 
-1) Dataset Label;
-
-2) Dataset Version;
-
-3) The Publisher: Your or your organization's email/URL;
-
-4) The Creator: Who has created the Knowledge base e.g. DBpedia -> http://dbpedia.org;
-
-5) The License: the dataset license;
-
-6) The URL where the knwoledge graph file can be dereferenced (please create the file using KBox createIndex command);
-
-7) The Dataset URI name: the URI name that will be used by users to dereference your dataset;
-
-8) The Dataset description: Give us a few words to help others to know what your dataset is about;
-
-9) Tell us one reason why KBox is awesome. :-)
+1. Dataset Label;
+2. Dataset Version;
+3. The Publisher: Your or your organization's email/URL;
+4. The Creator: Who has created the Knowledge base, e.g. DBpedia -> http://dbpedia.org;
+5. The License: the dataset license;
+6. The URL where the knwoledge graph file can be dereferenced (please create the file using KBox `-createIndex` command);
+7. The Dataset URI name: the URI name that will be used by users to dereference your dataset;
+8. The Dataset description: Give us a few words to help others to know what your dataset is about;
+9. Tell us one reason why KBox is awesome. :-)
