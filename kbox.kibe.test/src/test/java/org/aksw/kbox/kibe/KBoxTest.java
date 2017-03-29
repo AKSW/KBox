@@ -62,7 +62,7 @@ public class KBoxTest {
 	@Test
 	public void testKNEqualsWithFormatWithNull1() throws Exception {
 		KN kn = new KN("teste", "a", "b", "d", null, null, null);
-		assertTrue(!kn.equals("teste","b", "e"));
+		Assert.assertFalse(kn.equals("teste","b", "e"));
 	}
 	
 	@Test
@@ -74,7 +74,7 @@ public class KBoxTest {
 	@Test
 	public void testKNEqualsWithFormatWithNull3() throws Exception {
 		KN kn = new KN("teste", "a", "b", "c", null, null, null);
-		assertTrue(!kn.equals("teste", "b", "d"));
+		Assert.assertFalse(kn.equals("teste", "b", "d"));
 	}
 	
 	@Test
