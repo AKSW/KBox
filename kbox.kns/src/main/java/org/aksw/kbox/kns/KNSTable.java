@@ -30,7 +30,9 @@ public class KNSTable {
 	 * Resolve a given resource with by the given KNS service.
 	 * 
 	 * @param resourceURL the URL of the resource that will be resolved by the given KNS service.
+	 * 
 	 * @return the resolved URL.
+	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
 	public URL resolveURL(URL resourceURL) throws IOException {
@@ -42,7 +44,9 @@ public class KNSTable {
 	 * 
 	 * @param knsServerURL the URL of KNS server that will resolve the given URL.
 	 * @param resourceURL the URL of the resource that will be resolved by the given KNS service.
+	 * 
 	 * @return the resolved URL.
+	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
 	public static URL resolve(URL resourceURL, URL knsServerURL) throws IOException {
