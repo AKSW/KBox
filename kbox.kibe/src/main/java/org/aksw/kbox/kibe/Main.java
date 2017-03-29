@@ -209,8 +209,8 @@ public class Main {
 					ResultSet rs = KBox.query(sparql, serverURL);
 					out(commands, rs);
 				} catch (QueryExceptionHTTP e) {
-					String message = "An error occured while trying to connect to server:" + url + "." +
-							" Check the URL address and try again.";
+					String message = "An error occurred while trying to connect to server: " + url + "." +
+							" The server seems to be unavailable, check the URL and try again.";
 					System.out.println(message);
 					logger.error(message, e);
 				} catch (Exception e) {
@@ -362,13 +362,13 @@ public class Main {
 				Server server = new Server(port, KBox.getResourceFolder(), subDomain, model, serverListener);
 				server.start();
 			} catch (KBNotFoundException e) {
-				System.out.println("Error installing Knowledge Base: "
+				System.out.println("Error installing KB: "
 						+ "The knowledge base could not be found.");				
 				System.out.println("You can install it by executing the command -install -kb or "
 						+ "execute the query command adding -install paramenter.");
 				logger.error(e);
 			} catch (ServerStartException e) {
-				String message = "An error occured while starting the server, "
+				String message = "An error occurred while starting the server, "
 						+ "check if the port is not being used by another "
 						+ "application or if the parameters are valid.";
 				System.out.println(message);
