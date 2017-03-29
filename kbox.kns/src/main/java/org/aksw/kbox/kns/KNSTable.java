@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.aksw.kbox.utils.URLUtils;
 import org.apache.log4j.Logger;
 
 public class KNSTable {
@@ -73,12 +74,8 @@ public class KNSTable {
 						if(!line.isEmpty()) {
 							kns = KN.parse(line);
 							if(kns.equals(resourceURL.toString(), format, version)) {
-							   URL target = new URL(kns.getTarget());						
-							   URLConnection conn = target.openConnection();
-							   HttpURLConnection huc =  (HttpURLConnection) target.openConnection(); 
-							   huc.setRequestMethod("HEAD");								   
-							   conn.connect();
-							   if(huc.getResponseCode() != 404) {
+							   URL target = new URL(kns.getTarget());
+							   if(!URLUtils.checkStatus(target, 404)) {
 								   return target;
 							   } else {
 								   logger.warn("Invalid KNS target: " + target);

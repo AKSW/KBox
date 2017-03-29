@@ -13,11 +13,11 @@ import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
-import org.aksw.kbox.kibe.utils.URLUtils;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.KNSServerList;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
+import org.aksw.kbox.utils.URLUtils;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.query.ResultSet;
@@ -206,7 +206,7 @@ public class Main {
 				String url = commands.get(SERVER_COMMAND);
 				ServerAddress serverURL = new ServerAddress(url);
 				try {
-					ResultSet rs = KBox.query(sparql, serverURL);					
+					ResultSet rs = KBox.query(sparql, serverURL);
 					out(commands, rs);
 				} catch (QueryExceptionHTTP e) {
 					String message = "An error occurs while trying to connect to server:" + url + "." +
@@ -334,10 +334,10 @@ public class Main {
 			String subDomain = "kbox";
 			if(commands.containsKey(SERVER_COMMAND_PORT)) {
 				port = Integer.parseInt(commands.get(SERVER_COMMAND_PORT));
-			} 
+			}
 			if(commands.containsKey(SEVER_COMMAND_SUBDOMAIN)) {
 				subDomain = commands.get(SEVER_COMMAND_SUBDOMAIN);
-			}			
+			}
 			String graphNamesList = commands.get(KB_COMMAND);
 			String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
 			boolean install = commands.containsKey(INSTALL_COMMAND);
@@ -363,7 +363,7 @@ public class Main {
 				server.start();
 			} catch (KBNotFoundException e) {
 				System.out.println("Error installing Knowledge Base: "
-						+ "The Knowledge Base could not be found.");				
+						+ "The knowledge base could not be found.");				
 				System.out.println("You can install it by executing the command -install -kb or "
 						+ "execute the query command adding -install paramenter.");
 				logger.error(e);
@@ -395,22 +395,22 @@ public class Main {
 	public static void printHelp() {
 		System.out.println("KBox.jar <command> [option]");
 		System.out.println("Where [command] is:");
-		System.out.println("   * -createIndex <directory> \t - Create an index with the files in a given directory.");
-		System.out.println("                              \t ps: the directory might contain only RDF compatible file formats.");
-		System.out.println("   * -serialize <directory> \t - Serialize the content of a directory to be served in a KNS system.");
-		System.out.println("   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json] \t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
+		System.out.println("   * -createIndex <directory>\t - Create an index with the files in a given directory.");
+		System.out.println("                             \t ps: the directory might contain only RDF compatible file formats.");
+		System.out.println("   * -serialize <directory>\t - Serialize the content of a directory to be served in a KNS system.");
+		System.out.println("   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]\t - Query a given graph (e.g. -sparql \"Select ...\" -graph \"graph1,graph2\")");
 		System.out.println("                                               \t - ps: use -install in case you want to enable the auto-dereference.");	
 		System.out.println("   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install] \t - Start an SPARQL enpoint in the given subDomain containing the given graphs.");
-		System.out.println("   * -list \t - List all available KNS services and knowledge graphs.");
-		System.out.println("   * -list -kns\t - List all availables KNS services.");	
-		System.out.println("   * -install <URL> \t - Install a given resource in KBox.");
+		System.out.println("   * -list\t - List all available KNS services and knowledge graphs.");
+		System.out.println("   * -list -kns\t - List all availables KNS services.");
+		System.out.println("   * -install <URL>\t - Install a given resource.");
 		System.out.println("   * -install -kns <kns-URL> \t - Install a given KNS service.");
 		System.out.println("   * -install -kb <kb-URL>\t - Install a given knowledge graph using the available KNS services to resolve it.");
 		System.out.println("   * -install -kb <kb-URL> -format <format> -version <version>\t - Install a given knowledge graph using the available KNS services to resolve it.");
-		System.out.println("   * -install -kb <kb-URL> -index <indexFile> \t - Install a given index in a given knowledge graph URL.");
-		System.out.println("   * -install -kb <kb-URL> -kns <kns-URL> \t - Install a knowledge graph from a a given KNS service.");
-		System.out.println("   * -install -kb <kb-URL> -kns <kns-URL> -format <format> -version <version>\t - Install a knowledge graph from a a given KNS service.");
-		System.out.println("   * -remove -kns <kns-URL> \t - Remove a given KNS service.");
+		System.out.println("   * -install -kb <kb-URL> -index <indexFile>\t - Install a given index in a given knowledge graph URL.");
+		System.out.println("   * -install -kb <kb-URL> -kns <kns-URL>\t - Install a knowledge graph from a a given KNS service.");
+		System.out.println("   * -install -kb <kb-URL> -kns <kns-URL> -format <format> -version <version>\t - Install a knowledge graph from a a given KNS service with the specific format and version.");
+		System.out.println("   * -remove -kns <kns-URL>\t - Remove a given KNS service.");
 		System.out.println("   * -info <kb-URL> \t - Gives the information about a specific KB.");
 		System.out.println("   * -info <kb-URL> -format <format> -version <version>\t - Gives the information about a specific KB.");
 		System.out.println("   * -locate <URL>\t - returns the local address of the given resource.");
@@ -418,7 +418,8 @@ public class Main {
 		System.out.println("   * -locate -kb <kb-URL> -format <format> -version <version>\t - returns the local address of the given KB.");
 		System.out.println("   * -search <kb-URL-pattern> \t - Search for all kb-URL containing a given pattern.");
 		System.out.println("   * -search <kb-URL-pattern> -format <format> -version <version>\t - Search for all kb-URL containing a given pattern.");
-		System.out.println("   * -r-dir <resourceDir>\t - Change the current path of the KBox resource container.");
+		System.out.println("   * -r-dir\t - Show the path to the resource folder.");
+		System.out.println("   * -r-dir <resourceDir>\t - Change the path of the resource folder.");
 		System.out.println("   * -version \t - display KBox version.");
 	}
 	
