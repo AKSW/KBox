@@ -71,7 +71,7 @@ public class Main {
 			File indexFile = new File(KB_GRAPH_FILE_NAME);
 			try {
 				System.out.println("Creating index.");
-				KBox.createIndex(indexFile, filePathsToURLs(new File(directory).listFiles()));
+				KBox.createIndex(indexFile, URLUtils.fileToURL(new File(directory).listFiles()));
 				System.out.println("Index created.");
 			} catch (Exception e) {
 				String message = "An error occurred while creating the index: " + e.getMessage();
@@ -209,7 +209,7 @@ public class Main {
 					ResultSet rs = KBox.query(sparql, serverURL);
 					out(commands, rs);
 				} catch (QueryExceptionHTTP e) {
-					String message = "An error occurs while trying to connect to server:" + url + "." +
+					String message = "An error occured while trying to connect to server:" + url + "." +
 							" Check the URL address and try again.";
 					System.out.println(message);
 					logger.error(message, e);
@@ -286,7 +286,7 @@ public class Main {
 			try {
 				KBox.visit(searchVisitor);
 			} catch (Exception e) {
-				String message = "An error occurs while enquiring searching using the pattern: " + pattern;
+				String message = "An error occurred while enquiring searching using the pattern: " + pattern;
 				System.out.println(message);
 				logger.error(message, e);
 			}	
@@ -298,7 +298,7 @@ public class Main {
 			try {
 				KBox.visit(visitor);
 			} catch (Exception e) {
-				String message = "An error occurs while enquiring information from the graph " + graph;
+				String message = "An error occurred while enquiring information from the graph " + graph;
 				System.out.println(message);
 				logger.error(message, e);
 			}
@@ -368,7 +368,7 @@ public class Main {
 						+ "execute the query command adding -install paramenter.");
 				logger.error(e);
 			} catch (ServerStartException e) {
-				String message = "An error occurs while starting the server, "
+				String message = "An error occured while starting the server, "
 						+ "check if the port is not being used by another "
 						+ "application or if the parameters are valid.";
 				System.out.println(message);
@@ -453,15 +453,5 @@ public class Main {
 			}
 		}
 		return map;
-	}
-	
-	public static URL[] filePathsToURLs(File[] files) throws MalformedURLException {
-		URL[] urls = new URL[files.length];
-		int i = 0;
-		for(File file : files) {
-			urls[i] = file.toURI().toURL();
-			i++;
-		}		
-		return urls;
-	}
+	}	
 }
