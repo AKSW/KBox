@@ -63,7 +63,7 @@ public class CustomParams implements Serializable {
 	}
 		
 	public synchronized void visit(CustomParamVisitor visitor) {
-		final DB db = getDB();
+		final DB db = getReadOnlyDB();
 		final Iterator<String> internalIterator = getSet(db).iterator();
 		Iterable<String> iterable = new Iterable<String>(
 				) {
@@ -101,6 +101,13 @@ public class CustomParams implements Serializable {
 		DB db = DBMaker.fileDB(file).make();
 		return db;
 	}
+	
+	private DB getReadOnlyDB() {
+		File file = new File(path);
+		DB db = DBMaker.fileDB(file).readOnly().make();
+		return db;
+	}
+
 
 	public void remove(String value) {
 		DB db = getDB();
