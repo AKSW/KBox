@@ -16,7 +16,7 @@
 ```
 
 KBox is an abbreviation for Knowledge Box. 
-The rationale behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances. 
+The rationale behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances.
 Moreover, working on top of RDF model, KBox is a natural extension of the Web on your computer.
 
 - [Why use KBox?](https://github.com/AKSW/KBox#why-use-kbox)
@@ -30,11 +30,10 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 
 ### Why use KBox?
-Applications usually deal with resources and knowledge that are often duplicated among several applications.
-For instance, when using the Stanford NLP library among different applications, the resources and knowledge inside the library are duplicated among different instances.
-The idea is to have a common knowledge box where users can persist and yet retrieve and share resources without duplication.
-In order to do that, we bring the RDF concept to KBox.
-Thereafter, resources can be uniquely identified.
+Systems usually deal with resources and knowledge that are often duplicated among several instances.
+For instance, when using the Stanford NLP library the resources and knowledge inside the library are duplicated among different applications.
+The idea is to have a common repository where users can share resources without duplication.
+In order to do that, we bring the RDF concept to bridge the gap among reource publishig, storing and locating.
 
 ### What is possible to do with it?
 With KBox you can share resources and knowledge among several applications, but not just that.
