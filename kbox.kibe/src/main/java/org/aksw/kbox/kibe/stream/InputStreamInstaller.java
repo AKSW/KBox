@@ -7,6 +7,7 @@ public class InputStreamInstaller extends InputStream {
 	
 	private InputStream inputStream = null;
 	private InstallStreamListener listener = null;
+	private boolean started = false;
 	
 	public InputStreamInstaller(InputStream inputStream, InstallStreamListener listener) {
 		this.inputStream = inputStream;
@@ -26,6 +27,7 @@ public class InputStreamInstaller extends InputStream {
 	
 	@Override
 	public int read(byte[] b) throws IOException {
+		streaming();
 		int read = inputStream.read(b);
 		listener.update(read);
 		return read;
@@ -43,6 +45,7 @@ public class InputStreamInstaller extends InputStream {
 	
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException {
+		streaming();
 		int read = inputStream.read(b, off, len);
 		listener.update(read);
 		return read;
@@ -60,7 +63,15 @@ public class InputStreamInstaller extends InputStream {
 
 	@Override
 	public int read() throws IOException {
+		streaming();
 		return inputStream.read();
+	}
+	
+	private void streaming() {
+		if(!started) {
+			listener.start();
+			started = true;
+		}
 	}
 
 }

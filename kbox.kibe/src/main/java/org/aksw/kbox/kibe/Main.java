@@ -145,34 +145,48 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if(!commands.containsKey(SERVER_COMMAND) &&
+		} else if(!commands.containsKey(SPARQL_QUERY_COMMAND) &&
+				!commands.containsKey(SERVER_COMMAND) &&
 				commands.containsKey(INSTALL_COMMAND) &&
 				commands.containsKey(KB_COMMAND)) {
-			String url = commands.get(KB_COMMAND);
+			String graphNamesList = commands.get(KB_COMMAND);
 			String format = commands.get(FORMAT_COMMAND);
 			String version = commands.get(VERSION_COMMAND);
+			String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
+			URL[] urls;
 			try {
-				URL kbNameURL = new URL(url);
-				System.out.println("Installing KB " + url);
-				if(format == null && version == null) {
-					KBox.installKB(kbNameURL, inputStreamFactory);
-				} else {
-					KBox.installKB(kbNameURL, format, version, inputStreamFactory);
+				urls = URLUtils.stringToURL(graphNames);
+				for(URL kbNameURL : urls) {
+					try {
+						System.out.println("Installing KB " + kbNameURL);
+						File kbFile = KBox.locateKB(kbNameURL);
+						if(kbFile == null) {
+							if(format == null && version == null) {
+								KBox.installKB(kbNameURL, inputStreamFactory);
+							} else {
+								KBox.installKB(kbNameURL, format, version, inputStreamFactory);
+							}
+						}
+						System.out.println("KB installed.");						
+					} catch (KBNotResolvedException e) {
+						String message = "The knowledge base " + kbNameURL + " could not be found.";
+						System.out.println(message);
+						logger.error(message, e);
+					} catch (MalformedURLException e){
+						String message  = e.getMessage();
+						System.out.println(message);
+						logger.error(message, e);
+					} catch (Exception e) {
+						String message =  "An error occurred while installing the knowledge base " + kbNameURL + ": " + e.getMessage();
+						System.out.println(message);
+						logger.error(message, e);
+					}
 				}
-				System.out.println("KB installed.");				
-			} catch (KBNotResolvedException e) {
-				String message = "The knowledge base " + url + " could not be found.";
-				System.out.println(message);
-				logger.error(message, e);
-			} catch (MalformedURLException e){
-				String message  = e.getMessage();
-				System.out.println(message);
-				logger.error(message, e);
 			} catch (Exception e) {
-				String message =  "An error occurred while installing the knowledge base " + url + ": " + e.getMessage();
+				String message =  "An error occurred while parsing the KB Name list \"" + graphNames + "\": " + e.getMessage();
 				System.out.println(message);
 				logger.error(message, e);
-			}
+			}			
 		} else if(commands.containsKey(INSTALL_COMMAND) && 
 				commands.containsKey(KNS_COMMAND)) {
 			String url = commands.get(KNS_COMMAND);

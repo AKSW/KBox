@@ -13,4 +13,8 @@ public class KBDereferencingException extends Exception {
 	public KBDereferencingException(String kb) {
 		super("The knowledge base " + kb + " could not be derecerenced.");
 	}
+	
+	public KBDereferencingException(String kb, Exception e) {
+		super("The knowledge base " + kb + " could not be derecerenced.", e);
+	}
 }

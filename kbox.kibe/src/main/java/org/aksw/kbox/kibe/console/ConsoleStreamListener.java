@@ -8,14 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class implements a StreamListener for command line
- * stream process feedback.
+ * streaming feedback.
  * 
  * @author http://emarx.org
  */
 public class ConsoleStreamListener implements InstallStreamListener {
 	private String message = "loading";
 	private long length = 0;
-	private int read = 0;
+	private long read = 0;
 	private long startTime = 0;
 	private int size = 20;
 	
@@ -25,7 +25,7 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	 * @param message the message that will appear ahead of the progress bar in the console.
 	 * @param length stream length.
 	 */
-	public ConsoleStreamListener(String message, int length) {
+	public ConsoleStreamListener(String message, long length) {
 		this(message);
 		this.length = length;		
 	}
@@ -42,8 +42,8 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	
 	@Override
 	public void update(long bytes) {
+		read += bytes;
 		if(length > 0) {
-			read += bytes;
 			int percentage = (int)(((double)read / (double)length) * 100);
 			if(percentage > 100) {
 				percentage = 100;
@@ -51,10 +51,6 @@ public class ConsoleStreamListener implements InstallStreamListener {
 			printProgress(startTime, 100, percentage, size);
 		} else {			
 			printUndefined(read, size);
-			read++;
-			if(read == size) {
-				read = 0;
-			}
 		}
 	}
 	
@@ -83,9 +79,12 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	 * @param current streamed length in percentage.
 	 */
 	private void printProgress(long startTime, int total, int current, int size) {
-	    long eta = current == 0 ? 0 : 
-	        (total - current) * (System.currentTimeMillis() - startTime) / current;
-
+		
+		long elapsedTime = (System.currentTimeMillis() - startTime);
+		
+	    long eta = read == 0 ? 0 : 
+	        (((length) * elapsedTime) / read) - elapsedTime;
+	    
 	    String etaHms = current == 0 ? "N/A" : 
 	            String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(eta),
 	                    TimeUnit.MILLISECONDS.toMinutes(eta) % TimeUnit.HOURS.toMinutes(1),
@@ -96,8 +95,8 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	    if(current != 0) {
 	    	logCurrent = (int) (Math.log10(current));
 	    }
-	    int percent = (int) (current * 100 / total);
-	    int blocks = (percent*size/100);
+	    int percent = (int) ((current * 100) / total);
+	    int blocks = ((percent * size) / 100);
 	    
 	    string
 	        .append('\r')
@@ -119,15 +118,18 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	 * 
 	 * @param read
 	 */
-	private void printUndefined(int read, int size) {		
+	private void printUndefined(long read, int size) {		
 	    StringBuilder string = new StringBuilder(140);
+	    int pos = (int) ((read)/(size*50000)) % size;
 	    string
 	        .append('\r')
 	        .append(message)
 	        .append("  ??% [");
         for(int i=0; i < size+1; i++) {
-        	if(i==read) {
-        		string.append(".");
+        	if(i==pos) {
+        		string.append(">");
+        	} else if(i < pos) {
+        		string.append("=");
         	} else {
         		string.append(" ");
         	}

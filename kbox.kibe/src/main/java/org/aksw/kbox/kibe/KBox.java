@@ -289,9 +289,6 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		int i = 0;
 		for(URL knowledgeBase : urls) {
 			File localDataset = locateKB(knowledgeBase);
-			if(localDataset != null && !isChecked(localDataset.getAbsolutePath())) {
-				localDataset = null;
-			}
 			if(localDataset == null && install) {
 				URL kbSource = resolve(knowledgeBase);
 				if(kbSource == null) {
@@ -302,7 +299,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 				try(InputStream is = factory.get(kbSource)) {
 					installKB(is, knowledgeBase);
 				} catch (Exception e) {
-					throw new KBDereferencingException(knowledgeBase.toString());
+					throw new KBDereferencingException(knowledgeBase.toString(), e);
 				}
 				localDataset = locateKB(knowledgeBase);
 			} else if(localDataset == null){
