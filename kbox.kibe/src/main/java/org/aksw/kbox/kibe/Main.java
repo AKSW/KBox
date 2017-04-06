@@ -159,15 +159,18 @@ public class Main {
 				for(URL kbNameURL : urls) {
 					try {
 						System.out.println("Installing KB " + kbNameURL);
-						File kbFile = KBox.locateKB(kbNameURL);
-						if(kbFile == null) {
-							if(format == null && version == null) {
-								KBox.installKB(kbNameURL, inputStreamFactory);
-							} else {
+						if(format != null && version != null) {
+							File kbFile = KBox.locateKB(kbNameURL, format, version);
+							if(kbFile == null) {
 								KBox.installKB(kbNameURL, format, version, inputStreamFactory);
 							}
+						} else {		
+							File kbFile = KBox.locateKB(kbNameURL);
+							if(kbFile == null) {
+								KBox.installKB(kbNameURL, inputStreamFactory);
+							}
 						}
-						System.out.println("KB installed.");						
+						System.out.println("KB installed.");
 					} catch (KBNotResolvedException e) {
 						String message = "The knowledge base " + kbNameURL + " could not be found.";
 						System.out.println(message);
@@ -177,7 +180,10 @@ public class Main {
 						System.out.println(message);
 						logger.error(message, e);
 					} catch (Exception e) {
-						String message =  "An error occurred while installing the knowledge base " + kbNameURL + ": " + e.getMessage();
+						String message =  "The knowledge base could not be found: (URL:" + kbNameURL;
+						if(version != null && format != null) {
+							message += ", format: " + format + ", " + "vesion: " + version;  
+						}
 						System.out.println(message);
 						logger.error(message, e);
 					}

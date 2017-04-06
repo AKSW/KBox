@@ -19,7 +19,6 @@ import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.KNSServerListVisitor;
-import org.aksw.kbox.kns.KNSTable;
 import org.aksw.kbox.kns.ServerAddress;
 
 import com.hp.hpl.jena.query.ResultSet;
@@ -115,7 +114,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the indexing process.
 	 */
 	public static void installKB(URL knowledgeBase, String format, String version, InputStreamFactory isFactory) throws Exception {
-		URL sourceURL = resolve(knowledgeBase);
+		URL sourceURL = resolve(knowledgeBase, format, version);
 		if(sourceURL == null) {
 			throw new KBNotFoundException("Knowledge base " + knowledgeBase.toString() + " can not be resolved.");
 		}
@@ -174,7 +173,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
 	 */
 	public static void installKBFromKNSServer(URL knowledgebase, URL knsServer) throws KBNotFoundException, Exception {
-		URL file = KNSTable.resolve(knowledgebase, knsServer);
+		URL file = resolve(knowledgebase, knsServer);
 		if(file == null) {
 			throw new KBNotResolvedException(knowledgebase.toString());
 		}
@@ -192,8 +191,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the indexing process.
 	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
 	 */
-	public static void installKBFromKNSServer(URL knowledgebase, URL knsServer, InputStreamFactory isFactory) throws KBNotFoundException, Exception {
-		URL file = KNSTable.resolve(knowledgebase, knsServer);
+	public static void installKBFromKNSServer(URL knowledgebase, URL knsServerURL, InputStreamFactory isFactory) throws KBNotFoundException, Exception {
+		URL file = resolve(knowledgebase, knsServerURL);
 		if(file == null) {
 			throw new KBNotResolvedException(knowledgebase.toString());
 		}
@@ -211,7 +210,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
 	 */
 	public static void installKBFromKNSServer(URL knowledgebase, URL knsServer, String format, String version) throws KBNotFoundException, Exception {
-		URL file = KNSTable.resolve(knowledgebase, knsServer, format, version);
+		URL file = resolve(knowledgebase, knsServer, format, version);
 		if(file == null) {
 			throw new KBNotResolvedException(knowledgebase.toString());
 		}
@@ -230,7 +229,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the indexing process.
 	 */
 	public static void installKBFromKNSServer(URL knowledgebase, URL knsServer, String format, String version, InputStreamFactory isFactory) throws KBNotFoundException, Exception {
-		URL file = KNSTable.resolve(knowledgebase, knsServer, format, version);
+		URL file = resolve(knowledgebase, knsServer, format, version);
 		if(file == null) {
 			throw new KBNotResolvedException(knowledgebase.toString());
 		}
