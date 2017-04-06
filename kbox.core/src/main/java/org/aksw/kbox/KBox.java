@@ -30,7 +30,7 @@ public class KBox {
 	private static final String CHK = ".chk";
 
 	private final static Logger logger = Logger.getLogger(KBox.class);
-
+	
 	private static String cachedResourceFolderPath = null;
 
 	static {
@@ -413,15 +413,18 @@ public class KBox {
 	}
 	
 	public static void validate(File dir) throws IOException {
-		check(dir.getAbsolutePath());
+		validate(dir.getAbsolutePath());
 	}
 	
-	public static void check(String path) throws IOException {
+	public static void validate(String path) throws IOException {
 		File file = new File(path + CHK);
 		file.createNewFile();
 	}
 	
 	public static boolean isValid(String path) {
+		if(path.endsWith(File.separator)) {
+			path = path.substring(0, path.length()-1);
+		}
 		File file = new File(path + CHK);
 		return file.exists();
 	}

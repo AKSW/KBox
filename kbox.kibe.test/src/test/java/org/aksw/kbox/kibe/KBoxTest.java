@@ -31,7 +31,7 @@ public class KBoxTest {
 		KBox.installKB(indexFile.toURI().toURL(), new URL("http://dbpedia.org/3.9"));
 		indexFile.deleteOnExit();
 		
-		indexFile = File.createTempFile("knowledgebase","idx");		
+		indexFile = File.createTempFile("knowledgebase","idx");
 		url = TDBTest.class.getResource("/org/aksw/kbox/kibe/foaf.rdf");
 		filesToIndex[0] = url;		
 		KBox.createIndex(indexFile, filesToIndex);
@@ -90,7 +90,7 @@ public class KBoxTest {
 	}
 	
 	@Test
-	public void testInstallProcess() throws Exception {		
+	public void testInstallProcess() throws Exception {
 		ResultSet rs = KBox.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
 				new URL("http://dbpedia39"));
 		int i = 0;
