@@ -26,6 +26,15 @@ public class CustomParams implements Serializable {
 	public CustomParams(String path, String context) {
 		this.context = context;
 		this.path = path;
+		File dbFile = new File(path);
+		if(!dbFile.exists()) {
+			createDB();
+		}
+	}
+	
+	private void createDB() {		
+		DB db = getDB();
+		db.close();
 	}
 	
 	public synchronized String getProperty(String property, String defaultValue) {
