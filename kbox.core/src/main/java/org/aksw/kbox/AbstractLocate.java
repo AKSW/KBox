@@ -13,8 +13,9 @@ public abstract class AbstractLocate implements Locate, Locator {
 	}
 
 	public File locate(URL url) throws Exception {
-		File localFile = new File(URLToAbsolutePath(url));
-		if(localFile.exists()) {
+		String path = URLToAbsolutePath(url);
+		File localFile = new File(path);
+		if(localFile.exists() && KBox.isValid(path)) {
 			return localFile;
 		}
 		return null;

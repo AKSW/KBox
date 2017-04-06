@@ -26,6 +26,6 @@ public class ZipInstall extends ResourceInstall {
 		File destPath = new File(URLToAbsolutePath(target));
 		destPath.mkdirs();
 		ZIPUtil.unzip(resource, destPath.getAbsolutePath());
-		check(destPath);
+		validate(destPath);
 	}
 }

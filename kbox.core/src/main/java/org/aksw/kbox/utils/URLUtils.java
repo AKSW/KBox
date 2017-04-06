@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 public class URLUtils {
 	public static URL[] stringToURL(String... urls) throws Exception {
@@ -32,5 +33,15 @@ public class URLUtils {
 			i++;
 		}		
 		return urls;
+	}
+	
+	public static long getContentLength(URL url) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		List<String> values = conn.getHeaderFields().get("content-length");
+		conn.disconnect();
+		if(values != null) {
+			return Long.valueOf(values.get(0));
+		}
+		return -1;
 	}
 }

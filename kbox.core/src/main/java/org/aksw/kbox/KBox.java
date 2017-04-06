@@ -412,7 +412,7 @@ public class KBox {
 		installFromZip(source, source);
 	}
 	
-	public static void check(File dir) throws IOException {
+	public static void validate(File dir) throws IOException {
 		check(dir.getAbsolutePath());
 	}
 	
@@ -421,7 +421,7 @@ public class KBox {
 		file.createNewFile();
 	}
 	
-	public static boolean isChecked(String path) {
+	public static boolean isValid(String path) {
 		File file = new File(path + CHK);
 		return file.exists();
 	}

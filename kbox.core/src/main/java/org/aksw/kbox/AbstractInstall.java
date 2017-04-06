@@ -23,11 +23,11 @@ public abstract class AbstractInstall implements Install, Locator {
 	public void install(URL source, URL dest) throws Exception {
 		if(isFactory == null) {
 			try(InputStream is = source.openStream()) {
-				install(source.openStream(), dest);
+				install(is, dest);
 			}
 		} else {
 			try(InputStream is = isFactory.get(source)) {
-				install(source.openStream(), dest);
+				install(is, dest);
 			}
 		}
 	}
@@ -42,10 +42,10 @@ public abstract class AbstractInstall implements Install, Locator {
 		try (FileOutputStream fos = new FileOutputStream(destFile)) {
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		}
-		check(destFile);
+		validate(destFile);
 	}
 	
-	public void check(File destFile) throws IOException {
-		KBox.check(destFile);
+	public void validate(File destFile) throws IOException {
+		KBox.validate(destFile);
 	}
 }
