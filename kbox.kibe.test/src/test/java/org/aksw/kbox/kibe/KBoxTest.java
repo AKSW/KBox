@@ -172,7 +172,7 @@ public class KBoxTest {
 	@Test
 	public void testResolveKNS() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		URL fileURL = KBox.resolve(new URL("http://test.org"), serverURL);
+		URL fileURL = KBox.resolve(serverURL, new URL("http://test.org"));
 		assertEquals(fileURL.toString(), "http://target.org");
 	}
 	
