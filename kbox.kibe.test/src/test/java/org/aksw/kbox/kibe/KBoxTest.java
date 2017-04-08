@@ -79,8 +79,8 @@ public class KBoxTest {
 	
 	@Test
 	public void testResolveURLWithKBoxKNSService() throws Exception {
-		URL db = KBox.resolve(new URL("http://dbpedia.org/3.9/en/full"));
-		assertEquals(db.toString(), "http://vmdbpedia.informatik.uni-leipzig.de:3031/dbpedia/3.9/kbox.kb");
+		KN resolvedKN = KBox.resolve(new URL("http://dbpedia.org/3.9/en/full"));
+		assertEquals(resolvedKN.getTarget(), "http://vmdbpedia.informatik.uni-leipzig.de:3031/dbpedia/3.9/kbox.kb");
 	}
 	
 	@Test
@@ -172,8 +172,8 @@ public class KBoxTest {
 	@Test
 	public void testResolveKNS() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		URL fileURL = KBox.resolve(serverURL, new URL("http://test.org"));
-		assertEquals(fileURL.toString(), "http://target.org");
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
+		assertEquals(resolvedKN.getTarget(), "http://target.org");
 	}
 	
 	@Test
