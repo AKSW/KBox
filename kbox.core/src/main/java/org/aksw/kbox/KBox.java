@@ -2,7 +2,6 @@ package org.aksw.kbox;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
@@ -412,23 +411,23 @@ public class KBox {
 		installFromZip(source, source);
 	}
 	
-	public static void validate(File resource) throws IOException {
+	public static void validate(File resource) throws Exception {
 		validate(resource.getAbsolutePath());
 	}
 	
-	public static void validate(String resourcePath) throws IOException {
-		if(resourcePath.endsWith(File.separator)) {
-			resourcePath = resourcePath.substring(0, resourcePath.length()-1);
-		}
-		File file = new File(resourcePath + CHK);
+	public static void validate(String resourcePath) throws Exception {
+		String canonicalPath = getCanonicalPath(resourcePath);
+		File file = new File(canonicalPath + CHK);
 		file.createNewFile();
 	}
 	
-	public static boolean isValid(String resourcePath) {
-		if(resourcePath.endsWith(File.separator)) {
-			resourcePath = resourcePath.substring(0, resourcePath.length()-1);
-		}
-		File file = new File(resourcePath + CHK);
+	public static boolean isValid(String resourcePath) throws Exception {
+		String canonicalPath = getCanonicalPath(resourcePath);
+		File file = new File(canonicalPath + CHK);
 		return file.exists();
+	}
+	
+	private static String getCanonicalPath(String path) throws Exception {
+		return new File(path).getCanonicalPath();
 	}
 }

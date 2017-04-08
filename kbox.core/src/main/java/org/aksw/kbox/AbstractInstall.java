@@ -2,7 +2,6 @@ package org.aksw.kbox;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -45,7 +44,7 @@ public abstract class AbstractInstall implements Install, Locator {
 		validate(destFile);
 	}
 	
-	public void validate(File destFile) throws IOException {
+	public void validate(File destFile) throws Exception {
 		KBox.validate(destFile);
 	}
 }
