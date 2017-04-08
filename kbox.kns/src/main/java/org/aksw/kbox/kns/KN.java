@@ -3,6 +3,7 @@ package org.aksw.kbox.kns;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URL;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,6 +52,10 @@ public class KN {
 	
 	public String getTarget() {
 		return target;
+	}
+	
+	public URL getTargetURL() throws Exception {
+		return new URL(target);
 	}
 	
 	public void setTarget(String target) {

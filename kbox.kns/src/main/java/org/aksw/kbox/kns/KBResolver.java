@@ -7,21 +7,21 @@ public class KBResolver implements Resolver {
 	}
 
 	@Override
-	public URL resolve(URL knsServerURL, URL resourceURL) throws Exception {
-		URL resolvedURL = KNSTable.resolve(knsServerURL, resourceURL);
-		return resolvedURL;
+	public KN resolve(URL knsServerURL, URL resourceURL) throws Exception {
+		KN resolvedKN = KNSTable.resolve(knsServerURL, resourceURL);
+		return resolvedKN;
 	}
 	
 	@Override
-	public URL resolve(URL knsServerURL, URL resourceURL, String format) throws Exception {
-		URL resolvedURL = KNSTable.resolve(resourceURL, knsServerURL, format, null);
-		return resolvedURL;
+	public KN resolve(URL knsServerURL, URL resourceURL, String format) throws Exception {
+		KN resolvedKN = KNSTable.resolve(resourceURL, knsServerURL, format, null);
+		return resolvedKN;
 	}
 	
 	@Override
-	public URL resolve(URL knsServerURL, URL resourceURL, String format, String version) throws Exception {
-		URL resolvedURL = KNSTable.resolve(resourceURL, knsServerURL, format, version);
-		return resolvedURL;
+	public KN resolve(URL knsServerURL, URL resourceURL, String format, String version) throws Exception {
+		KN resolvedKN = KNSTable.resolve(resourceURL, knsServerURL, format, version);
+		return resolvedKN;
 	}
 
 }

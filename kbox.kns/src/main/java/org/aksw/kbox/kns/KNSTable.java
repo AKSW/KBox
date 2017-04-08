@@ -37,7 +37,7 @@ public class KNSTable {
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public URL resolveURL(URL resourceURL) throws IOException {
+	public KN resolveURL(URL resourceURL) throws IOException {
 		return resolve(knsServerURL, resourceURL);
 	}
 	
@@ -51,7 +51,7 @@ public class KNSTable {
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL knsServerURL, URL resourceURL) throws IOException {
+	public static KN resolve(URL knsServerURL, URL resourceURL) throws IOException {
 		return resolve(knsServerURL, resourceURL, null, null);
 	}
 	
@@ -63,11 +63,11 @@ public class KNSTable {
 	 * @param format the KB format. 
 	 * @param version the KB version.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved KN.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL knsServerURL, URL resourceURL, String format, String version) throws IOException {
+	public static KN resolve(URL knsServerURL, URL resourceURL, String format, String version) throws IOException {
 		URL tableURL = new URL(knsServerURL.toString() + "/" + FILE_SERVER_TABLE_FILE_NAME);
 		try(InputStream is = tableURL.openStream()) {
 			try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
@@ -80,7 +80,7 @@ public class KNSTable {
 							if(kns.equals(resourceURL.toString(), format, version)) {
 							   URL target = new URL(kns.getTarget());
 							   if(!URLUtils.checkStatus(target, 404)) {
-								   return target;
+								   return kns;
 							   } else {
 								   logger.warn("Invalid KNS target: " + target);
 							   }

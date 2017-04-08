@@ -18,6 +18,7 @@ import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.KBResolver;
+import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.Resolver;
 import org.aksw.kbox.kns.ServerAddress;
@@ -74,9 +75,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static void installKB(URL knowledgebase, Resolver resolver) throws KBNotResolvedException, Exception {
 		KBKNSServerList knsServerList = new KBKNSServerList();
-		URL resolvedURL = resolve(knsServerList, knowledgebase, resolver);
-		assertNotNull(resolvedURL, new KBNotResolvedException(knowledgebase.toString()));
-		install(resolvedURL, knowledgebase);
+		KN resolvedKN = resolve(knsServerList, knowledgebase, resolver);
+		assertNotNull(new KBNotResolvedException(knowledgebase.toString()), resolvedKN);
+		install(resolvedKN.getTargetURL(), knowledgebase);
 	}
 	
 	/**
@@ -91,9 +92,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static void installKB(URL knowledgebase, Resolver resolver, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
 		KBKNSServerList knsServerList = new KBKNSServerList();
-		URL resolvedURL = resolve(knsServerList, knowledgebase, resolver);
-		assertNotNull(resolvedURL, new KBNotResolvedException(knowledgebase.toString()));
-		installKB(resolvedURL, knowledgebase, isFactory);
+		KN resolvedKN = resolve(knsServerList, knowledgebase, resolver);
+		assertNotNull(new KBNotResolvedException(knowledgebase.toString()), resolvedKN);
+		installKB(resolvedKN.getTargetURL(), knowledgebase, isFactory);
 	}
 	
 	/**
@@ -147,9 +148,10 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static void installKB(URL knowledgebase, String format, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
 		KBResolver resolver = new KBResolver();
-		URL resolvedURL = resolve(knowledgebase, format, null, resolver);
-		assertNotNull(resolvedURL, new KBNotResolvedException(knowledgebase.toString()));
-		install(resolvedURL, knowledgebase, new AppZipInstall(format, DEFAULT_VERSION, isFactory));
+		KN resolvedKN = resolve(knowledgebase, format, null, resolver);
+		assertNotNull(new KBNotResolvedException(knowledgebase.toString()), resolvedKN);
+		String version = resolvedKN.getVersion();		
+		install(resolvedKN.getTargetURL(), knowledgebase, new AppZipInstall(format, getVersion(version), isFactory));
 	}
 	
 	/**
@@ -165,9 +167,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static void installKB(URL knowledgebase, String format, String version, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
 		KBResolver resolver = new KBResolver();
-		URL resolvedURL = resolve(knowledgebase, format, version, resolver);
-		assertNotNull(resolvedURL, new KBNotResolvedException(knowledgebase.toString()));
-		install(resolvedURL, knowledgebase, new AppZipInstall(format, version, isFactory));
+		KN resolvedKN = resolve(knowledgebase, format, version, resolver);
+		assertNotNull(new KBNotResolvedException(knowledgebase.toString()), resolvedKN);
+		install(resolvedKN.getTargetURL(), knowledgebase, new AppZipInstall(format, version, isFactory));
 	}
 	
 	
@@ -264,9 +266,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
 	 */
 	public static void installKBFromKNSServer(URL knsServer, URL knowledgebase, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
-		URL resolvedURL = resolve(knsServer, knowledgebase);
-		assertNotNull(resolvedURL, new KBNotResolvedException(knowledgebase.toString()));
-		installKB(knowledgebase, resolvedURL, isFactory);
+		KN resolvedKN = resolve(knsServer, knowledgebase);
+		assertNotNull(new KBNotResolvedException(knowledgebase.toString()), resolvedKN);
+		installKB(resolvedKN.getTargetURL(), knowledgebase, isFactory);
 	}
 	
 	/**
@@ -313,9 +315,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the indexing process.
 	 */
 	public static void installKBFromKNSServer(URL knsServer, URL knowledgebase, String format, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
-		URL resolvedURL = resolve(knsServer, knowledgebase, format);
-		assertNotNull(resolvedURL, new KBNotResolvedException(knowledgebase.toString()));
-		installKB(knowledgebase, resolvedURL, format, isFactory);
+		KN resolvedKN = resolve(knsServer, knowledgebase, format);
+		assertNotNull(new KBNotResolvedException(knowledgebase.toString()), resolvedKN);
+		installKB(resolvedKN.getTargetURL(), knowledgebase, format, isFactory);
 	}
 	
 	/**
@@ -332,9 +334,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the indexing process.
 	 */
 	public static void installKBFromKNSServer(URL knsServer, URL knowledgebase, String format, String version, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
-		URL resolvedURL = resolve(knsServer, knowledgebase, format, version);
-		assertNotNull(resolvedURL, new KBNotResolvedException(knowledgebase.toString()));
-		installKB(knowledgebase, resolvedURL, format, version, isFactory);
+		KN resolvedKN = resolve(knsServer, knowledgebase, format, version);
+		assertNotNull(new KBNotResolvedException(knowledgebase.toString()), resolvedKN);
+		installKB(resolvedKN.getTargetURL(), knowledgebase, format, version, isFactory);
 	}
 	
 	/**
@@ -390,17 +392,17 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		for(URL knowledgeBase : urls) {
 			File localDataset = locateKB(knowledgeBase);
 			if(localDataset == null && install) {
-				URL resolvedURL = resolve(knowledgeBase);
-				assertNotNull(resolvedURL, new KBNotResolvedException(knowledgeBase.toString()));
-				try(InputStream is = factory.get(resolvedURL)) {
+				KN resolvedKN = resolve(knowledgeBase);
+				assertNotNull(new KBNotResolvedException(knowledgeBase.toString()), resolvedKN.getTargetURL());
+				try(InputStream is = factory.get(resolvedKN.getTargetURL())) {
 					installKB(is, knowledgeBase);
 				} catch (Exception e) {
 					throw new KBDereferencingException(knowledgeBase.toString(), e);
 				}
 				localDataset = locateKB(knowledgeBase);
 			} else {
-				assertNotNull(localDataset, new KBNotResolvedException("Knowledge base " + knowledgeBase.toString() + " is not installed."
-					+ " You can install it using the command install."));
+				assertNotNull(new KBNotResolvedException("Knowledge base " + knowledgeBase.toString() + " is not installed."
+						+ " You can install it using the command install."), localDataset);
 			}
 			knowledgeBasesPaths[i] = localDataset.getAbsolutePath();
 			i++;
@@ -568,7 +570,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(URL resourceURL) throws Exception {
+	public static KN resolve(URL resourceURL) throws Exception {
 		KBKNSServerList kibeKNSServerList = new KBKNSServerList();
 		return resolve(kibeKNSServerList, resourceURL);
 	}
@@ -581,11 +583,11 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param knsServerURL the URL of the KNS Server.
 	 * @param resourceURL the URL to be resolved by the KNS.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL knsServerURL, URL resourceURL) throws Exception {
+	public static KN resolve(URL knsServerURL, URL resourceURL) throws Exception {
 		KBResolver resolver = new KBResolver();
 		return resolve(knsServerURL, resourceURL, resolver);
 	}
@@ -599,11 +601,11 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param resourceURL the URL to be resolved by the KNS.	 
 	 * @param format the KB format.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(URL knsServerURL, URL resourceURL, String format) throws Exception {
+	public static KN resolve(URL knsServerURL, URL resourceURL, String format) throws Exception {
 		KBResolver resolver = new KBResolver();
 		return resolve(knsServerURL, resourceURL, format, resolver);
 	}
@@ -618,11 +620,11 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param format the KB format. 
 	 * @param version the KB version.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(URL knsServerURL, URL resourceURL, String format, String version) throws Exception {
+	public static KN resolve(URL knsServerURL, URL resourceURL, String format, String version) throws Exception {
 		KBResolver resolver = new KBResolver();
 		return resolve(knsServerURL, resourceURL, format, version, resolver);
 	}
@@ -637,6 +639,13 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	public static void visit(KNSServerListVisitor visitor) throws Exception {
 		KBKNSServerList kibeKNSServerList = new KBKNSServerList();
 		kibeKNSServerList.visit(visitor);
+	}
+	
+	private static String getVersion(String version) {
+		if(version == null) {
+			return DEFAULT_VERSION;
+		}
+		return version;
 	}
 	
 }

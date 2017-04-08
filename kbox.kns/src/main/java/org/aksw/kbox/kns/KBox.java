@@ -37,11 +37,11 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the URL to be resolved by the KNS.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(KNSServerList knsServerList, URL resourceURL) throws Exception {
+	public static KN resolve(KNSServerList knsServerList, URL resourceURL) throws Exception {
 		KBResolver resolver = new KBResolver();
 		return resolve(knsServerList, resourceURL, resolver);
 	}
@@ -54,15 +54,15 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the URL to be resolved by the KNS.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(KNSServerList knsServerList, URL resourceURL, Resolver resolver) throws Exception {
+	public static KN resolve(KNSServerList knsServerList, URL resourceURL, Resolver resolver) throws Exception {
 		KNSResolverVisitor resolveVisitor = new KNSResolverVisitor(resourceURL, resolver);
 		knsServerList.visit(resolveVisitor);
-		URL resolvedURL = resolveVisitor.getResolvedURL();
-		return resolvedURL;
+		KN resolvedKN = resolveVisitor.getResolvedKN();
+		return resolvedKN;
 	}
 	
 	/**
@@ -80,9 +80,9 @@ public class KBox extends org.aksw.kbox.KBox {
 	 */
 	public static void install(URL knsServer, URL resourceURL, Resolver resolver, Install install)
 			throws ResourceNotResolvedException, Exception {		
-		URL resolvedURL = resolver.resolve(knsServer, resourceURL);
-		assertNotNull(resolvedURL, new ResourceNotResolvedException(resourceURL.toString()));
-		install(resolvedURL, resourceURL, install);
+		KN resolvedKN = resolver.resolve(knsServer, resourceURL);
+		assertNotNull(new ResourceNotResolvedException(resourceURL.toString()), resolvedKN);
+		install(resolvedKN.getTargetURL(), resourceURL, install);
 	}
 	
 	/**
@@ -93,11 +93,11 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param knsServerList list of KNS servers.
 	 * @param resourceURL the URL to be resolved by the KNS.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(URL resourceURL, String format, String version) throws Exception {
+	public static KN resolve(URL resourceURL, String format, String version) throws Exception {
 		return resolve(new KNSServerList(), resourceURL, format, version);
 	}
 	
@@ -109,11 +109,11 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param knsServerList list of KNS servers.
 	 * @param resourceURL the URL to be resolved by the KNS.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(URL resourceURL, String format, String version, Resolver resolver) throws Exception {
+	public static KN resolve(URL resourceURL, String format, String version, Resolver resolver) throws Exception {
 		return resolve(new KNSServerList(), resourceURL, format, version, resolver);
 	}
 	
@@ -127,11 +127,11 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param format the KB format. 
 	 * @param version the KB version.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(KNSServerList knsServerList, URL resourceURL, String format, String version) throws Exception {
+	public static KN resolve(KNSServerList knsServerList, URL resourceURL, String format, String version) throws Exception {
 		KBResolver resolver = new KBResolver();
 		return resolve(knsServerList, resourceURL, format, version, resolver);
 	}
@@ -147,15 +147,15 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param version the KB version. 
 	 * @param resolver the resolver that will resolve the given URL.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static URL resolve(KNSServerList knsServerList, URL resourceURL, String format, String version, Resolver resolver) throws Exception {
+	public static KN resolve(KNSServerList knsServerList, URL resourceURL, String format, String version, Resolver resolver) throws Exception {
 		KNSResolverVisitor resolveVisitor = new KNSResolverVisitor(resourceURL, format, version, resolver);
 		knsServerList.visit(resolveVisitor);
-		URL resolvedURL = resolveVisitor.getResolvedURL();
-		return resolvedURL;
+		KN resolvedKN = resolveVisitor.getResolvedKN();
+		return resolvedKN;
 	}
 	
 	/**
@@ -168,13 +168,13 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param format the KB format.
 	 * @param resolver the resolver that will resolve the given URL.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL knsServerURL, URL resourceURL, String format, Resolver resolver) throws ResourceNotResolvedException, Exception {
-		URL resolvedURL = resolver.resolve(resourceURL, knsServerURL, format);
-		return resolvedURL;
+	public static KN resolve(URL knsServerURL, URL resourceURL, String format, Resolver resolver) throws ResourceNotResolvedException, Exception {
+		KN resolvedKN = resolver.resolve(resourceURL, knsServerURL, format);
+		return resolvedKN;
 	}
 	
 	/**
@@ -188,13 +188,13 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param version the KB version. 
 	 * @param resolver the resolver that will resolve the given URL.
 	 * 
-	 * @return the resolved URL or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL knsServerURL, URL resourceURL, String format, String version, Resolver resolver) throws ResourceNotResolvedException, Exception {
-		URL resolvedURL = resolver.resolve(resourceURL, knsServerURL, format, version);
-		return resolvedURL;
+	public static KN resolve(URL knsServerURL, URL resourceURL, String format, String version, Resolver resolver) throws ResourceNotResolvedException, Exception {
+		KN resolvedKN = resolver.resolve(resourceURL, knsServerURL, format, version);
+		return resolvedKN;
 	}
 	
 	/**
@@ -210,12 +210,12 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL knsServerURL, URL resourceURL, Resolver resolver) throws ResourceNotResolvedException, Exception {
-		URL resolvedURL = resolver.resolve(knsServerURL, resourceURL);
-		return resolvedURL;
+	public static KN resolve(URL knsServerURL, URL resourceURL, Resolver resolver) throws ResourceNotResolvedException, Exception {
+		KN resolvedKN = resolver.resolve(knsServerURL, resourceURL);
+		return resolvedKN;
 	}
 	
-	public static void assertNotNull(Object object, Exception exception) throws Exception {
+	public static void assertNotNull(Exception exception, Object... object) throws Exception {
 		if(object == null) {
 			throw exception;
 		}

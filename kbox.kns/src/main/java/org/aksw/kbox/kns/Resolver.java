@@ -12,11 +12,11 @@ public interface Resolver {
 	 * @param knsServerURL the URL of the KNS Server.
 	 * @param resourceURL the URL to be resolved by the KNS.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved KN.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	URL resolve(URL knsServerURL, URL resourceURL) throws Exception;	
+	KN resolve(URL knsServerURL, URL resourceURL) throws Exception;	
 	
 	/**
 	 * Resolve the given URL in the available KNS.
@@ -27,11 +27,11 @@ public interface Resolver {
 	 * @param resourceURL the URL to be resolved by the KNS.	 
 	 * @param format the KB format.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved KN.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	URL resolve(URL knsServerURL, URL resourceURL, String format) throws Exception;
+	KN resolve(URL knsServerURL, URL resourceURL, String format) throws Exception;
 	
 	/**
 	 * Resolve the given URL in the available KNS.
@@ -43,10 +43,10 @@ public interface Resolver {
 	 * @param format the KB format. 
 	 * @param version the KB version.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved KN.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	URL resolve(URL knsServerURL, URL resourceURL, String format, String version) throws Exception;	
+	KN resolve(URL knsServerURL, URL resourceURL, String format, String version) throws Exception;	
 	
 }
