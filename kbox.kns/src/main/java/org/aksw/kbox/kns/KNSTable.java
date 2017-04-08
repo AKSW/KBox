@@ -17,13 +17,15 @@ public class KNSTable {
 	private final static Logger logger = Logger.getLogger(KNSTable.class);	
 	
 	private URL tableURL = null;
+	private URL knsServerURL = null;
 	
 	public KNSTable(URL url) throws MalformedURLException {		
 		this(url.toString());
 	}
 	
 	public KNSTable(String url) throws MalformedURLException {
-		tableURL = new URL(url + "/" + FILE_SERVER_TABLE_FILE_NAME);
+		this.knsServerURL = new URL(url);
+		this.tableURL = new URL(url + "/" + FILE_SERVER_TABLE_FILE_NAME);		
 	}
 	
 	/**
@@ -36,7 +38,7 @@ public class KNSTable {
 	 * @throws IOException if any error occurs during the operation.
 	 */
 	public URL resolveURL(URL resourceURL) throws IOException {
-		return resolve(resourceURL, tableURL);
+		return resolve(knsServerURL, resourceURL);
 	}
 	
 	/**
@@ -49,8 +51,8 @@ public class KNSTable {
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL resourceURL, URL knsServerURL) throws IOException {
-		return resolve(resourceURL, knsServerURL, null, null);
+	public static URL resolve(URL knsServerURL, URL resourceURL) throws IOException {
+		return resolve(knsServerURL, resourceURL, null, null);
 	}
 	
 	/**
@@ -65,7 +67,7 @@ public class KNSTable {
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL resourceURL, URL knsServerURL, String format, String version) throws IOException {
+	public static URL resolve(URL knsServerURL, URL resourceURL, String format, String version) throws IOException {
 		URL tableURL = new URL(knsServerURL.toString() + "/" + FILE_SERVER_TABLE_FILE_NAME);
 		try(InputStream is = tableURL.openStream()) {
 			try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {

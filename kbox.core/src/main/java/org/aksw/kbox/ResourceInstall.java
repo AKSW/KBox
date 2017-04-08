@@ -18,7 +18,7 @@ public class ResourceInstall extends AbstractInstall {
 	}
 
 	@Override
-	public String URLToAbsolutePath(URL url) {
+	public String URLToAbsolutePath(URL url) throws Exception {
 		return KBox.URLToAbsolutePath(url);
 	}	
 

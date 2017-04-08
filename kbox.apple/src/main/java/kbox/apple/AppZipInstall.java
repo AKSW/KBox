@@ -23,7 +23,7 @@ public class AppZipInstall extends ZipInstall {
 	}
 
 	@Override
-	public String URLToAbsolutePath(URL url) {
+	public String URLToAbsolutePath(URL url) throws Exception {
 		return KBox.getResourceFolder()
 				+ File.separator
 				+ format

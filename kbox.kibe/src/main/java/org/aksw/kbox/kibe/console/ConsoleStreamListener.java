@@ -18,6 +18,7 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	private long read = 0;
 	private long startTime = 0;
 	private int size = 20;
+	private boolean stoped = false;
 	
 	/**
 	 * Constructor of CommandLineStreamListener
@@ -67,8 +68,11 @@ public class ConsoleStreamListener implements InstallStreamListener {
 
 	@Override
 	public void stop() {
-		printProgress(startTime, 100, 100, size);
-		System.out.println();
+		if(!stoped) {
+			printProgress(startTime, 100, 100, size);
+			System.out.println();
+			stoped = true;
+		}
 	}
 	
 	/**
@@ -116,9 +120,10 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	/**
 	 * Print a undefined progress in the console.
 	 * 
-	 * @param read
+	 * @param read the number of read bytes.
+	 * @param size the size of the console bar.
 	 */
-	private void printUndefined(long read, int size) {		
+	private void printUndefined(long read, int size) {
 	    StringBuilder string = new StringBuilder(140);
 	    int pos = (int) ((read)/(size*50000)) % size;
 	    string
@@ -127,9 +132,9 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	        .append("  ??% [");
         for(int i=0; i < size+1; i++) {
         	if(i==pos) {
-        		string.append(">");
+        		string.append("?");
         	} else if(i < pos) {
-        		string.append("=");
+        		string.append("?");
         	} else {
         		string.append(" ");
         	}

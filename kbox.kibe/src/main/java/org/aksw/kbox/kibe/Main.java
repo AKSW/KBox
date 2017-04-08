@@ -11,7 +11,6 @@ import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
-import org.aksw.kbox.kibe.exception.KBNotFoundException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.KNSServerList;
@@ -19,6 +18,7 @@ import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
 import org.aksw.kbox.utils.URLUtils;
 import org.apache.log4j.Logger;
+import org.askw.kbox.kns.exception.ResourceNotResolvedException;
 
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
@@ -131,7 +131,10 @@ public class Main {
 				System.out.println("Installing KB " + kbURL + " from KNS " + knsServer);
 				if(format == null && version == null) {
 					KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), inputStreamFactory);					
-				} else {
+				} if(format != null) {
+					KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), format, inputStreamFactory);					
+				} 
+				else {
 					KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), format, version, inputStreamFactory);
 				}
 				System.out.println("KB installed.");
@@ -164,25 +167,29 @@ public class Main {
 							if(kbFile == null) {
 								KBox.installKB(kbNameURL, format, version, inputStreamFactory);
 							}
-						} else {		
+						} else if (format != null) { 
+							File kbFile = KBox.locateKB(kbNameURL, format);
+							if(kbFile == null) {
+								KBox.installKB(kbNameURL, format, inputStreamFactory);
+							}
+						} else {
 							File kbFile = KBox.locateKB(kbNameURL);
 							if(kbFile == null) {
 								KBox.installKB(kbNameURL, inputStreamFactory);
 							}
 						}
 						System.out.println("KB installed.");
-					} catch (KBNotResolvedException e) {
-						String message = "The knowledge base " + kbNameURL + " could not be found.";
-						System.out.println(message);
-						logger.error(message, e);
 					} catch (MalformedURLException e){
 						String message  = e.getMessage();
 						System.out.println(message);
 						logger.error(message, e);
 					} catch (Exception e) {
-						String message =  "The knowledge base could not be found: (URL:" + kbNameURL;
-						if(version != null && format != null) {
-							message += ", format: " + format + ", " + "vesion: " + version;  
+						String message =  "The knowledge base could not be found: URL:" + kbNameURL;
+						if(format != null) {
+							message += ", format: " + format;
+						}
+						if(version != null) {
+							message += ", " + "vesion: " + version;  
 						}
 						System.out.println(message);
 						logger.error(message, e);
@@ -381,7 +388,7 @@ public class Main {
 				};
 				Server server = new Server(port, KBox.getResourceFolder(), subDomain, model, serverListener);
 				server.start();
-			} catch (KBNotFoundException e) {
+			} catch (ResourceNotResolvedException e) {
 				System.out.println("Error installing KB: "
 						+ "The knowledge base could not be found.");				
 				System.out.println("You can install it by executing the command -install -kb or "

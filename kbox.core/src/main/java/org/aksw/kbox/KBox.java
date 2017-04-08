@@ -260,7 +260,7 @@ public class KBox {
 	 *         resource.
 	 *         
 	 * @throws Exception if the resource can not be located or some error occurs
-	 *             while creating the local miror.
+	 *             while creating the local mirror.
 	 */
 	public static InputStream getResourceAsStream(URL url) throws Exception {
 		return getResourceAsStream(url, false);
@@ -307,7 +307,7 @@ public class KBox {
 	 */
 	public static void install(URL source, URL dest) throws Exception {
 		try (InputStream is = source.openStream()) {
-			install(source.openStream(), dest);
+			install(is, dest);
 		}
 	}
 
@@ -326,7 +326,7 @@ public class KBox {
 	 */
 	public static void install(URL url) throws Exception {
 		try (InputStream is = url.openStream()) {
-			install(url.openStream(), url);
+			install(is, url);
 		}
 	}
 
@@ -412,20 +412,23 @@ public class KBox {
 		installFromZip(source, source);
 	}
 	
-	public static void validate(File dir) throws IOException {
-		validate(dir.getAbsolutePath());
+	public static void validate(File resource) throws IOException {
+		validate(resource.getAbsolutePath());
 	}
 	
-	public static void validate(String path) throws IOException {
-		File file = new File(path + CHK);
+	public static void validate(String resourcePath) throws IOException {
+		if(resourcePath.endsWith(File.separator)) {
+			resourcePath = resourcePath.substring(0, resourcePath.length()-1);
+		}
+		File file = new File(resourcePath + CHK);
 		file.createNewFile();
 	}
 	
-	public static boolean isValid(String path) {
-		if(path.endsWith(File.separator)) {
-			path = path.substring(0, path.length()-1);
+	public static boolean isValid(String resourcePath) {
+		if(resourcePath.endsWith(File.separator)) {
+			resourcePath = resourcePath.substring(0, resourcePath.length()-1);
 		}
-		File file = new File(path + CHK);
+		File file = new File(resourcePath + CHK);
 		return file.exists();
 	}
 }

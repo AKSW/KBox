@@ -3,7 +3,11 @@ package org.aksw.kbox.kns;
 import java.io.IOException;
 import java.net.URL;
 
+import org.aksw.kbox.Install;
+import org.askw.kbox.kns.exception.ResourceNotResolvedException;
+
 public class KBox extends org.aksw.kbox.KBox {
+
 	/**
 	 * Install the given URL in your personal Knowledge Name Service.
 	 * This service will be used to Lookup Knowledge bases.
@@ -30,17 +34,16 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * The first KNS to be checked is the default KNS, 
 	 * thereafter the user's KNS.
 	 * 
-	 * @param resourceURL the URL to be resolved by the KNS.
 	 * @param knsServerList list of KNS servers
+	 * @param resourceURL the URL to be resolved by the KNS.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved URL or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static URL resolve(KNSServerList knsServerList, URL resourceURL) throws Exception {
-		KNSResolverVisitor resolveVisitor = new KNSResolverVisitor(resourceURL);
-		knsServerList.visit(resolveVisitor);
-		return resolveVisitor.getResolvedURL();
+		KBResolver resolver = new KBResolver();
+		return resolve(knsServerList, resourceURL, resolver);
 	}
 	
 	/**
@@ -48,10 +51,49 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * The first KNS to be checked is the default KNS, 
 	 * thereafter the user's KNS.
 	 * 
-	 * @param resourceURL the URL to be resolved by the KNS.
 	 * @param knsServerList list of KNS servers
+	 * @param resourceURL the URL to be resolved by the KNS.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved URL or NULL if it is not resolved.
+	 * 
+	 * @throws Exception if any error occurs during the operation.
+	 */
+	public static URL resolve(KNSServerList knsServerList, URL resourceURL, Resolver resolver) throws Exception {
+		KNSResolverVisitor resolveVisitor = new KNSResolverVisitor(resourceURL, resolver);
+		knsServerList.visit(resolveVisitor);
+		URL resolvedURL = resolveVisitor.getResolvedURL();
+		return resolvedURL;
+	}
+	
+	/**
+	 * Creates a mirror for the given file in a given URL. This function allows
+	 * KBox to serve files to applications, acting as proxy to the mirrored
+	 * file. The file that is published in a give URL u will be located when the
+	 * client execute the function KBox.getResource(u).
+	 * 
+	 * @param url the URL that will be resolved.
+	 * @param install a customized method for installation.
+	 * 
+	 * @throws Exception if the resource does not exist or can not be copied or some
+	 *             error occurs during the resource publication.
+	 * @throws ResourceNotResolvedException if the given resource can not be resolved.
+	 */
+	public static void install(URL knsServer, URL resourceURL, Resolver resolver, Install install)
+			throws ResourceNotResolvedException, Exception {		
+		URL resolvedURL = resolver.resolve(knsServer, resourceURL);
+		assertNotNull(resolvedURL, new ResourceNotResolvedException(resourceURL.toString()));
+		install(resolvedURL, resourceURL, install);
+	}
+	
+	/**
+	 * Resolve the given URL in the available KNS.
+	 * The first KNS to be checked is the default KNS, 
+	 * thereafter the user's KNS.
+	 * 
+	 * @param knsServerList list of KNS servers.
+	 * @param resourceURL the URL to be resolved by the KNS.
+	 * 
+	 * @return the resolved URL or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
@@ -64,17 +106,34 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * The first KNS to be checked is the default KNS, 
 	 * thereafter the user's KNS.
 	 * 
+	 * @param knsServerList list of KNS servers.
 	 * @param resourceURL the URL to be resolved by the KNS.
-	 * @param knsServerList list of KNS servers
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved URL or NULL if it is not resolved.
+	 * 
+	 * @throws Exception if any error occurs during the operation.
+	 */
+	public static URL resolve(URL resourceURL, String format, String version, Resolver resolver) throws Exception {
+		return resolve(new KNSServerList(), resourceURL, format, version, resolver);
+	}
+	
+	/**
+	 * Resolve the given URL in the available KNS.
+	 * The first KNS to be checked is the default KNS, 
+	 * thereafter the user's KNS.
+	 * 
+	 * @param knsServerList list of KNS servers.
+	 * @param resourceURL the URL to be resolved by the KNS.	 
+	 * @param format the KB format. 
+	 * @param version the KB version.
+	 * 
+	 * @return the resolved URL or NULL if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static URL resolve(KNSServerList knsServerList, URL resourceURL, String format, String version) throws Exception {
-		KNSResolverVisitor resolveVisitor = new KNSResolverVisitor(resourceURL, format, version);
-		knsServerList.visit(resolveVisitor);
-		return resolveVisitor.getResolvedURL();
+		KBResolver resolver = new KBResolver();
+		return resolve(knsServerList, resourceURL, format, version, resolver);
 	}
 	
 	/**
@@ -82,32 +141,84 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * The first KNS to be checked is the default KNS, 
 	 * thereafter the user's KNS.
 	 * 
-	 * @param resourceURL the URL to be resolved by the KNS.
-	 * @param knsServerURL the URL of the KNS Server.
-	 * 
-	 * @return the resolved URL.
-	 * 
-	 * @throws IOException if any error occurs during the operation.
-	 */
-	public static URL resolve(URL resourceURL, URL knsServerURL) throws Exception {
-		return KNSTable.resolve(resourceURL, knsServerURL);
-	}
-	
-	/**
-	 * Resolve the given URL in the available KNS.
-	 * The first KNS to be checked is the default KNS, 
-	 * thereafter the user's KNS.
-	 * 
-	 * @param resourceURL the URL to be resolved by the KNS.
-	 * @param knsServerURL the URL of the KNS Server.	 
+	 * @param knsServerList list of KNS servers.
+	 * @param resourceURL the URL to be resolved by the KNS.	 
 	 * @param format the KB format. 
-	 * @param version the KB version.
+	 * @param version the KB version. 
+	 * @param resolver the resolver that will resolve the given URL.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved URL or NULL if it is not resolved.
+	 * 
+	 * @throws Exception if any error occurs during the operation.
+	 */
+	public static URL resolve(KNSServerList knsServerList, URL resourceURL, String format, String version, Resolver resolver) throws Exception {
+		KNSResolverVisitor resolveVisitor = new KNSResolverVisitor(resourceURL, format, version, resolver);
+		knsServerList.visit(resolveVisitor);
+		URL resolvedURL = resolveVisitor.getResolvedURL();
+		return resolvedURL;
+	}
+	
+	/**
+	 * Resolve the given URL in the available KNS.
+	 * The first KNS to be checked is the default KNS, 
+	 * thereafter the user's KNS.
+	 * 
+	 * @param knsServerURL the URL of the KNS Server.
+	 * @param resourceURL the URL to be resolved by the KNS.	 
+	 * @param format the KB format. 
+	 * @param version the KB version. 
+	 * @param resolver the resolver that will resolve the given URL.
+	 * 
+	 * @return the resolved URL or NULL if it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static URL resolve(URL resourceURL, URL knsServerURL, String format, String version) throws IOException {
-		return KNSTable.resolve(resourceURL, knsServerURL, format, version);
+	public static URL resolve(URL knsServerURL, URL resourceURL, String format, Resolver resolver) throws ResourceNotResolvedException, Exception {
+		URL resolvedURL = resolver.resolve(resourceURL, knsServerURL, format, null);
+		return resolvedURL;
+	}
+	
+	/**
+	 * Resolve the given URL in the available KNS.
+	 * The first KNS to be checked is the default KNS, 
+	 * thereafter the user's KNS.
+	 * 
+	 * @param knsServerURL the URL of the KNS Server.
+	 * @param resourceURL the URL to be resolved by the KNS.	 
+	 * @param format the KB format. 
+	 * @param version the KB version. 
+	 * @param resolver the resolver that will resolve the given URL.
+	 * 
+	 * @return the resolved URL or NULL if it is not resolved.
+	 * 
+	 * @throws IOException if any error occurs during the operation.
+	 */
+	public static URL resolve(URL knsServerURL, URL resourceURL, String format, String version, Resolver resolver) throws ResourceNotResolvedException, Exception {
+		URL resolvedURL = resolver.resolve(resourceURL, knsServerURL, format, version);
+		return resolvedURL;
+	}
+	
+	/**
+	 * Resolve the given URL in the available KNS.
+	 * The first KNS to be checked is the default KNS, 
+	 * thereafter the user's KNS.
+	 * 
+	 * @param knsServerURL the URL of the KNS Server.
+	 * @param resourceURL the URL to be resolved by the KNS.
+	 * @param resolver the resolver that will resolve the given URL.
+	 * 
+	 * @return the resolved URL or NULL if it is not resolved.
+	 * 
+	 * @throws IOException if any error occurs during the operation.
+	 */
+	public static URL resolve(URL knsServerURL, URL resourceURL, Resolver resolver) throws ResourceNotResolvedException, Exception {
+		URL resolvedURL = resolver.resolve(knsServerURL, resourceURL);
+		return resolvedURL;
+	}
+	
+	public static void assertNotNull(Object object, Exception exception) throws Exception {
+		if(object == null) {
+			throw exception;
+		}
 	}
 }

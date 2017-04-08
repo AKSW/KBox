@@ -8,25 +8,29 @@ public class KNSResolverVisitor implements KNSServerListVisitor {
 	private URL resolvedURL = null;
 	private String format = null;
 	private String version = null;
+	private Resolver resolver = null;
 	
-	public KNSResolverVisitor(URL resourceURL) {
+	public KNSResolverVisitor(URL resourceURL, Resolver resolver) {
 		this.resourceURL = resourceURL;
+		this.resolver = resolver;
 	}
 
-	public KNSResolverVisitor(URL resourceURL, String format, String version) {
-		this(resourceURL);
+	public KNSResolverVisitor(URL resourceURL, String format, String version, Resolver resolver) {
+		this(resourceURL, resolver);
 		this.format = format;
-		this.version = version;		
+		this.version = version;
 	}
 
 	@Override
 	public boolean visit(String knsServer) throws Exception {
 		URL url = null;
-		if(format == null || version == null) {
-			url = KNSTable.resolve(resourceURL, new URL(knsServer));
-		} else {
-			url = KNSTable.resolve(resourceURL, new URL(knsServer), format, version);
-		}
+		if(format == null && version == null) {
+			url = resolver.resolve(new URL(knsServer), resourceURL);
+		} else if(format != null && version != null){
+			url = resolver.resolve(new URL(knsServer), resourceURL, format, version);
+		} else if(format != null){
+           url = resolver.resolve(new URL(knsServer), resourceURL, format);
+        }
 		if(url != null) {
 			resolvedURL = url;
 			return false;
