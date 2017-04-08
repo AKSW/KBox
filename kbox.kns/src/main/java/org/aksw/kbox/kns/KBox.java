@@ -165,8 +165,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * 
 	 * @param knsServerURL the URL of the KNS Server.
 	 * @param resourceURL the URL to be resolved by the KNS.	 
-	 * @param format the KB format. 
-	 * @param version the KB version. 
+	 * @param format the KB format.
 	 * @param resolver the resolver that will resolve the given URL.
 	 * 
 	 * @return the resolved URL or NULL if it is not resolved.
@@ -174,7 +173,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @throws IOException if any error occurs during the operation.
 	 */
 	public static URL resolve(URL knsServerURL, URL resourceURL, String format, Resolver resolver) throws ResourceNotResolvedException, Exception {
-		URL resolvedURL = resolver.resolve(resourceURL, knsServerURL, format, null);
+		URL resolvedURL = resolver.resolve(resourceURL, knsServerURL, format);
 		return resolvedURL;
 	}
 	
