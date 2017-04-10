@@ -19,13 +19,13 @@ public class KNSTable {
 	private URL tableURL = null;
 	private URL knsServerURL = null;
 	
-	public KNSTable(URL url) throws MalformedURLException {		
-		this(url.toString());
+	public KNSTable(URL knsServer) throws MalformedURLException {		
+		this(knsServer.toString());
 	}
 	
-	public KNSTable(String url) throws MalformedURLException {
-		this.knsServerURL = new URL(url);
-		this.tableURL = new URL(url + "/" + FILE_SERVER_TABLE_FILE_NAME);		
+	public KNSTable(String knsServer) throws MalformedURLException {
+		this.knsServerURL = new URL(knsServer);
+		this.tableURL = new URL(knsServer + "/" + FILE_SERVER_TABLE_FILE_NAME);
 	}
 	
 	/**
@@ -73,16 +73,16 @@ public class KNSTable {
 			try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
 				String line = null;
 				while((line = in.readLine()) != null) {
-				    KN kns = null;
+				    KN kn = null;
 					try {
 						if(!line.isEmpty()) {
-							kns = KN.parse(line);
-							if(kns.equals(resourceURL.toString(), format, version)) {
-							   URL target = new URL(kns.getTarget());
+							kn = KN.parse(line);
+							if(kn.equals(resourceURL.toString(), format, version)) {
+							   URL target = kn.getTargetURL();
 							   if(!URLUtils.checkStatus(target, 404)) {
-								   return kns;
+								   return kn;
 							   } else {
-								   logger.warn("Invalid KNS target: " + target);
+								   logger.warn("Invalid KNS entry: (source: " + kn.getName() + ", target: " + target + ")");
 							   }
 							}
 						}

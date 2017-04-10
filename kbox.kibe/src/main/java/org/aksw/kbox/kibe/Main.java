@@ -113,7 +113,7 @@ public class Main {
 				File resourceFile = new File(resource);
 				URL file = resourceFile.toURI().toURL();
 				System.out.println("Installing KB " + kb2Install);
-				KBox.installKB(file, kbURL, inputStreamFactory);
+				KBox.install(file, kbURL, inputStreamFactory);
 				System.out.println("KB installed.");
 			} catch (Exception e) {
 				String message = "Error installing the knowledge base " + kb2Install +": " + e.getMessage();
@@ -130,12 +130,12 @@ public class Main {
 			try{
 				System.out.println("Installing KB " + kbURL + " from KNS " + knsServer);
 				if(format == null && version == null) {
-					KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), inputStreamFactory);					
+					KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), inputStreamFactory);					
 				} if(format != null) {
-					KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), format, inputStreamFactory);					
+					KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), format, inputStreamFactory);					
 				} 
 				else {
-					KBox.installKBFromKNSServer(new URL(kbURL), new URL(knsServer), format, version, inputStreamFactory);
+					KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), format, version, inputStreamFactory);
 				}
 				System.out.println("KB installed.");
 			} catch (MalformedURLException e){
@@ -164,18 +164,18 @@ public class Main {
 						System.out.println("Installing KB " + kbNameURL);
 						if(format != null && version != null) {
 							File kbFile = KBox.locateKB(kbNameURL, format, version);
-							if(kbFile == null) {
-								KBox.installKB(kbNameURL, format, version, inputStreamFactory);
+							if(kbFile == null) {								
+								KBox.install(kbNameURL, format, version, inputStreamFactory);
 							}
 						} else if (format != null) { 
 							File kbFile = KBox.locateKB(kbNameURL, format);
 							if(kbFile == null) {
-								KBox.installKB(kbNameURL, format, inputStreamFactory);
+								KBox.install(kbNameURL, format, inputStreamFactory);
 							}
 						} else {
-							File kbFile = KBox.locateKB(kbNameURL);
+							File kbFile = KBox.locateRDFKB(kbNameURL);
 							if(kbFile == null) {
-								KBox.installKB(kbNameURL, inputStreamFactory);
+								KBox.install(kbNameURL, inputStreamFactory);
 							}
 						}
 						System.out.println("KB installed.");
@@ -346,7 +346,7 @@ public class Main {
 			String version = commands.get(VERSION_COMMAND);
 			try {
 				if(format == null && version == null) {			
-					System.out.println(KBox.locateKB(new URL(kbURI)));
+					System.out.println(KBox.locateRDFKB(new URL(kbURI)));
 				} else {
 					System.out.println(KBox.locateKB(new URL(kbURI), format, version));
 				}

@@ -9,7 +9,7 @@ import java.nio.channels.ReadableByteChannel;
 
 public abstract class AbstractInstall implements Install, Locator {
 	
-	private InputStreamFactory isFactory = null;
+	protected InputStreamFactory isFactory = null;
 	
 	public AbstractInstall() {		
 	}

@@ -25,17 +25,17 @@ public class KBoxTest {
 		URL url = TDBTest.class.getResource("/org/aksw/kbox/kibe/dbpedia_3.9.xml");
 		filesToIndex[0] = url;
 		KBox.createIndex(indexFile, filesToIndex);
-		KBox.installKB(indexFile.toURI().toURL(), new URL("http://dbpedia39"));
+		KBox.install(indexFile.toURI().toURL(), new URL("http://dbpedia39"));
 		indexFile.deleteOnExit();
 		
-		KBox.installKB(indexFile.toURI().toURL(), new URL("http://dbpedia.org/3.9"));
+		KBox.install(indexFile.toURI().toURL(), new URL("http://dbpedia.org/3.9"));
 		indexFile.deleteOnExit();
 		
 		indexFile = File.createTempFile("knowledgebase","idx");
 		url = TDBTest.class.getResource("/org/aksw/kbox/kibe/foaf.rdf");
 		filesToIndex[0] = url;		
 		KBox.createIndex(indexFile, filesToIndex);
-		KBox.installKB(indexFile.toURI().toURL(), new URL("http://foaf"));
+		KBox.install(indexFile.toURI().toURL(), new URL("http://foaf"));
 		indexFile.deleteOnExit();
 	}
 	
@@ -50,7 +50,7 @@ public class KBoxTest {
 	@Test
 	public void testKNEquals() throws Exception {
 		KN kn = new KN("teste", "a", "b", null, null, null, null);
-		assertTrue(kn.equals("teste"));
+		assertTrue("teste".equals(kn.getName()));
 	}
 	
 	@Test
