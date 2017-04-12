@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.aksw.kbox.kibe.tdb.TDBTest;
+import org.aksw.kbox.kns.KBResolver;
 import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSSever;
 import org.junit.Assert;
@@ -79,8 +80,17 @@ public class KBoxTest {
 	
 	@Test
 	public void testResolveURLWithKBoxKNSService() throws Exception {
-		KN resolvedKN = KBox.resolve(new URL("http://dbpedia.org/3.9/en/full"));
-		assertEquals(resolvedKN.getTarget(), "http://vmdbpedia.informatik.uni-leipzig.de:3031/dbpedia/3.9/kbox.kb");
+		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
+		assertEquals(resolvedKN.getTarget(), "http://target.org");
+	}
+	
+	@Test
+	public void testResolveKNS() throws MalformedURLException, Exception {
+		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		KBResolver resolver = new KBResolver();
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"), resolver);		
+		assertEquals(resolvedKN.getTarget(), "http://target.org");
 	}
 	
 	@Test
@@ -168,13 +178,7 @@ public class KBoxTest {
 					new URL("http://dbpedia39.o"));
 		Assert.fail("The query should have returned an Exception.");
 	}
-	
-	@Test
-	public void testResolveKNS() throws MalformedURLException, Exception {
-		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
-		assertEquals(resolvedKN.getTarget(), "http://target.org");
-	}
+
 	
 	@Test
 	public void listKNSServers() throws MalformedURLException, Exception {
