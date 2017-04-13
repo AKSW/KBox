@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.aksw.kbox.utils.AssertionUtils;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
@@ -24,6 +25,8 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	private String path;
 	
 	public CustomParams(String path, String context) {
+		AssertionUtils.assertNotNull(new NullPointerException("context"), context);
+		AssertionUtils.assertNotNull(new NullPointerException("path"), path);
 		this.context = context;
 		this.path = path;
 		File dbFile = new File(path);
@@ -38,6 +41,8 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	}
 	
 	public synchronized String getProperty(String property, String defaultValue) {
+		AssertionUtils.assertNotNull(new NullPointerException("property"), property);
+		AssertionUtils.assertNotNull(new NullPointerException("defaultValue"), defaultValue);
 		DB db = getDB();
 		String value;
 		try {
@@ -52,6 +57,8 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	}
 	
 	public synchronized void setProperty(String property, String value) {
+		AssertionUtils.assertNotNull(new NullPointerException("property"), property);
+		AssertionUtils.assertNotNull(new NullPointerException("value"), value);
 		DB db = getDB();
 		try {
 			getMap(db).put(property, value);
@@ -62,6 +69,7 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	}
 	
 	public synchronized void add(String value) {
+		AssertionUtils.assertNotNull(new NullPointerException("value"), value);
 		DB db = getDB();
 		try {
 			getSet(db).add(value);
@@ -71,7 +79,8 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 		}
 	}
 		
-	public synchronized boolean visit(CustomParamVisitor visitor) {
+	public synchronized boolean visit(CustomParamVisitor visitor) throws Exception {
+		AssertionUtils.assertNotNull(new NullPointerException("visitor"), visitor);
 		final DB db = getReadOnlyDB();
 		final Iterator<String> internalIterator = getSet(db).iterator();
 		Iterable<String> iterable = new Iterable<String>(
@@ -84,13 +93,10 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 		};
 		boolean next = false;
 		for(String param : iterable) {
-			try {
-				next = visitor.visit(param);
-				if(!next) {
-					break;
-				}
-			} catch (Exception e) {
-			}			
+			next = visitor.visit(param);
+			if(!next) {
+				break;
+			}	
 		}
 		db.close();
 		return next;

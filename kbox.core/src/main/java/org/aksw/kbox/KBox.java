@@ -7,6 +7,7 @@ import java.net.URL;
 import java.nio.file.InvalidPathException;
 
 import org.aksw.kbox.utils.ArrayUtils;
+import org.aksw.kbox.utils.ObjectUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -16,7 +17,7 @@ import org.apache.log4j.Logger;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class KBox {
+public class KBox extends ObjectUtils {
 
 	private final static String KBOX_FOLDER = ".kbox";
 	private final static String KBOX_RESOURCE_FOLDER = "KBOX_RESOURCE_FOLDER";

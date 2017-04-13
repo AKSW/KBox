@@ -297,16 +297,4 @@ public class KBox extends org.aksw.kbox.KBox {
 		return resolvedKN;
 	}
 	
-	public static void assertNotNull(Exception exception, Object... object) throws Exception {
-		if(object == null) {
-			throw exception;
-		}
-	}
-	
-	public static String getValue(String value, String defaultValue) {
-		if(value == null) {
-			return defaultValue;
-		}
-		return value;
-	}
 }
