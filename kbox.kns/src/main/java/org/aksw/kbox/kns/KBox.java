@@ -15,7 +15,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param url the {@link URL} of the KNS (Knowledge Name Service)
 	 */
 	public static void installKNS(URL url) {
-		KNSServerList knsServerList = new KNSServerList();
+		CustomParamKNSServerList knsServerList = new CustomParamKNSServerList();
 		knsServerList.add(url.toString());
 	}
 	
@@ -25,7 +25,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param url the {@link URL} of the KNS (Knowledge Name Service)
 	 */
 	public static void removeKNS(URL url) {
-		KNSServerList knsServerList = new KNSServerList();
+		CustomParamKNSServerList knsServerList = new CustomParamKNSServerList();
 		knsServerList.remove(url.toString());
 	}
 		
@@ -41,7 +41,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static KN resolve(KNSServerList knsServerList, URL resourceURL) throws Exception {
+	public static KN resolve(CustomParamKNSServerList knsServerList, URL resourceURL) throws Exception {
 		KBResolver resolver = new KBResolver();
 		return resolve(knsServerList, resourceURL, resolver);
 	}
@@ -53,13 +53,13 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link KNSServerList}.
+	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
 	 * @return the resolved {@link KN} or <code>NULL</code> if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static KN resolve(KNSServerList knsServerList, 
+	public static KN resolve(CustomParamKNSServerList knsServerList, 
 			URL resourceURL, 
 			Resolver resolver) throws Exception {
 		KNSResolverVisitor resolveVisitor = new KNSResolverVisitor(resourceURL, resolver);
@@ -156,7 +156,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	public static KN resolve(URL resourceURL, 
 			String format, 
 			String version) throws Exception {
-		return resolve(new KNSServerList(), resourceURL, format, version);
+		return resolve(new CustomParamKNSServerList(), resourceURL, format, version);
 	}
 	
 	/**
@@ -176,7 +176,7 @@ public class KBox extends org.aksw.kbox.KBox {
 			String format, 
 			String version, 
 			Resolver resolver) throws Exception {
-		return resolve(new KNSServerList(), resourceURL, format, version, resolver);
+		return resolve(new CustomParamKNSServerList(), resourceURL, format, version, resolver);
 	}
 	
 	/**
@@ -194,7 +194,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given KNSServer.
 	 */
-	public static KN resolve(KNSServerList knsServerList, 
+	public static KN resolve(CustomParamKNSServerList knsServerList, 
 			URL resourceURL, 
 			String format, 
 			String version) throws Exception {
@@ -217,7 +217,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static KN resolve(KNSServerList knsServerList, 
+	public static KN resolve(CustomParamKNSServerList knsServerList, 
 			URL resourceURL, 
 			String format, 
 			String version, 

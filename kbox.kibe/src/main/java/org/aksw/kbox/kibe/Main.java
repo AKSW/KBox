@@ -13,7 +13,8 @@ import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
-import org.aksw.kbox.kns.KNSServerList;
+import org.aksw.kbox.kns.CustomParamKNSServerList;
+import org.aksw.kbox.kns.KNSServer;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
 import org.aksw.kbox.utils.URLUtils;
@@ -249,12 +250,12 @@ public class Main {
 		} else if (commands.containsKey(LIST_COMMAND) &&
 				commands.containsKey(KNS_COMMAND)) {
 			System.out.println("KNS table list");
-			KNSServerList knsServerList = new KNSServerList();
+			CustomParamKNSServerList knsServerList = new CustomParamKNSServerList();
 			try {
 				knsServerList.visit(new KNSServerListVisitor() {
 					@Override
-					public boolean visit(String knsServerURL) throws Exception {
-						System.out.println("\t - " + knsServerURL);
+					public boolean visit(KNSServer knsServer) throws Exception {
+						System.out.println("\t - " + knsServer.getURL());
 						return false;
 					}
 				});
@@ -267,7 +268,7 @@ public class Main {
 				!commands.containsKey(KNS_COMMAND)) {			
 			try {
 				System.out.println("Knowledge base table list");
-				KNSListVisitor listAllVisitor = new KNSListVisitor();
+				SystemOutKNSServerListVisitor listAllVisitor = new SystemOutKNSServerListVisitor();
 				KBox.visit(listAllVisitor);
 			} catch (UnknownHostException e) {
 				String message = "An error occurred while listing the available KBs. Check your connection.";

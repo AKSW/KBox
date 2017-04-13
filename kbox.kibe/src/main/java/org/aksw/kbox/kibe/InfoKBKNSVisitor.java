@@ -2,7 +2,7 @@ package org.aksw.kbox.kibe;
 
 import org.aksw.kbox.kns.KN;
 
-public class InfoKBKNSVisitor extends KNSListVisitor {
+public class InfoKBKNSVisitor extends SystemOutKNSServerListVisitor {
 	
 	private String kbName = null;
 	private String format = null;

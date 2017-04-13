@@ -15,7 +15,7 @@ import org.mapdb.HTreeMap;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class CustomParams implements Serializable {
+public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	/**
 	 * 
 	 */
@@ -71,7 +71,7 @@ public class CustomParams implements Serializable {
 		}
 	}
 		
-	public synchronized void visit(CustomParamVisitor visitor) {
+	public synchronized boolean visit(CustomParamVisitor visitor) {
 		final DB db = getReadOnlyDB();
 		final Iterator<String> internalIterator = getSet(db).iterator();
 		Iterable<String> iterable = new Iterable<String>(
@@ -82,10 +82,10 @@ public class CustomParams implements Serializable {
 				return internalIterator;
 			}
 		};
-		
+		boolean next = false;
 		for(String param : iterable) {
 			try {
-				boolean next = visitor.visit(param);
+				next = visitor.visit(param);
 				if(!next) {
 					break;
 				}
@@ -93,6 +93,7 @@ public class CustomParams implements Serializable {
 			}			
 		}
 		db.close();
+		return next;
 	}
 	
 	private HTreeMap<String, String> getMap(DB db) {

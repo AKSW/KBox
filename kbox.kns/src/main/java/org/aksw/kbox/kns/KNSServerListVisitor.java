@@ -1,6 +1,11 @@
 package org.aksw.kbox.kns;
 
-import org.aksw.kbox.CustomParamVisitor;
+import org.aksw.kbox.Visitor;
 
-public interface KNSServerListVisitor extends CustomParamVisitor {
+/**
+ * 
+ * @author {@linkplain http://emarx.org}
+ *
+ */
+public interface KNSServerListVisitor extends Visitor<KNSServer> {	
 }

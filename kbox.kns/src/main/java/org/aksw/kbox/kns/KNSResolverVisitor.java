@@ -22,14 +22,15 @@ public class KNSResolverVisitor implements KNSServerListVisitor {
 	}
 
 	@Override
-	public boolean visit(String knsServer) throws Exception {
+	public boolean visit(KNSServer knsServer) throws Exception {
 		KN kn = null;
+		URL knsServerURL = knsServer.getURL();
 		if(format == null && version == null) {
-			kn = resolver.resolve(new URL(knsServer), resourceURL);
+			kn = resolver.resolve(knsServerURL, resourceURL);
 		} else if(format != null && version != null){
-			kn = resolver.resolve(new URL(knsServer), resourceURL, format, version);
+			kn = resolver.resolve(knsServerURL, resourceURL, format, version);
 		} else if(format != null){
-			kn = resolver.resolve(new URL(knsServer), resourceURL, format);
+			kn = resolver.resolve(knsServerURL, resourceURL, format);
         }
 		if(kn != null) {
 			resolvedKN = kn;

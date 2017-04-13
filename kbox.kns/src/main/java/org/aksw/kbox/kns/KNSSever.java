@@ -14,35 +14,42 @@ public class KNSSever {
 	/**
 	 * Iterate over all Knowledge Names (KNs).
 	 * 
-	 * @param visitor a KNSVisitor.
+	 * @param visitor a {@link KNSVisitor}.
+	 * 
+	 * @return true if the {@link KNSVisitor#visit(KN)} method return true and false otherwise.
+	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public void visit(KNSVisitor visitor) throws IOException {
-		visit(table, visitor);
+	public boolean visit(KNSVisitor visitor) throws IOException {
+		return visit(table, visitor);
 	}
 	
 	/**
 	 * Iterate over all Knowledge Names (KNs) of a given Knowledge Name Service (KNS).
 	 * 
-	 * @param knsServerURL a KNSTable URL.
-	 * @param visitor a KNSVisitor.
+	 * @param knsServerURL a knsServerURL {@link URL}.
+	 * @param visitor a {@link KNSVisitor}.
 	 * 
-	 * @throws IOException if any error occurs during the operation.
+	 * @return true if the {@link KNSVisitor#visit(KN)} method return true and false otherwise.
+	 * 
+	 * @throws {@link IOException} if any error occurs during the operation.
 	 */
-	public static void visit(URL knsServerURL, KNSVisitor visitor) throws IOException {
+	public static boolean visit(URL knsServerURL, KNSVisitor visitor) throws IOException {
 		KNSTable table = new KNSTable(knsServerURL);
-		visit(table, visitor);
+		return visit(table, visitor);
 	}
 	
 	/**
 	 * Iterate over all Knowledge Names (KNs) of a given Knowledge Name Service (KNS).
 	 * 
-	 * @param table a KNSTable.
-	 * @param visitor a KNSVisitor.
+	 * @param table a {@link KNSTable}.
+	 * @param visitor a {@link KNSVisitor}.
 	 * 
-	 * @throws IOException if any error occurs during the operation.
+	 * @return true if the {@link KNSVisitor#visit(KN)} method return true and false otherwise.
+	 * 
+	 * @throws {@link IOException} if any error occurs during the operation.
 	 */
-	public static void visit(KNSTable table, KNSVisitor visitor) throws IOException {
-		table.visit(visitor);
+	public static boolean visit(KNSTable table, KNSVisitor visitor) throws IOException {
+		return table.visit(visitor);
 	}
 }

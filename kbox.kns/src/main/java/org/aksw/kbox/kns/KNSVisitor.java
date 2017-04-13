@@ -1,5 +1,6 @@
 package org.aksw.kbox.kns;
 
-public interface KNSVisitor {
-	public boolean visit(KN kn);
+import org.aksw.kbox.Visitor;
+
+public interface KNSVisitor extends Visitor<KN> {
 }

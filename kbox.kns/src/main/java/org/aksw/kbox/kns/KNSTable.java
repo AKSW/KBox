@@ -95,8 +95,9 @@ public class KNSTable {
 		return null;
 	}
 	
-	public void visit(KNSVisitor visitor) throws IOException {
+	public boolean visit(KNSVisitor visitor) throws IOException {
 		InputStream is = tableURL.openStream();
+		boolean next = true;
 		try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
 			String line = null;
 			while((line = in.readLine()) != null) {
@@ -106,7 +107,7 @@ public class KNSTable {
 					url = url.replace("/" + FILE_SERVER_TABLE_FILE_NAME, "");
 					kn = KN.parse(line);
 					kn.setKNS(url);
-					boolean next = visitor.visit(kn);
+					next = visitor.visit(kn);
 					if(!next) {
 						break;
 					}
@@ -115,5 +116,6 @@ public class KNSTable {
 				}
 			}
 		}
+		return next;
 	}
 }

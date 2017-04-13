@@ -19,7 +19,7 @@ import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.AppInstall;
 import org.aksw.kbox.kns.KBResolver;
 import org.aksw.kbox.kns.KN;
-import org.aksw.kbox.kns.KNSServerList;
+import org.aksw.kbox.kns.CustomParamKNSServerList;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.Resolver;
 import org.aksw.kbox.kns.ServerAddress;
@@ -188,14 +188,14 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link KNSServerList}.
+	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
 	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws {@link KBNotResolvedException} if the given KB can not be resolved.
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static void install(KNSServerList knsServerList, URL resourceURL, Resolver resolver, AppInstall install) throws KBNotResolvedException, Exception {
+	public static void install(CustomParamKNSServerList knsServerList, URL resourceURL, Resolver resolver, AppInstall install) throws KBNotResolvedException, Exception {
 		KN resolvedKN = resolve(knsServerList, resourceURL, resolver);
 		assertNotNull(new KBNotResolvedException(resourceURL.toString()), resolvedKN);
 		install(resolvedKN, 
@@ -211,14 +211,14 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link KNSServerList}.
+	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
 	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws {@link KBNotResolvedException} if the given KB can not be resolved.
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static void install(KNSServerList knsServerList, URL resourceURL, Resolver resolver, AppInstall install, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
+	public static void install(CustomParamKNSServerList knsServerList, URL resourceURL, Resolver resolver, AppInstall install, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
 		KN resolvedKN = resolve(knsServerList, resourceURL, resolver);
 		assertNotNull(new KBNotResolvedException(resourceURL.toString()), resolvedKN);
 		install(resolvedKN, 
@@ -234,13 +234,13 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link KNSServerList}.
+	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
 	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static void install(KNSServerList knsServerList, URL resourceURL, String format, String version, Resolver resolver, AppInstall install, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
+	public static void install(CustomParamKNSServerList knsServerList, URL resourceURL, String format, String version, Resolver resolver, AppInstall install, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
 		KN resolvedKN = resolve(knsServerList, resourceURL, format, version, resolver);
 		assertNotNull(new KBNotResolvedException(resourceURL.toString()), resolvedKN);
 		install(resolvedKN, 
@@ -256,14 +256,14 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link KNSServerList}.
+	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
 	 * @return the resolved KN or NULL if it is not resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
 	public static void install(URL resourceURL, Resolver resolver, AppInstall install) throws Exception {
-		install(new KNSServerList(), resourceURL, resolver, install);		
+		install(new CustomParamKNSServerList(), resourceURL, resolver, install);		
 	}
 	
 	
@@ -286,7 +286,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static void install(URL resourceURL, Resolver resolver, AppInstall install, InputStreamFactory isFactory)
 			throws ResourceNotResolvedException, Exception {
-		install(new KNSServerList(), 
+		install(new CustomParamKNSServerList(), 
 				resourceURL,
 				resolver,
 				install,
