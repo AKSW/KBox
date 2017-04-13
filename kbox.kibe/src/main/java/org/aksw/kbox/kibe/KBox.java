@@ -36,8 +36,8 @@ import com.hp.hpl.jena.rdf.model.Model;
  */
 public class KBox extends org.aksw.kbox.kns.KBox {	
 
-	protected final static String DEFAULT_VERSION = "0";
-	protected final static String DEFAULT_FORMAT = "kibe";
+	public final static String DEFAULT_VERSION = "0";
+	public final static String DEFAULT_FORMAT = "kibe";
 	
 	/**
 	 * Install the given knowledge base.
@@ -70,8 +70,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} u will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
 	 * @param source the {@link URL} of the file that is going to be published at the
 	 *        given {@link URL}.
@@ -89,8 +89,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} u will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
 	 * @param url the {@link URL} that will be resolved.
 	 * @param install a customized method for installation.
@@ -113,8 +113,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} u will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
 	 * @param url the {@link URL} that will be resolved.
 	 * @param install a customized method for installation.
@@ -141,8 +141,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} u will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
 	 * @param url the {@link URL} that will be resolved.
 	 * @param install a customized method for installation.
@@ -165,8 +165,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} u will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
 	 * @param source the {@link URL} of the file that is going to be published at the
 	 *        given {@link URL}.
@@ -190,7 +190,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
-	 * @return the resolved KN or NULL if it is not resolved.
+	 * @return the resolved {@link  KN} or NULL if it is not resolved.
 	 * 
 	 * @throws {@link KBNotResolvedException} if the given KB can not be resolved.
 	 * @throws {@link Exception} if any error occurs during the operation.
@@ -213,7 +213,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
-	 * @return the resolved KN or NULL if it is not resolved.
+	 * @return the resolved {@link KN} or NULL if it is not resolved.
 	 * 
 	 * @throws {@link KBNotResolvedException} if the given KB can not be resolved.
 	 * @throws {@link Exception} if any error occurs during the operation.
@@ -236,7 +236,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
-	 * @return the resolved KN or NULL if it is not resolved.
+	 * @return the resolved {@link  KN} or NULL if it is not resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
@@ -258,7 +258,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
-	 * @return the resolved KN or NULL if it is not resolved.
+	 * @return the resolved {@link  KN} or NULL if it is not resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
@@ -273,8 +273,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} <code>u</code> will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
 	 * @param url the {@link URL} that will be resolved.
 	 * @param install a customized method for installation.
@@ -296,8 +296,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} <code>u</code> will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
 	 * @param url the {@link URL} that will be resolved.
 	 * @param install a customized method for installation.
@@ -321,8 +321,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} <code>u</code> will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
 	 * @param source the {@link URL} of the file that is going to be published at the
 	 *        given {@link URL}.
@@ -341,7 +341,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * Install a given KB resolved by a given {@link Resolver}.
 	 * 
 	 * @param knowledgebase the KB Name that will be resolved and installed.
-	 * @param resolver the Resolver that will resolve the KB Name.
+	 * @param resolver the {@link Resolver} that will resolve the KB Name.
 	 * 
 	 * @throws {@link KBNotResolvedException} if the given knowledge base can not be resolved.
 	 * @throws {@link Exception} if any error occurs during the indexing process.
@@ -358,7 +358,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * default version <b>0<b>.
 	 * 
 	 * @param knowledgebase the KB Name that will be resolved and installed.
-	 * @param resolver the Resolver that will resolve the KB Name.
+	 * @param resolver the {@link Resolver} that will resolve the KB Name.
 	 * @param isFactory the {@link InputStreamFactory}.
 	 * 
 	 * @throws {@link KBNotResolvedException} if the given knowledge base can not be resolved.
@@ -606,7 +606,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	
 	/**
 	 * Install a given knowledge base resolved by a given KNS service.
-	 * This method uses the default install method ZipAppInstall.
+	 * This method uses {@link ZipAppInstall} as install method.
 	 * 
 	 * @param knowledge base the {@link URL} of the knowledge base that is going to be installed.
 	 * @param knsServer the {@link URL} of the KNS service that will be used to lookup.
@@ -785,7 +785,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param sparql the SPARQL query.
 	 * @param install specify if the knowledge base should be installed (true) or not (false).
-	 * @param knowledgeNames the KB names to be queried.
+	 * @param knowledgeNames the RDF KB names to be queried.
 	 * 
 	 * @return a result set with the given query solution.
 	 * 
@@ -797,7 +797,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	}
 
 	/**
-	 * Returns the local Knowledge base directory.
+	 * Returns the local knowledge base directory.
 	 * 
 	 * @param url that will be used to locate the Knowledge base
 	 * 
