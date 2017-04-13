@@ -17,9 +17,9 @@ import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.AppInstall;
+import org.aksw.kbox.kns.CustomParamKNSServerList;
 import org.aksw.kbox.kns.KBResolver;
 import org.aksw.kbox.kns.KN;
-import org.aksw.kbox.kns.CustomParamKNSServerList;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.Resolver;
 import org.aksw.kbox.kns.ServerAddress;
@@ -686,7 +686,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		String[] knowledgeBasesPaths = new String[urls.length];
 		int i = 0;
 		for(URL knowledgeBase : urls) {
-			File localDataset = locateRDFKB(knowledgeBase);
+			File localDataset = locate(knowledgeBase);
 			if(localDataset == null && install) {
 				KN resolvedKN = resolve(knowledgeBase);
 				assertNotNull(new KBNotResolvedException(knowledgeBase.toString()), resolvedKN.getTargetURL());
@@ -695,7 +695,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 				} catch (Exception e) {
 					throw new KBDereferencingException(knowledgeBase.toString(), e);
 				}
-				localDataset = locateRDFKB(knowledgeBase);
+				localDataset = locate(knowledgeBase);
 			} else {
 				assertNotNull(new KBNotResolvedException("Knowledge base " + knowledgeBase.toString() + " is not installed."
 						+ " You can install it using the command install."), localDataset);
@@ -805,7 +805,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 *  
 	 * @throws {@link Exception} if any error occurs while locating the Knowledge Base. 
 	 */
-	public static File locateRDFKB(URL url) throws Exception {
+	public static File locate(URL url) throws Exception {
 		KBLocate kbLocate = new KBLocate();
 		return locate(url, kbLocate);
 	}
@@ -820,8 +820,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 *  
 	 * @throws {@link Exception} if any error occurs while locating the Knowledge Base. 
 	 */
-	public static File locateKB(URL url, String format) throws Exception {		
-		return locateKB(url, format, DEFAULT_VERSION);
+	public static File locate(URL url, String format) throws Exception {		
+		return locate(url, format, DEFAULT_VERSION);
 	}
 	
 	/**
@@ -835,7 +835,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 *  
 	 * @throws {@link Exception} if any error occurs while locating the Knowledge Base. 
 	 */
-	public static File locateKB(URL url, String format, String version) throws Exception {
+	public static File locate(URL url, String format, String version) throws Exception {
 		AppLocate kbLocate = new AppLocate(format, version);
 		return locate(url, kbLocate);
 	}
@@ -847,7 +847,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * 
-	 * @return the resolved {@link URL} or NULL if it is not resolved.
+	 * @return the resolved {@link URL} or NULL if the given {@link URL} can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
@@ -864,7 +864,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param knsServerURL the {@link URL} of the KNS Server.
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * 
-	 * @return the resolved KN or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if the given {@link URL} can not be resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
@@ -882,7 +882,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.	 
 	 * @param format the KB format.
 	 * 
-	 * @return the resolved KN or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if the given {@link URL} can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
@@ -901,7 +901,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param format the KB format. 
 	 * @param version the KB version.
 	 * 
-	 * @return the resolved KN or NULL if it is not resolved.
+	 * @return the resolved KN or NULL if the given {@link URL} can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
@@ -909,7 +909,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		KBResolver resolver = new KBResolver();
 		return resolve(knsServerURL, resourceURL, format, version, resolver);
 	}
-		
+
 	/**
 	 * Iterate over all available KNS services with a given visitor.
 	 * 

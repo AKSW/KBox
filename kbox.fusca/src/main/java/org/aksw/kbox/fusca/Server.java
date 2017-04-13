@@ -73,7 +73,6 @@ public class Server {
 				server.getServer().join();
 			} catch (Exception e) {			
 			}
-			System.exit(0);		
 		} catch (FusekiException e) {
 			throw new ServerStartException("Failed to start the server.", e);
 		}

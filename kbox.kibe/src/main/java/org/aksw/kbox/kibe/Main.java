@@ -134,7 +134,7 @@ public class Main {
 					KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), inputStreamFactory);					
 				} if(format != null) {
 					KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), format, inputStreamFactory);					
-				} 
+				}
 				else {
 					KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), format, version, inputStreamFactory);
 				}
@@ -164,17 +164,17 @@ public class Main {
 					try {
 						System.out.println("Installing KB " + kbNameURL);
 						if(format != null && version != null) {
-							File kbFile = KBox.locateKB(kbNameURL, format, version);
+							File kbFile = KBox.locate(kbNameURL, format, version);
 							if(kbFile == null) {								
 								KBox.install(kbNameURL, format, version, inputStreamFactory);
 							}
 						} else if (format != null) { 
-							File kbFile = KBox.locateKB(kbNameURL, format);
+							File kbFile = KBox.locate(kbNameURL, format);
 							if(kbFile == null) {
 								KBox.install(kbNameURL, format, inputStreamFactory);
 							}
 						} else {
-							File kbFile = KBox.locateRDFKB(kbNameURL);
+							File kbFile = KBox.locate(kbNameURL);
 							if(kbFile == null) {
 								KBox.install(kbNameURL, inputStreamFactory);
 							}
@@ -334,7 +334,7 @@ public class Main {
 				!commands.containsKey(KB_COMMAND)) {
 			String resourceURI = commands.get(LOCATE_COMMAND);
 			try {
-				System.out.println(org.aksw.kbox.KBox.getResource(new URL(resourceURI)));
+				System.out.println(org.aksw.kbox.KBox.locate(new URL(resourceURI)));
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the resource: " + resourceURI;
 				System.out.println(message);
@@ -346,10 +346,12 @@ public class Main {
 			String format = commands.get(FORMAT_COMMAND);
 			String version = commands.get(VERSION_COMMAND);
 			try {
-				if(format == null && version == null) {			
-					System.out.println(KBox.locateRDFKB(new URL(kbURI)));
+				if(format != null && version != null) {
+					System.out.println(KBox.locate(new URL(kbURI), format, version));
+				} if(format != null) {
+					System.out.println(KBox.locate(new URL(kbURI), format));
 				} else {
-					System.out.println(KBox.locateKB(new URL(kbURI), format, version));
+					System.out.println(KBox.locate(new URL(kbURI)));
 				}
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KB: " + kbURI;
