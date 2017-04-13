@@ -5,7 +5,6 @@ import java.io.PrintStream;
 import org.aksw.kbox.kns.AbstractKNSListVisitor;
 import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSServer;
-import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.KNSSever;
 import org.aksw.kbox.kns.KNSVisitor;
 
