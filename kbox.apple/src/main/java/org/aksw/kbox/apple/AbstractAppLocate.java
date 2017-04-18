@@ -19,7 +19,7 @@ public abstract class AbstractAppLocate extends AppPathBinder implements Locate,
 	@Override
 	public File locate(URL resource, String format, String version)
 			throws Exception {
-		File localFile = new File(URLToAbsolutePath(resource, format, version));
+		File localFile = new File(urlToAbsolutePath(resource, format, version));
 		if(localFile.exists() && isValid(resource, format, version)) {
 			return localFile;
 		}
@@ -29,7 +29,7 @@ public abstract class AbstractAppLocate extends AppPathBinder implements Locate,
 	@Override
 	public boolean isValid(URL url, String format, String version)
 			throws Exception {
-		File resource = new File(URLToAbsolutePath(url, format, version));
+		File resource = new File(urlToAbsolutePath(url, format, version));
 		return KBox.isValid(resource.getAbsolutePath());
 	}
 }

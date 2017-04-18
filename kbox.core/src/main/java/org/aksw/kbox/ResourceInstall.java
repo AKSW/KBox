@@ -11,8 +11,8 @@ import java.net.URL;
 public class ResourceInstall extends AbstractInstall {
 
 	@Override
-	public String URLToAbsolutePath(URL url) throws Exception {
-		return KBox.URLToAbsolutePath(url);
+	public String urlToAbsolutePath(URL url) throws Exception {
+		return KBox.urlToAbsolutePath(url);
 	}	
 
 }

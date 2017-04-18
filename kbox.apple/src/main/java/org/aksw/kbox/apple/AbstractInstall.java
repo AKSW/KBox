@@ -32,7 +32,7 @@ public abstract class AbstractInstall extends AppPathBinder implements Install, 
 	
 	@Override
 	public void validate(URL path, String format, String version) throws Exception {
-		File destFile = new File(URLToAbsolutePath(path, format, version));
+		File destFile = new File(urlToAbsolutePath(path, format, version));
 		KBox.validate(destFile);
 	}
 

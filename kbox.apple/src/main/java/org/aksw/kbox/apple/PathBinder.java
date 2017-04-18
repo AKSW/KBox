@@ -17,5 +17,5 @@ public interface PathBinder {
 	 * @return 
 	 * @throws Exception
 	 */
-	public String URLToAbsolutePath(URL url, String format, String version) throws Exception;	
+	public String urlToAbsolutePath(URL url, String format, String version) throws Exception;	
 }

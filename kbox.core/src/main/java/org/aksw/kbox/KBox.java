@@ -60,7 +60,7 @@ public class KBox extends ObjectUtils {
 	 * 
 	 * @param url an URL.
 	 */
-	public static String URLToPath(URL url) {
+	public static String urlToPath(URL url) {
 		String urlPath = url.getPath();
 		String host = url.getHost();
 		String protocol = url.getProtocol();
@@ -108,10 +108,10 @@ public class KBox extends ObjectUtils {
 	 * 
 	 * @param url an URL.
 	 */
-	public static String URLToAbsolutePath(URL url) {
+	public static String urlToAbsolutePath(URL url) {
 		String resourceFolder = getResourceFolder();
 		File resource = new File(resourceFolder + File.separator
-				+ URLToPath(url));
+				+ urlToPath(url));
 		return resource.getAbsolutePath();
 	}
 
@@ -121,7 +121,7 @@ public class KBox extends ObjectUtils {
 	 * @param the KBox directory representing the given URL.
 	 */
 	public static File newDir(URL url) {
-		File resource = new File(URLToAbsolutePath(url));
+		File resource = new File(urlToAbsolutePath(url));
 		resource.mkdirs();
 		return resource;
 	}

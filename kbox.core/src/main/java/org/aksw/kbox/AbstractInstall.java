@@ -18,7 +18,7 @@ public abstract class AbstractInstall implements Install, PathBinder {
 
 	@Override
 	public void install(InputStream inputStream, URL dest) throws Exception {
-		File destFile = new File(URLToAbsolutePath(dest));
+		File destFile = new File(urlToAbsolutePath(dest));
 		File resourceDir = destFile.getParentFile();
 		resourceDir.mkdirs();
 		destFile.createNewFile();
@@ -30,7 +30,7 @@ public abstract class AbstractInstall implements Install, PathBinder {
 	}
 	
 	public void validate(URL url) throws Exception {
-		File f = new File(URLToAbsolutePath(url));
+		File f = new File(urlToAbsolutePath(url));
 		KBox.validate(f);
 	}
 }

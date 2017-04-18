@@ -16,7 +16,7 @@ public class ZipAppInstall extends AbstractInstall {
 	@Override
 	public void install(InputStream resource, URL dest, String format,
 			String version) throws Exception {
-		File destPath = new File(URLToAbsolutePath(dest, format, version));
+		File destPath = new File(urlToAbsolutePath(dest, format, version));
 		destPath.mkdirs();
 		ZIPUtil.unzip(resource, destPath.getAbsolutePath());
 	}

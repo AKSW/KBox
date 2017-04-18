@@ -16,7 +16,7 @@ public class ZipInstall extends ResourceInstall {
 	
 	@Override
 	public void install(InputStream resource, URL target) throws Exception {
-		File destPath = new File(URLToAbsolutePath(target));
+		File destPath = new File(urlToAbsolutePath(target));
 		destPath.mkdirs();
 		ZIPUtil.unzip(resource, destPath.getAbsolutePath());
 	}

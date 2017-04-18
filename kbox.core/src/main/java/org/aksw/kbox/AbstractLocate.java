@@ -13,7 +13,7 @@ public abstract class AbstractLocate implements Locate, PathBinder {
 	}
 
 	public File locate(URL url) throws Exception {
-		String path = URLToAbsolutePath(url);
+		String path = urlToAbsolutePath(url);
 		File localFile = new File(path);
 		if(localFile.exists() && isValid(url)) {
 			return localFile;
@@ -28,7 +28,7 @@ public abstract class AbstractLocate implements Locate, PathBinder {
 	
 	@Override
 	public boolean isValid(URL url) throws Exception {
-		String path = URLToAbsolutePath(url);
+		String path = urlToAbsolutePath(url);
 		File localFile = new File(path);
 		return KBox.isValid(localFile.getAbsolutePath());
 	}
