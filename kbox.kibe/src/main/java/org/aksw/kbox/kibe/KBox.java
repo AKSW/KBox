@@ -21,6 +21,7 @@ import org.aksw.kbox.kns.CustomParamKNSServerList;
 import org.aksw.kbox.kns.KBResolver;
 import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSServer;
+import org.aksw.kbox.kns.KNSServerList;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.Resolver;
 import org.aksw.kbox.kns.ServerAddress;
@@ -225,7 +226,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws KBNotResolvedException if the given KB can not be resolved.
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static void install(CustomParamKNSServerList knsServerList, URL resourceURL, Resolver resolver, Install install, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
+	public static void install(KNSServerList knsServerList, URL resourceURL, Resolver resolver, Install install, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
 		KN resolvedKN = resolve(knsServerList, resourceURL, resolver);
 		assertNotNull(new KBNotResolvedException(resourceURL.toString()), resolvedKN);
 		install(resolvedKN, 
@@ -247,7 +248,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static void install(CustomParamKNSServerList knsServerList, URL resourceURL, String format, String version, Resolver resolver, Install install, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
+	public static void install(KNSServerList knsServerList, URL resourceURL, String format, String version, Resolver resolver, Install install, InputStreamFactory isFactory) throws KBNotResolvedException, Exception {
 		KN resolvedKN = resolve(knsServerList, resourceURL, format, version, resolver);
 		assertNotNull(new KBNotResolvedException(resourceURL.toString()), resolvedKN);
 		install(resolvedKN, 
@@ -270,7 +271,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static void install(URL resourceURL, Resolver resolver, Install install) throws Exception {
-		install(new CustomParamKNSServerList(), resourceURL, resolver, install);		
+		DefaultKNSServerList kibeKNSServerList = new DefaultKNSServerList();
+		install(kibeKNSServerList, resourceURL, resolver, install);		
 	}
 	
 	
@@ -293,7 +295,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static void install(URL resourceURL, Resolver resolver, Install install, InputStreamFactory isFactory)
 			throws ResourceNotResolvedException, Exception {
-		install(new CustomParamKNSServerList(), 
+		DefaultKNSServerList kibeKNSServerList = new DefaultKNSServerList();
+		install(kibeKNSServerList, 
 				resourceURL,
 				resolver,
 				install,

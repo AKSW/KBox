@@ -31,9 +31,9 @@ public class KNSTable {
 	/**
 	 * Resolve a given resource with by the given KNS service.
 	 * 
-	 * @param resourceURL the URL of the resource that will be resolved by the given KNS service.
+	 * @param resourceURL the {@link URL} of the resource that will be resolved by the given KNS service.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved {@link KN} or {@link null} in case it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
@@ -44,10 +44,10 @@ public class KNSTable {
 	/**
 	 * Resolve a given resource with by the given KNS service.
 	 * 
-	 * @param knsServerURL the URL of KNS server that will resolve the given URL.
-	 * @param resourceURL the URL of the resource that will be resolved by the given KNS service.
+	 * @param knsServerURL the {@link URL} of KNS server that will resolve the given URL.
+	 * @param resourceURL the {@link URL} of the resource that will be resolved by the given KNS service.
 	 * 
-	 * @return the resolved URL.
+	 * @return the resolved {@link KN} or {@link null} in case it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
@@ -58,12 +58,12 @@ public class KNSTable {
 	/**
 	 * Resolve a given resource with by the given KNS service.
 	 * 
-	 * @param knsServerURL the URL of KNS server that will resolve the given URL.
-	 * @param resourceURL the URL of the resource that will be resolved by the given KNS service.
+	 * @param knsServerURL the {@link URL} of KNS server that will resolve the given {@link URL}.
+	 * @param resourceURL the {@link URL} of the resource that will be resolved by the given KNS service.
 	 * @param format the KB format. 
 	 * @param version the KB version.
 	 * 
-	 * @return the resolved KN.
+	 * @return the resolved {@link KN} or {@link null} in case it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */

@@ -27,9 +27,9 @@ public class KNSResolverVisitor implements KNSServerListVisitor {
 		URL knsServerURL = knsServer.getURL();
 		if(format == null && version == null) {
 			kn = resolver.resolve(knsServerURL, resourceURL);
-		} else if(format != null && version != null){
+		} else if(format != null && version != null) {
 			kn = resolver.resolve(knsServerURL, resourceURL, format, version);
-		} else if(format != null){
+		} else if(format != null) {
 			kn = resolver.resolve(knsServerURL, resourceURL, format);
         }
 		if(kn != null) {
