@@ -28,4 +28,6 @@ public interface Install {
 	 * @throws Exception
 	 */
 	public void install(InputStream resource, URL dest) throws Exception;
+	
+	public void validate(URL url) throws Exception;
 }

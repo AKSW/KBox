@@ -1,12 +1,16 @@
 package org.aksw.kbox.kns;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
 import org.aksw.kbox.InputStreamFactory;
+import org.aksw.kbox.apple.AppInstall;
+import org.aksw.kbox.apple.AppLocate;
+import org.askw.kbox.kns.exception.ResourceDereferencingException;
 import org.askw.kbox.kns.exception.ResourceNotResolvedException;
 
-public class KBox extends org.aksw.kbox.KBox {	
+public class KBox extends org.aksw.kbox.apple.KBox {	
 
 	/**
 	 * Install the given {@link URL} in your personal Knowledge Name Service.
@@ -37,11 +41,11 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * 
-	 * @return the resolved KN or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved KN or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static KN resolve(CustomParamKNSServerList knsServerList, URL resourceURL) throws Exception {
+	public static KN resolve(KNSServerList knsServerList, URL resourceURL) throws Exception {
 		KBResolver resolver = new KBResolver();
 		return resolve(knsServerList, resourceURL, resolver);
 	}
@@ -55,11 +59,11 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
 	 * 
-	 * @return the resolved {@link KN} or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved {@link KN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static KN resolve(CustomParamKNSServerList knsServerList, 
+	public static KN resolve(KNSServerList knsServerList, 
 			URL resourceURL, 
 			Resolver resolver) throws Exception {
 		KNSResolverVisitor resolveVisitor = new KNSResolverVisitor(resourceURL, resolver);
@@ -69,78 +73,6 @@ public class KBox extends org.aksw.kbox.KBox {
 	}
 	
 	/**
-	 * Creates a mirror for the given file in a given {@link URL}. This function allows
-	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} <code>u</code> will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
-	 * 
-	 * @param source the {@link URL} of the file that is going to be published at the
-	 *        given URL.
-	 * @param dest the {@link URL} where the file is going to be published.
-	 * @param install a customized method for installation.
-	 * 
-	 * @throws {@link Exception} if the resource does not exist or can not be copied or some
-	 *             error occurs during the resource publication.
-	 */
-	public static void install(URL source, 
-			URL dest, 
-			String format, 
-			String version, 
-			AppInstall install)
-			throws Exception {
-		install.install(source, dest, format, version);
-	}
-	
-	/**
-	 * Creates a mirror for the given file in a given {@link URL}. This function allows
-	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} <code>u</code> will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
-	 * 
-	 * @param source the {@link URL} of the file that is going to be published at the
-	 *        given {@link URL}.
-	 * @param dest the {@link URL} where the file is going to be published.
-	 * @param install a customized method for installation.
-	 * 
-	 * @throws {@link Exception} if the resource does not exist or can not be copied or some
-	 *             error occurs during the resource publication.
-	 */
-	public static void install(InputStream source, 
-			URL dest, 
-			String format, 
-			String version, 
-			AppInstall install)
-			throws Exception {
-		install.install(source, dest, format, version);
-	}	
-	
-	/**
-	 * Creates a mirror for the given file in a given {@link URL}. This function allows
-	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give {@link URL} <code>u</code> will be located when the
-	 * client execute the function <code>KBox.getResource(u)</code>.
-	 * 
-	 * @param source the URL of the file that is going to be published at the
-	 *        given {@link URL}.
-	 * @param dest the {@link URL} where the file is going to be published.
-	 * @param install a customized method for installation.
-	 * 
-	 * @throws {@link Exception} if the resource does not exist or can not be copied or some
-	 *             error occurs during the resource publication.
-	 */
-	public static void install(URL source, 
-			URL dest, 
-			String format, 
-			String version, 
-			AppInstall install, 
-			InputStreamFactory isFactory)
-			throws Exception {
-		install.install(source, dest, format, version, isFactory);
-	}
-	
-	
-	
-	/**
 	 * Resolve the given {@link URL} in the available KNS.
 	 * The first KNS to be checked is the default KNS, 
 	 * thereafter the user's KNS.
@@ -148,7 +80,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param knsServerList list of KNS servers.
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * 
-	 * @return the resolved {@link KN} or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved {@link KN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given KNSServer.
@@ -160,14 +92,14 @@ public class KBox extends org.aksw.kbox.KBox {
 	}
 	
 	/**
-	 * Resolve the given URL in the available KNS.
+	 * Resolve the given {@link URL} in the available KNS.
 	 * The first KNS to be checked is the default KNS, 
 	 * thereafter the user's KNS.
 	 * 
 	 * @param knsServerList list of KNS servers.
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * 
-	 * @return the resolved {@link KN} or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved {@link KN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given KNSServer.
@@ -189,12 +121,12 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param format the KB format. 
 	 * @param version the KB version.
 	 * 
-	 * @return the resolved {@link KN} or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved {@link KN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given KNSServer.
 	 */
-	public static KN resolve(CustomParamKNSServerList knsServerList, 
+	public static KN resolve(KNSServerList knsServerList, 
 			URL resourceURL, 
 			String format, 
 			String version) throws Exception {
@@ -213,11 +145,11 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param version the KB version. 
 	 * @param resolver the resolver that will resolve the given {@link URL}.
 	 * 
-	 * @return the resolved {@link KN} or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved {@link KN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static KN resolve(CustomParamKNSServerList knsServerList, 
+	public static KN resolve(KNSServerList knsServerList, 
 			URL resourceURL, 
 			String format, 
 			String version, 
@@ -238,7 +170,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param format the KB format.
 	 * @param resolver the resolver that will resolve the given {@link URL}.
 	 * 
-	 * @return the resolved {@link KN}  or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved {@link KN}  or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given KNSServer.
@@ -262,7 +194,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param version the KB version. 
 	 * @param resolver the resolver that will resolve the given {@link URL}.
 	 * 
-	 * @return the resolved {@link KN}  or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved {@link KN}  or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given KNSServer.
@@ -285,7 +217,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
 	 * @param resolver the resolver that will resolve the given {@link URL}.
 	 * 
-	 * @return the resolved {@link URL} or <code>NULL</code> if it can not be resolved.
+	 * @return the resolved {@link URL} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given KNSServer.
@@ -295,6 +227,52 @@ public class KBox extends org.aksw.kbox.KBox {
 			Resolver resolver) throws ResourceNotResolvedException, Exception {
 		KN resolvedKN = resolver.resolve(knsServerURL, resourceURL);
 		return resolvedKN;
+	}
+	
+	public static File getResource(KNSServerList knsServerList, 
+			URL resourceURL, 
+			AppLocate locateMethod,
+			String format,
+			String version,
+			Resolver resolver, 
+			AppInstall installMethod,
+			InputStreamFactory isFactory) throws Exception {
+		return getResource(knsServerList, 
+				resourceURL, 
+				locateMethod,
+				format,
+				version,
+				resolver, 
+				installMethod, 
+				isFactory, 
+				true);
+   }
+	
+	public static File getResource(KNSServerList knsServerList, 
+			URL resourceURL, 
+			AppLocate locateMethod,
+			String format,
+			String version,
+			Resolver resolver,
+			AppInstall installMethod,
+			InputStreamFactory isFactory,
+			boolean install)
+			throws Exception {
+		File localDataset = locate(resourceURL, format, version, locateMethod);
+		if(localDataset == null && install) {
+			KN resolvedKN = resolve(knsServerList, resourceURL, format, version, resolver);
+			assertNotNull(new ResourceNotResolvedException(resourceURL.toString()), resolvedKN.getTargetURL());
+			try(InputStream is = isFactory.get(resolvedKN.getTargetURL())) {
+				install(is, resourceURL, format, version, installMethod);
+			} catch (Exception e) {
+				throw new ResourceDereferencingException(resourceURL.toString(), e);
+			}
+			localDataset = locate(resourceURL, format, version, locateMethod);
+		} else {
+			assertNotNull(new ResourceNotResolvedException("Resource " + resourceURL.toString() + " is not installed."
+					+ " You can install it using the command install."), localDataset);
+		}
+		return localDataset;
 	}
 	
 }

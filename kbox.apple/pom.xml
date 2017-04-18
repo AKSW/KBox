@@ -22,7 +22,7 @@
   <dependencies>
 	  <dependency>
 	    	<groupId>org.aksw.kbox</groupId>
-		    <artifactId>kbox.kns</artifactId>
+		    <artifactId>kbox.core</artifactId>
 		    <version>0.0.1-alpha2</version>
 	  </dependency>
   </dependencies> 

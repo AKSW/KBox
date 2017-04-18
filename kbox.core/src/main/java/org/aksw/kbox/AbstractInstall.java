@@ -7,27 +7,12 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-public abstract class AbstractInstall implements Install, Locator {
-	
-	protected InputStreamFactory isFactory = null;
-	
-	public AbstractInstall() {		
-	}
-	
-	public AbstractInstall(InputStreamFactory isFactory) {
-		this.isFactory = isFactory;
-	}
+public abstract class AbstractInstall extends ResourceValidator implements Install, Locator {
 	
 	@Override
 	public void install(URL source, URL dest) throws Exception {
-		if(isFactory == null) {
-			try(InputStream is = source.openStream()) {
-				install(is, dest);
-			}
-		} else {
-			try(InputStream is = isFactory.get(source)) {
-				install(is, dest);
-			}
+		try(InputStream is = source.openStream()) {
+			install(is, dest);
 		}
 	}
 
@@ -41,10 +26,11 @@ public abstract class AbstractInstall implements Install, Locator {
 		try (FileOutputStream fos = new FileOutputStream(destFile)) {
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		}
-		validate(destFile);
+		validate(dest);
 	}
 	
-	public void validate(File destFile) throws Exception {
-		KBox.validate(destFile);
+	public void validate(URL url) throws Exception {
+		File f = new File(URLToAbsolutePath(url));
+		KBox.validate(f);
 	}
 }

@@ -27,6 +27,16 @@
 	</dependency>
 	<dependency>
     	<groupId>org.aksw.kbox</groupId>
+	    <artifactId>kbox.kns</artifactId>
+	    <version>0.0.1-alpha2</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.aksw.kbox</groupId>
+	    <artifactId>kbox.core</artifactId>
+	    <version>0.0.1-alpha2</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.aksw.kbox</groupId>
 	    <artifactId>kbox.fusca</artifactId>
 	    <version>0.0.1-alpha2</version>
 	</dependency>

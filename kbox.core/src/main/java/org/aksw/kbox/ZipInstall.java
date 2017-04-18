@@ -14,18 +14,10 @@ import org.aksw.kbox.utils.ZIPUtil;
  */
 public class ZipInstall extends ResourceInstall {
 	
-	public ZipInstall() {
-	}
-	
-	public ZipInstall(InputStreamFactory isFactory) {
-		super(isFactory);
-	}
-	
 	@Override
 	public void install(InputStream resource, URL target) throws Exception {
 		File destPath = new File(URLToAbsolutePath(target));
 		destPath.mkdirs();
 		ZIPUtil.unzip(resource, destPath.getAbsolutePath());
-		validate(destPath);
 	}
 }

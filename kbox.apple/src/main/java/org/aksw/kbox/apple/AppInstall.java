@@ -1,12 +1,16 @@
-package org.aksw.kbox.kns;
+package org.aksw.kbox.apple;
 
 import java.io.InputStream;
 import java.net.URL;
 
 import org.aksw.kbox.InputStreamFactory;
-import org.aksw.kbox.Install;
 
-public interface AppInstall extends Install {
+/**
+ * 
+ * @author {@linkplain http://emarx.org}
+ *
+ */
+public interface AppInstall {
 	/**
 	 * Install a given resource in a given URL.
 	 * 
@@ -42,4 +46,6 @@ public interface AppInstall extends Install {
 	 * @throws Exception
 	 */
 	public void install(InputStream resource, URL dest, String format, String version) throws Exception;
+	
+	public void validate(URL url, String format, String version) throws Exception;
 }

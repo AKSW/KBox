@@ -12,7 +12,7 @@ public class KNSSever {
 	}
 	
 	/**
-	 * Iterate over all Knowledge Names (KNs).
+	 * Iterate over all Knowledge Names ({@link KN}s).
 	 * 
 	 * @param visitor a {@link KNSVisitor}.
 	 * 
@@ -25,9 +25,9 @@ public class KNSSever {
 	}
 	
 	/**
-	 * Iterate over all Knowledge Names (KNs) of a given Knowledge Name Service (KNS).
+	 * Iterate over all Knowledge Names ({@link KN}s) of a given Knowledge Name Service (KNS).
 	 * 
-	 * @param knsServerURL a knsServerURL {@link URL}.
+	 * @param knsServerURL the {@link KNSServer}'s {@link URL}.
 	 * @param visitor a {@link KNSVisitor}.
 	 * 
 	 * @return true if the {@link KNSVisitor#visit(KN)} method return true and false otherwise.
@@ -40,7 +40,7 @@ public class KNSSever {
 	}
 	
 	/**
-	 * Iterate over all Knowledge Names (KNs) of a given Knowledge Name Service (KNS).
+	 * Iterate over all Knowledge Names ({@link KN}s) of a given Knowledge Name Service (KNS).
 	 * 
 	 * @param table a {@link KNSTable}.
 	 * @param visitor a {@link KNSVisitor}.
