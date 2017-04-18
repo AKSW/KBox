@@ -37,17 +37,19 @@ public class DefaultKNSServerList extends CustomParamKNSServerList {
 			String line = null;
 			while((line = in.readLine()) != null) {
 			    KNSServer knsServer = null;
-				try {					
+				try {
 					knsServer = parse(line);
-					boolean keep = visitor.visit(knsServer);
-					if(keep) {
-						keep = super.visit(visitor);
+					next = visitor.visit(knsServer);
+					if(!next) {
+						return false;
 					}
-					return keep;
 				} catch (Exception e) {
 					logger.error("KNS Table entry could not be parsed: " + line, e);
 				}
 			}
+		}
+		if(next) {
+			next = super.visit(visitor);
 		}
 		return next;
 	}

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import org.aksw.kbox.KBox;
 import org.junit.Test;
 
