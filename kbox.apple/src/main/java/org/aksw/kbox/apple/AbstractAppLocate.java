@@ -9,14 +9,21 @@ public abstract class AbstractAppLocate extends AppPathBinder implements Locate,
 	@Override
 	public String locate(String resource, String format, String version)
 			throws Exception {
-		return URLToAbsolutePath(new URL(resource), format, version);
+		File localFile = locate(new URL(resource), format, version);
+		if(localFile != null) {
+			localFile.getAbsolutePath();
+		}
+		return null;
 	}
 
 	@Override
 	public File locate(URL resource, String format, String version)
 			throws Exception {
-		File newFile = new File(URLToAbsolutePath(resource, format, version));
-		return newFile;
+		File localFile = new File(URLToAbsolutePath(resource, format, version));
+		if(localFile.exists() && isValid(resource, format, version)) {
+			return localFile;
+		}
+		return null;
 	}
 
 	@Override
