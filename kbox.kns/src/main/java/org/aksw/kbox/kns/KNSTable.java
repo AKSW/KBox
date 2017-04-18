@@ -44,7 +44,7 @@ public class KNSTable {
 	/**
 	 * Resolve a given resource with by the given KNS service.
 	 * 
-	 * @param knsServerURL the {@link URL} of KNS server that will resolve the given URL.
+	 * @param knsServerURL the {@link URL} of KNS server that will resolve the given {@link URL}.
 	 * @param resourceURL the {@link URL} of the resource that will be resolved by the given KNS service.
 	 * 
 	 * @return the resolved {@link KN} or {@link null} in case it is not resolved.
