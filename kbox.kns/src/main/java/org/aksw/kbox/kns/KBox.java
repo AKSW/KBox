@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.aksw.kbox.InputStreamFactory;
-import org.aksw.kbox.apple.AppInstall;
-import org.aksw.kbox.apple.AppLocate;
+import org.aksw.kbox.apple.Install;
+import org.aksw.kbox.apple.Locate;
 import org.askw.kbox.kns.exception.ResourceDereferencingException;
 import org.askw.kbox.kns.exception.ResourceNotResolvedException;
 
@@ -231,11 +231,11 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	
 	public static File getResource(KNSServerList knsServerList, 
 			URL resourceURL, 
-			AppLocate locateMethod,
+			Locate locateMethod,
 			String format,
 			String version,
 			Resolver resolver, 
-			AppInstall installMethod,
+			Install installMethod,
 			InputStreamFactory isFactory) throws Exception {
 		return getResource(knsServerList, 
 				resourceURL, 
@@ -250,11 +250,11 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	
 	public static File getResource(KNSServerList knsServerList, 
 			URL resourceURL, 
-			AppLocate locateMethod,
+			Locate locateMethod,
 			String format,
 			String version,
 			Resolver resolver,
-			AppInstall installMethod,
+			Install installMethod,
 			InputStreamFactory isFactory,
 			boolean install)
 			throws Exception {

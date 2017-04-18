@@ -7,7 +7,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-public abstract class AbstractInstall extends ResourceValidator implements Install, Locator {
+public abstract class AbstractInstall implements Install, PathBinder {
 	
 	@Override
 	public void install(URL source, URL dest) throws Exception {

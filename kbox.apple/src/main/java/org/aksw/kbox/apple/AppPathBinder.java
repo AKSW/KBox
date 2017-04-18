@@ -10,7 +10,7 @@ import org.aksw.kbox.KBox;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class DefaultAppLocator implements AppLocator {
+public class AppPathBinder implements PathBinder {
 	public String URLToAbsolutePath(URL url, String format, String version) throws Exception {
 		return KBox.getResourceFolder()
 				+ File.separator

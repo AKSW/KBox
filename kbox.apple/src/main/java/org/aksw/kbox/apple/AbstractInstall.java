@@ -11,7 +11,7 @@ import org.aksw.kbox.InputStreamFactory;
  * @author {@linkplain http://emarx.org}
  *
  */
-public abstract class AbstractAppInstall extends DefaultAppLocator implements AppInstall, AppLocator {
+public abstract class AbstractInstall extends AppPathBinder implements Install, PathBinder {
 
 	@Override
 	public void install(URL source, URL target, String format, String version)

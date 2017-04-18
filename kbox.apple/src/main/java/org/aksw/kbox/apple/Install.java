@@ -10,7 +10,7 @@ import org.aksw.kbox.InputStreamFactory;
  * @author {@linkplain http://emarx.org}
  *
  */
-public interface AppInstall {
+public interface Install {
 	/**
 	 * Install a given resource in a given URL.
 	 * 

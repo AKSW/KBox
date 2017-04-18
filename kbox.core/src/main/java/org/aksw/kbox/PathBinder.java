@@ -2,6 +2,6 @@ package org.aksw.kbox;
 
 import java.net.URL;
 
-public interface Locator {
+public interface PathBinder {
 	String URLToAbsolutePath(URL url) throws Exception;
 }

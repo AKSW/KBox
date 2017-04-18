@@ -11,7 +11,7 @@ import org.aksw.kbox.utils.ZIPUtil;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class ZipAppInstall extends AbstractAppInstall {
+public class ZipAppInstall extends AbstractInstall {
 	
 	@Override
 	public void install(InputStream resource, URL dest, String format,

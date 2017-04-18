@@ -5,13 +5,7 @@ import java.net.URL;
 
 import org.aksw.kbox.KBox;
 
-/**
- * 
- * @author {@linkplain http://emarx.org}
- *
- */
-public class DefaultAppLocate extends DefaultAppLocator implements AppLocate {
-
+public abstract class AbstractAppLocate extends AppPathBinder implements Locate, PathBinder {
 	@Override
 	public String locate(String resource, String format, String version)
 			throws Exception {
@@ -31,5 +25,4 @@ public class DefaultAppLocate extends DefaultAppLocator implements AppLocate {
 		File resource = new File(URLToAbsolutePath(url, format, version));
 		return KBox.isValid(resource.getAbsolutePath());
 	}
-
 }

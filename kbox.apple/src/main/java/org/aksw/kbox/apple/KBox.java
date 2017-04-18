@@ -30,7 +30,7 @@ public class KBox extends org.aksw.kbox.KBox {
 			URL dest, 
 			String format, 
 			String version, 
-			AppInstall install)
+			Install install)
 			throws Exception {
 		install.install(source, dest, format, version);
 	}
@@ -53,7 +53,7 @@ public class KBox extends org.aksw.kbox.KBox {
 			URL dest, 
 			String format, 
 			String version, 
-			AppInstall install)
+			Install install)
 			throws Exception {
 		install.install(source, dest, format, version);
 	
@@ -65,7 +65,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @param url the resource URL
 	 * @return the local path of the resource.
 	 */
-	public static File locate(URL url, String format, String version, AppLocate locate) throws Exception  {
+	public static File locate(URL url, String format, String version, Locate locate) throws Exception  {
 		return locate.locate(url, format, version);
 	}
 	
@@ -87,7 +87,7 @@ public class KBox extends org.aksw.kbox.KBox {
 			URL dest, 
 			String format, 
 			String version, 
-			AppInstall install, 
+			Install install, 
 			InputStreamFactory isFactory)
 			throws Exception {
 		install.install(source, dest, format, version, isFactory);
