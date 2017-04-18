@@ -27,7 +27,7 @@ public class KBoxTest {
 	@Test
 	public void testFileMethods() throws MalformedURLException, Exception {
 		File kboxedFile = KBox.getResource(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));		
-		String path = KBox.URLToPath(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));
+		String path = KBox.urlToPath(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));
 		KBox.install(new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt"));
 		File inDisk = new File(KBox.getResourceFolder() + File.separator + path);
 		assertEquals(true, inDisk.exists());
@@ -42,7 +42,7 @@ public class KBoxTest {
 		URL fileToInstall = new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt");
 		File kboxedFile = KBox.getResource(fileToInstall);
 		KBox.install(fileToInstall, new URL("http://test.org/context.txt"));
-		String path = KBox.URLToPath(new URL("http://test.org/context.txt"));
+		String path = KBox.urlToPath(new URL("http://test.org/context.txt"));
 		File inDisk = new File(KBox.getResourceFolder() + File.separator + path);
 		assertEquals(true, inDisk.exists());
 		kboxedFile =  KBox.getResource(new URL("http://test.org/context.txt"));
