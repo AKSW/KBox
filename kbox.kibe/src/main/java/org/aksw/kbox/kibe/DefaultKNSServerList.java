@@ -44,7 +44,7 @@ public class DefaultKNSServerList extends CustomParamKNSServerList {
 						return false;
 					}
 				} catch (Exception e) {
-					logger.error("KNS Table entry could not be parsed: " + line, e);
+					logger.error("KNS Server Table entry could not be parsed: " + line, e);
 				}
 			}
 		}
