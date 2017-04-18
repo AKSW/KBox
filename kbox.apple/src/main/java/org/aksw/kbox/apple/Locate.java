@@ -35,7 +35,18 @@ public interface Locate {
 	 * @throws Exception if something goes wrong during the locating process.
 	 */	
 	public File locate(URL resource, String format, String version) throws Exception;
-			
+	
+	/**
+	 * Checks if a given resource has a valid installation.
+	 * 
+	 * @param url the URL of the resource
+	 * @param format the format.
+	 * @param version the version.
+	 * 
+	 * @return true if the resource has a valid installation and false otherwise.
+	 * 
+	 * @throws Exception if something goes wrong during the validating process.
+	 */
 	public boolean isValid(URL url, String format, String version) throws Exception;
 
 }
