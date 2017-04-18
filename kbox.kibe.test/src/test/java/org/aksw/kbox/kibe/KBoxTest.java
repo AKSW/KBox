@@ -84,7 +84,6 @@ public class KBoxTest {
 		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
 		assertEquals(resolvedKN.getTarget(), "http://target.org");
 	}
-
 	
 	@Test
 	public void testLocate() throws MalformedURLException, Exception {
