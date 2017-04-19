@@ -116,9 +116,9 @@ public class KBox extends ObjectUtils {
 	}
 
 	/**
-	 * Create a KBox directory representing the URL.
+	 * Create a KBox directory representing the {@link URL}.
 	 * 
-	 * @param the KBox directory representing the given URL.
+	 * @param the KBox directory representing the given {@link URL}.
 	 */
 	public static File newDir(URL url) {
 		File resource = new File(urlToAbsolutePath(url));
@@ -133,11 +133,8 @@ public class KBox extends ObjectUtils {
 	 *        resources were going to be saved. 
 	 *        The default resource folder is "user/.kbox".
 	 * 
-	 * @throws InvalidPathException if the folder path does not exist
-	 *         or is not a directory.
 	 */
-	public static void setResourceFolder(String resourceFolderPath)
-			throws InvalidPathException {
+	public static void setResourceFolder(String resourceFolderPath) {
 		File resourceDir = new File(resourceFolderPath);
 		if (!(resourceDir.exists() || resourceDir.isDirectory())) {
 			throw new InvalidPathException(resourceFolderPath,
@@ -151,7 +148,7 @@ public class KBox extends ObjectUtils {
 	/**
 	 * Get the default resource folder.
 	 * 
-	 * @return the full path of the default resource folder
+	 * @return the full path of the default resource folder.
 	 */
 	public static String getResourceFolder() {
 		if (cachedResourceFolderPath != null) {
@@ -168,7 +165,7 @@ public class KBox extends ObjectUtils {
 	 * This method will not try to install the resource and will return null in
 	 * case it does not exists.
 	 * 
-	 * @param url the remote URL of the resource to be retrieved.
+	 * @param url the remote {@link URL} of the resource to be retrieved.
 	 * 
 	 * @return a file pointing to a local KBox resource.
 	 * 
@@ -185,7 +182,7 @@ public class KBox extends ObjectUtils {
 	 * If the flag install is set to true, returns a local copy 
 	 * of the resource if it already exists or create it otherwise.
 	 * 
-	 * @param url the remote URL of the resource to be retrieved.
+	 * @param url the remote {@link URL} of the resource to be retrieved.
 	 * @param install specify if the resource should be installed in case in does
 	 *         no exist (true) or not (false).
 	 * 
@@ -229,7 +226,7 @@ public class KBox extends ObjectUtils {
 	 * If the flag install is set to true, returns a local copy 
 	 * of the resource if it already exists or create it otherwise.
 	 * 
-	 * @param url the remote URL of the resource to be retrieved.
+	 * @param url the remote {@link URL} of the resource to be retrieved.
 	 * @param install specify if the resource should be installed (true) or not
 	 *            (false).
 	 * @param method the method that will be used to install the resource in case
@@ -251,10 +248,10 @@ public class KBox extends ObjectUtils {
 	}
 
 	/**
-	 * Get a local mirror of the remote resource or null if it does 
+	 * Get a local mirror of the remote resource or {@link null} if it does 
 	 * not exist.
 	 * 
-	 * @param url the remote URL of the resource to be retrieved.
+	 * @param url the remote {@link URL} of the resource to be retrieved.
 	 * 
 	 * @return an InputStream pointing to a local copy of the
 	 *         resource.
@@ -275,11 +272,11 @@ public class KBox extends ObjectUtils {
 	 * This method will not try to install the resource and will return null in
 	 * case it does not exists.
 	 * 
-	 * @param url the remote URL of the resource to be retrieved.
+	 * @param url the remote {@link URL} of the resource to be retrieved.
 	 * @param install specify if the resource should be installed in case in does
 	 *        no exist (true) or not (false).
 	 * 
-	 * @return an InputStream pointing to a local copy of the
+	 * @return an {@link InputStream} pointing to a local copy of the
 	 *         resource.
 	 *         
 	 * @throws Exception if the resource can not be located or some error occurs
@@ -297,9 +294,9 @@ public class KBox extends ObjectUtils {
 	 * published in a give URL u will be located when the client execute the
 	 * function KBox.getResource(u).
 	 * 
-	 * @param source the URL of the file that is going to be published at the
-	 *            given URL.
-	 * @param dest the URL were the dereferenced file is going to be
+	 * @param source the {@link URL} of the file that is going to be published at the
+	 *            given {@link URL}.
+	 * @param dest the {@link URL} were the dereferenced file is going to be
 	 *            published.
 	 * 
 	 * @throws Exception if the resource does not exist or can not be copied 
@@ -312,14 +309,14 @@ public class KBox extends ObjectUtils {
 	}
 
 	/**
-	 * Publish the dereferenced file in a given URL in your corresponding local
+	 * Publish the dereferenced file in a given {@link URL} in your corresponding local
 	 * Knowledge Box (KBox) resource folder. This function allows KBox to serve
 	 * files to applications, acting as proxy to the published file. The file
-	 * that is installed in a give URL u will be located when the client
+	 * that is installed in a give {@link URL} u will be located when the client
 	 * executes the function KBox.getResource(u).
 	 * 
-	 * @param url the URL of the resource that is going to be published at the
-	 *            given URL.
+	 * @param url the {@link URL} of the resource that is going to be published at the
+	 *            given {@link URL}.
 	 * 
 	 * @throws Exception if the resource does not exist or can not be copied or some
 	 *             error occurs during the resource publication.
@@ -331,15 +328,15 @@ public class KBox extends ObjectUtils {
 	}
 
 	/**
-	 * Publish the given input stream in the given URL on your local Knowledge
+	 * Publish the given input stream in the given {@link URL} on your local Knowledge
 	 * Box (KBox) resource folder. This function allows KBox to serve files to
 	 * applications, acting as proxy to the published file. The file that is
 	 * installed in a give URL u will be located when the client execute the
 	 * function KBox.getResource(u).
 	 * 
-	 * @param source the inputStream that is going to be published in 
-	 *        the given URL.
-	 * @param dest the URL were the file is going to be published. 
+	 * @param source the {@link InputStream} that is going to be published in 
+	 *        the given {@link URL}.
+	 * @param dest the {@link URL} were the file is going to be published. 
 	 * 
 	 * @throws Exception if the resource does not exist or can not be copied or 
 	 *         some error occurs during the resource publication.
@@ -351,14 +348,14 @@ public class KBox extends ObjectUtils {
 	}
 
 	/**
-	 * Creates a mirror for the given file in a given URL. This function allows
+	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
-	 * file. The file that is published in a give URL u will be located when the
+	 * file. The file that is published in a give {@link URL} u will be located when the
 	 * client execute the function KBox.getResource(u).
 	 * 
-	 * @param source the URL of the file that is going to be published at the
-	 *        given URL.
-	 * @param dest the URL where the file is going to be published.
+	 * @param source the {@link URL} of the file that is going to be published at the
+	 *        given {@link URL}.
+	 * @param dest the {@link URL} where the file is going to be published.
 	 * @param install a customized method for installation.
 	 * 
 	 * @throws Exception if the resource does not exist or can not be copied or some
@@ -370,14 +367,14 @@ public class KBox extends ObjectUtils {
 	}
 
 	/**
-	 * Publish a given file in a given URL local directory. This function allows
+	 * Publish a given file in a given {@link URL} local directory. This function allows
 	 * KBox to serve files to applications, acting as proxy to the published
 	 * file. The file that is published in a give URL u will be located when the
 	 * client execute the function KBox.getResource(u).
 	 * 
-	 * @param source the InputStream of the file that is going to be published at
-	 *            the given URL.
-	 * @param dest the URL where the file is going to be published.
+	 * @param source the {@link InputStream} of the file that is going to be published at
+	 *            the given {@link URL}.
+	 * @param dest the {@link URL} where the file is going to be published.
 	 * @param install the customized method for installation.
 	 * 
 	 * @throws Exception if the resource does not exist or can not be copied or some
@@ -389,10 +386,10 @@ public class KBox extends ObjectUtils {
 	}
 
 	/**
-	 * Install a given ZIP file from a given URL.
+	 * Install a given ZIP file from a given {@link URL}.
 	 * 
-	 * @param source the source URL containing the ZIP file to be installed.
-	 * @param dest the URL whereas the source will be installed.
+	 * @param source the source {@link URL} containing the ZIP file to be installed.
+	 * @param dest the {@link URL} whereas the source will be installed.
 	 * 
 	 * @throws Exception if an error occurs during the installation.
 	 */
@@ -402,9 +399,9 @@ public class KBox extends ObjectUtils {
 	}
 
 	/**
-	 * Install a given ZIP file from a given URL.
+	 * Install a given ZIP file from a given {@link URL}.
 	 * 
-	 * @param source the source URL containing the ZIP file to be installed.
+	 * @param source the source {@link URL} containing the ZIP file to be installed.
 	 * 
 	 * @throws Exception if an error occurs during the installation.
 	 */
@@ -429,6 +426,10 @@ public class KBox extends ObjectUtils {
 	}
 	
 	private static String getCanonicalPath(String path) throws Exception {
-		return new File(path).getCanonicalPath();
+		return getCanonicalPath(new File(path));
+	}
+	
+	private static String getCanonicalPath(File path) throws Exception {
+		return path.getCanonicalPath();
 	}
 }
