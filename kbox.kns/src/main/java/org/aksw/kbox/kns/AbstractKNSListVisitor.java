@@ -17,7 +17,7 @@ public abstract class AbstractKNSListVisitor implements KNSServerListVisitor {
 	private class KNServerListVisitor implements KNSVisitor {
 		@Override
 		public boolean visit(KN kn) throws Exception {			
-			return visit(kn);
+			return AbstractKNSListVisitor.this.visit(kn);
 		}		
 	}
 }
