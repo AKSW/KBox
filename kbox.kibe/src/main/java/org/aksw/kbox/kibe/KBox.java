@@ -1,16 +1,15 @@
 package org.aksw.kbox.kibe;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.aksw.kbox.InputStreamFactory;
+import org.aksw.kbox.apple.AppLocate;
 import org.aksw.kbox.apple.Install;
 import org.aksw.kbox.apple.Locate;
-import org.aksw.kbox.apple.AppLocate;
 import org.aksw.kbox.apple.ZipAppInstall;
 import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
@@ -96,8 +95,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param url the {@link URL} that will be resolved.
 	 * @param install a customized method for installation.
-	 * @param resolver the resolver of the given KNS and resourceURL.
-	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's URL.
+	 * @param resolver the resolver of the given KNS and resource'S {@link URL}.
+	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's {@link URL}.
 	 * 
 	 * @throws ResourceNotResolvedException if the given resource can not be resolved.
 	 * @throws Exception if the resource does not exist or can not be copied or some
@@ -121,8 +120,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param url the {@link URL} that will be resolved.
 	 * @param install an {@link Install} method to be used for installation.
-	 * @param resolver the resolver of the given KNS and resourceURL.
-	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's URL.
+	 * @param resolver the resolver of the given KNS and resource's {@link URL}.
+	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's {@link URL}.
 	 * 
 	 * @throws NullArgumentException if any of the arguments is {@link null}.
 	 * @throws Exception if the resource does not exist or can not be copied or some
@@ -148,10 +147,10 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * file. The file that is published in a give {@link URL} will be located when the
 	 * client execute the function {@link KBox#getResource(URL)}.
 	 * 
-	 * @param knsServerURL a {@link KNSServer}'s {@link URL} that will be used to resolve the given <code>resourceURL</code>.
+	 * @param knsServerURL a {@link KNSServer}'s {@link URL} that will be used to resolve the given resource's {@link URL}.
 	 * @param resourceURL the {@link URL} that will be resolved.
 	 * @param install an {@link Install} method to be used for installation.
-	 * @param resolver the {@link Resolver} of the given KNS and <code>resourceURL</code>.
+	 * @param resolver the {@link Resolver} of the given KNS and resource's {@link URL}.
 	 * 
 	 * @throws KBNotResolvedException if the given KB can not be resolved.
 	 * @throws Exception if the resource does not exist or can not be copied or some
@@ -193,7 +192,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
+	 * @param resolver the resolver to resolve the given resourceURL in the {@link DefaultKNSServerList}.
 	 * @param install a customized {@link Install} method for installation.
 	 * 
 	 * @return the resolved {@link  KN} or {@link null} if it is not resolved.
@@ -217,9 +216,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
+	 * @param resolver the resolver to resolve the given resourceURL in the {@link DefaultKNSServerList}.
 	 * @param install a customized {@link Install} method for installation.
-	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's URL.
+	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's {@link URL}.
 	 * 
 	 * @return the resolved {@link KN} or {@link null} if it is not resolved.
 	 * 
@@ -242,7 +241,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
+	 * @param resolver the resolver to resolve the given resource's {@link URL} in the {@link DefaultKNSServerList}.
 	 * 
 	 * @return the resolved {@link  KN} or {@link null} if it is not resolved.
 	 * 
@@ -264,7 +263,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knsServerList list of KNS servers
 	 * @param resourceURL the {@link URL} to be resolved by the KNS.
-	 * @param resolver the resolver to resolve the given resourceURL in the {@link CustomParamKNSServerList}.
+	 * @param resolver the resolver to resolve the given resource's {@link URL} in the {@link DefaultKNSServerList}.
 	 * 
 	 * @return the resolved {@link  KN} or {@link null} if it is not resolved.
 	 * 
@@ -287,7 +286,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param url the {@link URL} that will be resolved.
 	 * @param install a customized method for installation.
-	 * @param resolver the resolver of the given KNS and resourceURL.
+	 * @param resolver the resolver to resolve the given the given resource's {@link URL}.
 	 * 
 	 * @throws ResourceNotResolvedException if the given resource can not be resolved.
 	 * @throws Exception if the resource does not exist or can not be copied or some
@@ -414,7 +413,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param knowledgebase the {@link URL} of the index file to be installed.
 	 * @param format the KB format.
-	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's URL.
+	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's {@link URL}.
 	 * 
 	 * @throws KBNotResolvedException if the given knowledge base can not be resolved.
 	 * @throws Exception if any error occurs during the indexing process.
@@ -432,7 +431,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @param source the {@link URL} of the index file to be installed.
 	 * @param target the {@link URL} of the knowledge base whereas the index will be installed.
-	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's URL.
+	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's {@link URL}.
 	 * @param format the KB format.
 	 * 
 	 * @throws Exception if any error occurs during the indexing process.
@@ -449,7 +448,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @param target the {@link URL} of the knowledge base whereas the index will be installed.
 	 * @param format the KB format.
 	 * @param version the KB version.
-	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's URL.
+	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's {@link URL}.
 	 * 
 	 * @throws Exception if any error occurs during the indexing process.
 	 */
@@ -721,7 +720,177 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	}
 	
 	/**
-	 * Create a {@link Model} with a given RDF Knowledge Base Names.
+	 * Get the KB from the given KNS Server {@link URL} with the given format and version.
+	 * 
+	 * @param knsServerList the {@link KNSServerList} to lookup for the give KB {@link URL}.
+	 * @param kbURL the {@link URL} of the KB. 
+	 * @param format the KB format.
+	 * @param isFactory the {@link InputStreamFactory} to be used to open the KB file stream.
+	 * 
+	 * ps: This method automatically dereference the KB from the KNS Server in case it 
+	 * can not be found locally.
+	 * 
+	 * @return the KB {@link File} or {@link null} if the KB does not exist or could not be located. 
+	 * 
+	 * @throws Exception if some error occurs during while getting the KB. 
+	 */
+	public static File getResource(KNSServerList knsServerList, 
+			URL kbURL,
+			String format,
+			InputStreamFactory isFactory
+			) throws Exception {
+		return getResource(knsServerList, kbURL, format, DEFAULT_VERSION, isFactory, true);
+	}
+	
+	/**
+	 * Get the KB from the given KNS Server {@link URL} with the given format and version.
+	 * 
+	 * @param knsServerList the {@link KNSServerList} to lookup for the give KB {@link URL}.
+	 * @param kbURL the {@link URL} of the KB. 
+	 * @param format the KB format.
+	 * @param version the KB version.
+	 * @param isFactory the {@link InputStreamFactory} to be used to open the KB file stream.
+	 * 
+	 * ps: This method automatically dereference the KB from the KNS Server in case it 
+	 * can not be found locally.
+	 * 
+	 * @return the KB {@link File} or {@link null} if the KB does not exist or could not be located. 
+	 * 
+	 * @throws Exception if some error occurs during while getting the KB. 
+	 */
+	public static File getResource(KNSServerList knsServerList, 
+			URL kbURL, 
+			String format, 
+			String version, 
+			InputStreamFactory isFactory
+			) throws Exception {
+		return getResource(knsServerList, kbURL, format, version, isFactory, true);
+	}
+	
+	/**
+	 * Get the KB from the given KNS Server {@link URL} with the given format and version.
+	 * 
+	 * @param knsServerList the {@link KNSServerList} to lookup for the give KB {@link URL}.
+	 * @param kbURL the {@link URL} of the KB. 
+	 * @param format the KB format.
+	 * @param version the KB version.
+	 * @param isFactory the {@link InputStreamFactory} to be used to open the KB file stream.
+	 * @param install true if the KB should be installed and false otherwise.
+	 * 
+	 * @return the KB {@link File} or {@link null} if the KB does not exist or could not be located. 
+	 * 
+	 * @throws Exception if some error occurs during while getting the KB. 
+	 */
+	public static File getResource(KNSServerList knsServerList,
+			URL kbURL,
+			String format,
+			String version,
+			InputStreamFactory isFactory,
+			boolean install
+			) throws Exception {
+		Locate kbLocate = new AppLocate();
+		Resolver kbResolver = new KBResolver();
+		try {
+			File kbDir = getResource(knsServerList, 
+					kbURL,
+					kbLocate,
+					DEFAULT_FORMAT,
+					DEFAULT_VERSION,
+					kbResolver,
+					new ZipAppInstall(), 
+					isFactory,
+					install);
+			return kbDir;
+		} catch (ResourceNotResolvedException e) {
+			throw new KBNotResolvedException("Knowledge base " + kbURL.toString() + " is not installed."
+					+ " You can install it using the command install.");
+		} catch (KBDereferencingException e) {
+			throw new KBDereferencingException(kbURL.toString(), e);
+		}
+	}
+	
+	/**
+	 * Get the KB from the given KNS Server {@link URL} with the given format and version.
+	 * 
+	 * @param knsServerURL the KNS Server {@link URL}.
+	 * @param kbURL the {@link URL} of the KB. 
+	 * @param format the KB format.
+	 * @param isFactory the {@link InputStreamFactory} to open the KB file stream.
+	 * 
+	 * ps: This method automatically dereference the KB from the KNS Server in case it 
+	 * can not be found locally.
+	 * 
+	 * @return the KB {@link File} or null if the KB does not exist or could not be located. 
+	 * 
+	 * @throws Exception if some error occurs during while getting the resource. 
+	 */
+	public static File getResource(URL knsServerURL, 
+			URL kbURL, 
+			String format,
+			InputStreamFactory isFactory
+			) throws Exception {
+		return getResource(knsServerURL, kbURL, format, DEFAULT_VERSION, isFactory, true);
+	}
+	
+	/**
+	 * Get the KB from the given KNS Server {@link URL} with the given format and version.
+	 * 
+	 * @param knsServerURL the KNS Server {@link URL}.
+	 * @param kbURL the {@link URL} of the KB. 
+	 * @param format the KB format.
+	 * @param version the KB version.
+	 * @param isFactory the {@link InputStreamFactory} to open the KB file stream.
+	 * 
+	 * ps: This method automatically dereference the KB from the KNS Server in case it 
+	 * can not be found locally.
+	 * 
+	 * @return the KB {@link File} or null if the KB does not exist or could not be located. 
+	 * 
+	 * @throws Exception if some error occurs during while getting the resource. 
+	 */
+	public static File getResource(URL knsServerURL, 
+			URL kbURL, 
+			String format, 
+			String version, 
+			InputStreamFactory isFactory
+			) throws Exception {
+		return getResource(knsServerURL, kbURL, format, version, isFactory, true);
+	}
+	
+	/**
+	 * Get the KB from the given KNS Server {@link URL} with the given format and version.
+	 * 
+	 * @param knsServerURL the KNS Server {@link URL}.
+	 * @param kbURL the {@link URL} of the KB. 
+	 * @param format the KB format.
+	 * @param version the KB version.
+	 * @param isFactory the {@link InputStreamFactory} to open the KB file stream.
+	 * @param install true if the KB should be installed and false otherwise.
+	 * 
+	 * @return the KB {@link File} or null if the KB does not exist or could not be located. 
+	 * 
+	 * @throws Exception if some error occurs during while getting the resource. 
+	 */
+	public static File getResource(URL knsServerURL, 
+			URL kbURL, 
+			String format, 
+			String version, 
+			InputStreamFactory isFactory,
+			boolean install
+			) throws Exception {
+		final KNSServer knsServer = new KNSServer(knsServerURL);
+		KNSServerList knsServerList = new KNSServerList() {			
+			@Override
+			public boolean visit(KNSServerListVisitor visitor) throws Exception {
+				visitor.visit(knsServer);
+				return false;
+			}
+		};
+		return getResource(knsServerList, kbURL, format, version, isFactory, install);
+	}
+	
+	/**
+	 * Create a {@link Model} with a given RDF knowledge base Names.
 	 * Warning: This method automatically dereference the RDF KBs.
 	 * 
 	 * @param knowledgeNames the RDF KB Names to be queried.        
@@ -880,7 +1049,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @return the resolved {@link KN} or {@link null} if the given resource's {@link URL} can not be resolved.
 	 * 
-	 * @throws IOException if any error occurs during the operation.
+	 * @throws Exception if any error occurs during the operation.
 	 */
 	public static KN resolve(URL knsServerURL, URL resourceURL) throws Exception {
 		KBResolver resolver = new KBResolver();
