@@ -7,6 +7,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDBTest;
 import org.aksw.kbox.kns.KBResolver;
 import org.aksw.kbox.kns.KN;
@@ -52,6 +53,15 @@ public class KBoxTest {
 	public void testKNEquals() throws Exception {
 		KN kn = new KN("teste", "a", "b", null, null, null, null);
 		assertTrue("teste".equals(kn.getName()));
+	}
+	
+	@Test
+	public void testGetResource() throws Exception {
+		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
+		URL kbURL = new URL("http://foaf");
+		URL knsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
+		File f = KBox.getResource(knsServerURL, kbURL, KBox.DEFAULT_FORMAT, KBox.DEFAULT_VERSION, isFactory);
+		Assert.assertNotNull(f);
 	}
 	
 	@Test

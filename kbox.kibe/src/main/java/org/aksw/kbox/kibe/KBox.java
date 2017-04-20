@@ -129,10 +129,10 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	private static void install(KN kn, URL resourceURL, Install install, InputStreamFactory isFactory)
 			throws NullArgumentException, Exception {		
-		assertNotNull(new NullArgumentException("kn"), kn);
-		assertNotNull(new NullArgumentException("resourceURL"), resourceURL);
-		assertNotNull(new NullArgumentException("install"), install);
-		assertNotNull(new NullArgumentException("isFactory"), isFactory);
+		assertNotNull(new IllegalArgumentException("kn"), kn);
+		assertNotNull(new IllegalArgumentException("resourceURL"), resourceURL);
+		assertNotNull(new IllegalArgumentException("install"), install);
+		assertNotNull(new IllegalArgumentException("isFactory"), isFactory);
 		install(kn.getTargetURL(),
 				resourceURL,
 				getValue(kn.getFormat(), DEFAULT_FORMAT),
@@ -1104,5 +1104,4 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		DefaultKNSServerList kibeKNSServerList = new DefaultKNSServerList();
 		kibeKNSServerList.visit(visitor);
 	}
-	
 }
