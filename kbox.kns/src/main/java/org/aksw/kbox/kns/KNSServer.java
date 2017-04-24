@@ -4,8 +4,8 @@ import java.net.URL;
 
 public class KNSServer {
 	
-	URL url = null;
-	KNSTable table = null;
+	private URL url = null;
+	private KNSTable table = null;
 
 	public KNSServer(URL url) throws Exception {
 		this.url = url;
