@@ -936,7 +936,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	}
 	
 	/**
-	 * Query a given Query a given KBox service endpoints.
+	 * Executes a given query in a KBox service endpoints address.
 	 * 
 	 * @param sparql the SPARQL query that will be used to query.
 	 * @param url the {@link URL} of the service.
