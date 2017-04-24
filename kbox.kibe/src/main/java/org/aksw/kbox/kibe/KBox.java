@@ -606,7 +606,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		KN resolvedKN = resolve(knsServer, knowledgebase, format);
 		assertNotNull(new KBNotResolvedException(knowledgebase.toString()), resolvedKN);
 		install(resolvedKN.getTargetURL(), 
-				knowledgebase, getValue(format, DEFAULT_FORMAT), 
+				knowledgebase, getValue(format, DEFAULT_FORMAT),
 				getValue(resolvedKN.getVersion(), DEFAULT_VERSION), isFactory);
 	}
 	
@@ -790,14 +790,15 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 			) throws Exception {
 		Locate kbLocate = new AppLocate();
 		Resolver kbResolver = new KBResolver();
+		Install installMethod = new ZipAppInstall();
 		try {
 			File kbDir = getResource(knsServerList, 
 					kbURL,
 					kbLocate,
-					DEFAULT_FORMAT,
-					DEFAULT_VERSION,
+					format,
+					version,
 					kbResolver,
-					new ZipAppInstall(), 
+					installMethod, 
 					isFactory,
 					install);
 			return kbDir;
