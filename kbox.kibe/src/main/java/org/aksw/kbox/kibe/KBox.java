@@ -11,9 +11,9 @@ import org.aksw.kbox.apple.AppLocate;
 import org.aksw.kbox.apple.Install;
 import org.aksw.kbox.apple.Locate;
 import org.aksw.kbox.apple.ZipAppInstall;
+import org.aksw.kbox.apple.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
-import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDB;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.CustomParamKNSServerList;
@@ -734,7 +734,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if some error occurs during while getting the KB. 
 	 */
-	public static File getResource(KNSServerList knsServerList, 
+	public static File getResource(KNSServerList knsServerList,
 			URL kbURL,
 			String format,
 			InputStreamFactory isFactory
@@ -759,9 +759,9 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if some error occurs during while getting the KB. 
 	 */
 	public static File getResource(KNSServerList knsServerList, 
-			URL kbURL, 
-			String format, 
-			String version, 
+			URL kbURL,
+			String format,
+			String version,
 			InputStreamFactory isFactory
 			) throws Exception {
 		return getResource(knsServerList, kbURL, format, version, isFactory, true);
@@ -824,8 +824,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if some error occurs during while getting the resource. 
 	 */
-	public static File getResource(URL knsServerURL, 
-			URL kbURL, 
+	public static File getResource(URL knsServerURL,
+			URL kbURL,
 			String format,
 			InputStreamFactory isFactory
 			) throws Exception {
@@ -848,10 +848,10 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if some error occurs during while getting the resource. 
 	 */
-	public static File getResource(URL knsServerURL, 
-			URL kbURL, 
+	public static File getResource(URL knsServerURL,
+			URL kbURL,
 			String format, 
-			String version, 
+			String version,
 			InputStreamFactory isFactory
 			) throws Exception {
 		return getResource(knsServerURL, kbURL, format, version, isFactory, true);

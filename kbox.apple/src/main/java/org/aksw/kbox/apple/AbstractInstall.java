@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.aksw.kbox.InputStreamFactory;
+import org.aksw.kbox.apple.stream.DefaultInputStreamFactory;
+import org.aksw.kbox.utils.URLUtils;
 
 /**
  * 
@@ -14,17 +16,15 @@ import org.aksw.kbox.InputStreamFactory;
 public abstract class AbstractInstall extends AppPathBinder implements Install, PathBinder {
 
 	@Override
-	public void install(URL source, URL target, String format, String version)
-			throws Exception {
-		try(InputStream is = source.openStream()) {
-			install(is, target, format, version);
-			validate(target, format, version);
-		}
+	public void install(URL resource, URL dest, String format, String version)
+			throws Exception {		
+		install(resource, dest, format, version, new DefaultInputStreamFactory());
 	}
 	
 	@Override
 	public void install(URL resource, URL dest, String format, String version, InputStreamFactory isFactory) throws Exception {
-		try(InputStream is = isFactory.get(resource)) {
+		URL forwardURL = URLUtils.getURLForward(resource);
+		try(InputStream is = isFactory.get(forwardURL)) {
 			install(is, dest, format, version);
 			validate(dest, format, version);
 		}

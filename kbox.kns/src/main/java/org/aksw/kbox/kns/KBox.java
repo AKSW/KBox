@@ -1,7 +1,6 @@
 package org.aksw.kbox.kns;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 
 import org.aksw.kbox.InputStreamFactory;
@@ -262,8 +261,8 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 		if(localDataset == null && install) {
 			KN resolvedKN = resolve(knsServerList, resourceURL, format, version, resolver);
 			assertNotNull(new ResourceNotResolvedException(resourceURL.toString()), resolvedKN.getTargetURL());
-			try(InputStream is = isFactory.get(resolvedKN.getTargetURL())) {
-				install(is, resourceURL, format, version, installMethod);
+			try {
+				install(resolvedKN.getTargetURL(), resourceURL, format, version, installMethod, isFactory);
 			} catch (Exception e) {
 				throw new ResourceDereferencingException(resourceURL.toString(), e);
 			}

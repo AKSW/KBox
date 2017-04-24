@@ -55,8 +55,7 @@ public class KBox extends org.aksw.kbox.KBox {
 			String version, 
 			Install install)
 			throws Exception {
-		install.install(source, dest, format, version);
-	
+		install.install(source, dest, format, version);	
 	}
 	
 	/**
@@ -85,7 +84,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 */
 	public static void install(URL source, 
 			URL dest, 
-			String format, 
+			String format,
 			String version, 
 			Install install, 
 			InputStreamFactory isFactory)

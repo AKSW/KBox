@@ -1,4 +1,4 @@
-package org.aksw.kbox.kibe.stream;
+package org.aksw.kbox.apple.stream;
 
 import java.io.IOException;
 import java.io.InputStream;

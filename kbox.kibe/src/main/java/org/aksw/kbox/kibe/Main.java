@@ -83,7 +83,7 @@ public class Main {
 			String directory = commands.get(SERVERIALIZE_COMMAND);
 			File indexFile = new File(KB_KNS_NAME);
 			try {
-				System.out.println("Serializing directory " + directory);
+				System.out.println("Serializing content inside the directory " + directory);
 				ZIPUtil.zip(new File(directory).getAbsolutePath(), indexFile.getAbsolutePath());
 				System.out.println("Process finished.");
 			} catch (Exception e) {
