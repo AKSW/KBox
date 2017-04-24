@@ -7,7 +7,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.aksw.kbox.kibe.stream.DefaultInputStreamFactory;
+import org.aksw.kbox.apple.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDBTest;
 import org.aksw.kbox.kns.KBResolver;
 import org.aksw.kbox.kns.KN;
