@@ -36,12 +36,24 @@ public class URLUtils {
 	}
 	
 	public static long getContentLength(URL url) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		List<String> values = conn.getHeaderFields().get("content-length");
-		conn.disconnect();
-		if(values != null) {
-			return Long.valueOf(values.get(0));
+        URLConnection conn = url.openConnection();
+        Long contentLength = conn.getContentLengthLong();
+        if(contentLength != null && contentLength >= 0) {
+        	return contentLength;
+        }
+		String contentLengthValue = conn.getHeaderField("content-length");
+		if(contentLengthValue != null) {
+			return Long.valueOf(contentLengthValue);
 		}
 		return -1;
+	}
+	
+	public static URL getURLForward(URL url) throws Exception {
+		URLConnection con = url.openConnection();
+		String location = con.getHeaderField("Location");
+		if(location != null) {
+			return new URL(location);
+		}
+		return url;
 	}
 }
