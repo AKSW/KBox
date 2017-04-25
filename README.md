@@ -58,7 +58,7 @@ Where [command] is:
    * -createIndex <directory>    - Create an index with the files in a given directory.
                                  ps: the directory might contain only RDF compatible file formats.
    * -serialize <directory>      - Serialize the content of a directory to be served in a KNS system.
-   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]       - Query a given graph (e.g. -sparql "Select ..." -graph "graph1,graph2")
+   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]       - Query a given graph (e.g. -sparql "Select ..." -kb "KB1,KB2")
                                                  - ps: use -install in case you want to enable the auto-dereference.
    * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install]   - Start an SPARQL enpoint in the given subDomain containing the given graphs.
    * -list       - List all available KNS services and knowledge graphs.
