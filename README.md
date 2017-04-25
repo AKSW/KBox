@@ -53,20 +53,39 @@ It is easy to plug and use it.
 * Type the following:
 ```
 java -jar kbox.jar <command> [option]
+KBox.jar <command> [option]
 Where [command] is:
-* -createIndex <directory> - Create an index with the files in a given directory.
- ps: the directory might contain only RDF compatible file formats.
-* -sparql <query> -graph <graph>  - Query a given graph.
-* -kns-list  - List all availables KNS services.
-* -kns-install <kns-URL>  - Install a given KNS service.
-* -kns-remove <kns-URL>  - Remove a given KNS service.
-* -r-install  <URL>  - Install a given resource in KBox.
-* -kb-install  <kb-URL> - Install a given knowledge base using the available KNS services to resolve it.
-* -kb-install  <kb-URL> -index <indexFile> - Install a given index in a given knowledge base URL.
-* -kb-install  <kb-URL> -kns-server <kns-server-URL> - Install a knowledge base from a a given KNS server.
-* -kb-list  - List all available KNS services and knowledge bases.
-* -r-dir <resourceDir> - Change the current path of the KBox resource directory.
-* -version - display KBox version.
+   * -createIndex <directory>    - Create an index with the files in a given directory.
+                                 ps: the directory might contain only RDF compatible file formats.
+   * -serialize <directory>      - Serialize the content of a directory to be served in a KNS system.
+   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]       - Query a given graph (e.g. -sparql "Select ..." -graph "graph1,graph2")
+                                                 - ps: use -install in case you want to enable the auto-dereference.
+   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install]   - Start an SPARQL enpoint in the given subDomain containing the given graphs.
+   * -list       - List all available KNS services and knowledge graphs.
+   * -list -kns  - List all availables KNS services.
+   * -install <URL>      - Install a given resource.
+   * -install -kns <kns-URL>     - Install a given KNS service.
+   * -install -kb <kb-URL>       - Install a given knowledge graph using the available KNS services to resolve it.
+   * -install -kb <kb-URL> -format <format>      - Install a given knowledge graph using the available KNS services to resolve it.
+   * -install -kb <kb-URL> -format <format> -version <version>   - Install a given knowledge graph using the available KNS services to resolve it.
+   * -install -kb <kb-URL> -index <indexFile>    - Install a given index in a given knowledge graph URL.
+   * -install -kb <kb-URL> -kns <kns-URL>        - Install a knowledge graph from a a given KNS service.
+   * -install -kb <kb-URL> -kns <kns-URL> -format <format> -version <version>
+ - Install a knowledge graph from a a given KNS service with the specific format and version.
+   * -remove -kns <kns-URL>      - Remove a given KNS service.
+   * -info <kb-URL>      - Gives the information about a specific KB.
+   * -info <kb-URL> -format <format>     - Gives the information about a specific KB.
+   * -info <kb-URL> -format <format> -version <version>  - Gives the information about a specific KB.
+   * -locate <URL>       - returns the local address of the given resource.
+   * -locate -kb <kb-URL>        - returns the local address of the given KB.
+   * -locate -kb <kb-URL> -format <format>       - returns the local address of the given KB.
+   * -locate -kb <kb-URL> -format <format> -version <version>    - returns the local address of the given KB.
+   * -search <kb-URL-pattern>    - Search for all kb-URL containing a given pattern.
+   * -search <kb-URL-pattern> -format <format>   - Search for all kb-URL containing a given pattern.
+   * -search <kb-URL-pattern> -format <format> -version <version>        - Search for all kb-URL containing a given pattern.
+   * -r-dir      - Show the path to the resource folder.
+   * -r-dir <resourceDir>        - Change the path of the resource folder.
+   * -version    - display KBox version.
 ```
 
 ### How can I use KBox in my project?
