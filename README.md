@@ -70,8 +70,7 @@ Where [command] is:
    * -install -kb <kb-URL> -format <format> -version <version>   - Install a given knowledge graph using the available KNS services to resolve it.
    * -install -kb <kb-URL> -index <indexFile>    - Install a given index in a given knowledge graph URL.
    * -install -kb <kb-URL> -kns <kns-URL>        - Install a knowledge graph from a a given KNS service.
-   * -install -kb <kb-URL> -kns <kns-URL> -format <format> -version <version>
- - Install a knowledge graph from a a given KNS service with the specific format and version.
+   * -install -kb <kb-URL> -kns <kns-URL> -format <format> -version <version> - Install a knowledge graph from a a given KNS service with the specific format and version.
    * -remove -kns <kns-URL>      - Remove a given KNS service.
    * -info <kb-URL>      - Gives the information about a specific KB.
    * -info <kb-URL> -format <format>     - Gives the information about a specific KB.
