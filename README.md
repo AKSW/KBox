@@ -28,6 +28,7 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I query multi-graphs?](https://github.com/AKSW/KBox#how-can-i-query-multi-graphs)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
+- [Check our Wiki for old API's](https://github.com/AKSW/KBox/wiki)
 
 ### Why use KBox?
 Systems usually deal with resources and knowledge that are often duplicated among several instances.
@@ -76,9 +77,9 @@ Where [command] is:
 1) Add the following dependency on your project:
 ```
 <dependency>
-  <groupId>org.aksw.kbox</groupId>
-  <artifactId>kbox.core</artifactId>
-  <version>0.0.1-alpha1</version>
+    	<groupId>org.aksw.kbox</groupId>
+    	<artifactId>kbox.kibe</artifactId>
+    	<version>v0.0.1-alpha3-RC16</version>
 </dependency>
 ```
 2) Add the internal AKSW repository to your pom file:
@@ -101,7 +102,7 @@ Remember the commands listed on '[How can I execute KBox in command Line](https:
 It's just about executing the command line below. Remember to add `-install`, so the knowledge graph is automatically dereferenced.
 
 ```
-java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema" -install
+java -jar kbox-v0.0.1-alpha3-RC16.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
 ------
 | n  |
 ======
@@ -128,7 +129,7 @@ It's very easy, as you just need to add the knowledge graph you want to query se
 
 In the given example, we query two knowledge graphs, https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
 ```
-java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
+java -jar kbox-v0.0.1-alpha2.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
 -------
 | n   |
 =======
@@ -166,7 +167,7 @@ docker aksw/kbox pull
 
 3) Run it...
 ```
-docker run aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -graph "https://www.w3.org/2000/01/rdf-schema" -install
+docker run aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
 ------
 | n  |
 ======
