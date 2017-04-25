@@ -61,7 +61,7 @@ Where [command] is:
    * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]       - Query a given graph (e.g. -sparql "Select ..." -kb "KB1,KB2")
                                                  - ps: use -install in case you want to enable the auto-dereference.
    * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install]   - Start an SPARQL enpoint in the given subDomain containing the given graphs.
-   * -list       - List all available KNS services and knowledge graphs.
+   * -list       - List all available knowledge graphs.
    * -list -kns  - List all availables KNS services.
    * -install <URL>      - Install a given resource.
    * -install -kns <kns-URL>     - Install a given KNS service.
