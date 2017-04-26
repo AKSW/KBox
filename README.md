@@ -192,7 +192,8 @@ java -jar kbox-v0.0.1-alpha3-RC16.jar -server "http://localhost:8080/kbox/query"
 ```
 or JAVA API
 ```
-KBox.query()
+ServerAddress serverURL = new ServerAddress(url);
+ResultSet rs = KBox.query(sparql, serverURL);
 ```
 
 ### Listing resource folder path
