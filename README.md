@@ -180,7 +180,7 @@ sudo apt-get -y install docker-engine
 
 2) Pull KBox from AKSW hub repository.
 ```
-docker aksw/kbox pull
+docker pull aksw/kbox
 ```
 
 3) Run it...
