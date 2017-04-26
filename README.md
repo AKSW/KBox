@@ -176,7 +176,7 @@ java -jar kbox-v0.0.1-alpha3-RC16.jar -server -kb "https://www.w3.org/2000/01/rd
 Loading Model...
 Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
-´´´
+```
 
 ### Using KBox with Docker
 
