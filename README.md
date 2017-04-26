@@ -24,8 +24,8 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
 - [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
 - [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
-- [How can I query a published knowledge graph?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-graph)
-- [How can I query multi-graphs?](https://github.com/AKSW/KBox#how-can-i-query-multi-graphs)
+- [How can I query a published knowledge base?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-base)
+- [How can I query multi-bases?](https://github.com/AKSW/KBox#how-can-i-query-multi-bases)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 - [Check our Wiki for old API's](https://github.com/AKSW/KBox/wiki)
@@ -113,7 +113,7 @@ Where [command] is:
 ```
 3) Rock it.. ;-)
 
-### How can I query a published knowledge graph?
+### How can I query a published knowledge base?
 
 Weeeelll... it's quite easy.
 Remember the commands listed on '[How can I execute KBox in command Line](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)'.
@@ -141,7 +141,7 @@ Model model = KBox.createModel(new URL("https://www.w3.org/2000/01/rdf-schema"))
 KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 ```
 
-### How can I query multi-graphs?
+### How can I query multi-bases?
 
 It's very easy, as you just need to add the knowledge graph you want to query separated by commas as the command below:
 
