@@ -170,7 +170,7 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model
 
 ### I like KBox, but I don't like Java neither console, can I start an endpoint?
 
-Ye you can!!
+Yes, you can!!
 
 ```
 java -jar kbox-v0.0.1-alpha3-RC16.jar -server -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
