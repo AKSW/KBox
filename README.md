@@ -164,8 +164,19 @@ You might want to setup the model before starting to execute multiple queries on
 ```
 Model model = KBox.createModel(new URL("https://www.w3.org/2000/01/rdf-schema"),
                    new URL("http://xmlns.com/foaf/0.1"));
-KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
+KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model
 ```
+
+### I like KBox, but I don't like Java neither console, can I start an endpoint?
+
+Ye you can!!
+
+```
+java -jar kbox-v0.0.1-alpha3-RC16.jar -server -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
+Loading Model...
+Publishing service on http://localhost:8080/kbox/query
+Service up and running ;-) ...
+´´´
 
 ### Using KBox with Docker
 
