@@ -179,7 +179,7 @@ Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
 ```
 
-### Querying a KBox endpoint
+### Querying a SPARQL endpoint
 
 by console
 ```
