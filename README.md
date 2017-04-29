@@ -170,7 +170,7 @@ Model model = KBox.createModel(new URL("https://www.w3.org/2000/01/rdf-schema"),
 KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 ```
 
-### Starting a SPARQL enpoint
+### Starting a SPARQL endpoint
 
 Yes, you can!!
 
