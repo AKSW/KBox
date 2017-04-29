@@ -28,6 +28,7 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I query multi-bases?](https://github.com/AKSW/KBox#how-can-i-query-multi-bases)
 - [I like KBox, but I don't like Java neither console, can I start an endpoint?](https://github.com/AKSW/KBox/blob/master/README.md#i-like-kbox-but-i-dont-like-java-neither-console-can-i-start-an-endpoint)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
+- [Querying a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#querying-a-sparql-endpoint)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 - [Check our Wiki for old API's](https://github.com/AKSW/KBox/wiki)
 
@@ -192,7 +193,8 @@ java -jar kbox-v0.0.1-alpha3-RC16.jar -server "http://localhost:8080/kbox/query"
 ```
 or JAVA API
 ```
-ServerAddress serverURL = new ServerAddress(url);
+URL url = new URL("Select (count(distinct ?s) as ?n) where {?s ?p ?o}");
+ServerAddress serverURL = new ServerAddress("http://localhost:8080/kbox/query");
 ResultSet rs = KBox.query(sparql, serverURL);
 ```
 
