@@ -42,7 +42,7 @@ In order to do that, we bring the RDF concept to bridge the gap among reource pu
 ### What is possible to do with it?
 With KBox you can share resources and knowledge among several applications, but not just that.
 In order to allow an easier knowledge dissemination, we have implemented Kibe library.
-The Kibe library allows applications to virtually install and query RDF knowledge graphs.
+The Kibe library allows applications to virtually install and query RDF knowledge bases.
 It takes around ~50 minutes to start quering DBpedia on your computer to avoid server overheads and faults.
 
 ### How can I use KBox?
@@ -148,7 +148,7 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 
 It's very easy, as you just need to add the knowledge graph you want to query separated by commas as the command below:
 
-In the given example, we query two knowledge graphs, https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
+In the given example, we query two knowledge bases, https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
 ```
 java -jar kbox-v0.0.1-alpha3-RC16.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
 -------
