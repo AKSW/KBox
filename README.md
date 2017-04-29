@@ -120,7 +120,7 @@ Where [command] is:
 
 Weeeelll... it's quite easy.
 Remember the commands listed on '[How can I execute KBox in command Line](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)'.
-It's just about executing the command line below. Remember to add `-install`, so the knowledge graph is automatically dereferenced.
+It's just about executing the command line below. Remember to add `-install`, so the knowledge base is automatically dereferenced.
 
 ```
 java -jar kbox-v0.0.1-alpha3-RC16.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
@@ -146,7 +146,7 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 
 ### How can I query multi-bases?
 
-It's very easy, as you just need to add the knowledge graph you want to query separated by commas as the command below:
+It's very easy, as you just need to add the knowledge base you want to query separated by commas as the command below:
 
 In the given example, we query two knowledge bases, https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
 ```
