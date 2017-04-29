@@ -27,8 +27,9 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I query a published knowledge base?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-base)
 - [How can I query multi-bases?](https://github.com/AKSW/KBox#how-can-i-query-multi-bases)
 - [I like KBox, but I don't like Java neither console, can I start an endpoint?](https://github.com/AKSW/KBox/blob/master/README.md#i-like-kbox-but-i-dont-like-java-neither-console-can-i-start-an-endpoint)
-- [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [Querying a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#querying-a-sparql-endpoint)
+- [Changing resource folder's path](https://github.com/AKSW/KBox/blob/master/README.md#changing-resource-folder-path)
+- [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 - [Check our Wiki for old API's](https://github.com/AKSW/KBox/wiki)
 
