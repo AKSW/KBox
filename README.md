@@ -28,7 +28,8 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I query multi-bases?](https://github.com/AKSW/KBox#how-can-i-query-multi-bases)
 - [Starting a SPARQL enpoint](https://github.com/AKSW/KBox/blob/master/README.md#starting-a-sparql-endpoint)
 - [Querying a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#querying-a-sparql-endpoint)
-- [Changing resource folder's path](https://github.com/AKSW/KBox/blob/master/README.md#changing-resource-folder-path)
+- [Listing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#listing-the-resource-folder)
+- [Changing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#changing-the.resource-folder)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 - [Check our Wiki for old APIs](https://github.com/AKSW/KBox/wiki)
@@ -199,14 +200,14 @@ ServerAddress serverURL = new ServerAddress("http://localhost:8080/kbox/query");
 ResultSet rs = KBox.query(sparql, serverURL);
 ```
 
-### Listing resource folder path
+### Listing the resource folder
 
 ```
 java -jar kbox-v0.0.1-alpha3-RC16.jar -r-dir
 Your current resource directory is: kbox/dir/path
 ```
 
-### Changing resource folder path
+### Changing the resource folder
 
 You might get problems with permissions using KBox in shared enviroments.
 Therefore you can change the resource directory of KBox to your desired one.
