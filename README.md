@@ -29,7 +29,7 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [Starting a SPARQL enpoint](https://github.com/AKSW/KBox/blob/master/README.md#starting-a-sparql-endpoint)
 - [Querying a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#querying-a-sparql-endpoint)
 - [Listing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#listing-the-resource-folder)
-- [Changing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#changing-the.resource-folder)
+- [Changing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#changing-the-resource-folder)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
 - [Check our Wiki for old APIs](https://github.com/AKSW/KBox/wiki)
