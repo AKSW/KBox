@@ -257,7 +257,7 @@ Information needed:
 3. The Publisher: Your or your organization's email/URL;
 4. The Creator: Who has created the Knowledge base, e.g. DBpedia -> http://dbpedia.org;
 5. The License: the dataset license;
-6. The URL where the knwoledge graph file can be dereferenced (please create the file using KBox `-createIndex` command);
+6. The URL where the Knowledge graph file can be dereferenced (please create the file using KBox `-createIndex` command);
 7. The Dataset URI name: the URI name that will be used by users to dereference your dataset;
 8. The Dataset description: Give us a few words to help others to know what your dataset is about;
 9. Tell us one reason why KBox is awesome. :-)
