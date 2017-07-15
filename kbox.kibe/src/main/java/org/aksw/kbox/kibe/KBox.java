@@ -591,8 +591,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	/**
 	 * Install a given knowledge base resolved by a given KNS service.
 	 * 
-	 * @param knowledge base the {@link URL} of the knowledge base that is going to be installed.
 	 * @param knsServer the {@link URL} of the KNS service that will be used to lookup.
+	 * @param knowledgebase the {@link URL} of the knowledge base that is going to be installed.
 	 * @param format the KB format.
 	 * @param isFactory stream factory to be used to open stream with the source knowledge base.
 	 * 
@@ -614,8 +614,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * Install a given knowledge base resolved by a given KNS service.
 	 * This method uses {@link ZipAppInstall} as install method.
 	 * 
-	 * @param knowledge base the {@link URL} of the knowledge base that is going to be installed.
 	 * @param knsServer the {@link URL} of the KNS service that will be used to lookup.
+	 * @param knowledgebase the {@link URL} of the knowledge base that is going to be installed.
 	 * @param format the KB format.
 	 * @param version the KB version.
 	 * @param isFactory stream factory to be used to open stream with the source knowledge base.
@@ -680,8 +680,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if any of the given knowledge bases can not be found.
 	 */
-	public static Model createModel(InputStreamFactory isFactory, 
-			boolean install, 
+	public static Model createModel(InputStreamFactory isFactory,
+			boolean install,
 			URL... knowledgeNames) throws Exception {
 		String[] knowledgeBasesPaths = getKowledgebases(isFactory, install, knowledgeNames);
 		return TDB.createModel(knowledgeBasesPaths);
