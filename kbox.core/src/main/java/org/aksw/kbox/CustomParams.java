@@ -36,14 +36,15 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	}
 	
 	private void createDB() {		
-		DB db = getDB();
+		DB db = getDB(false);
+		db.commit();
 		db.close();
 	}
 	
 	public synchronized String getProperty(String property, String defaultValue) {
 		AssertionUtils.assertNotNull(new IllegalArgumentException("property"), property);
 		AssertionUtils.assertNotNull(new IllegalArgumentException("defaultValue"), defaultValue);
-		DB db = getDB();
+		DB db = getReadOnlyDB();
 		String value;
 		try {
 			value = getMap(db).get(property);
@@ -59,7 +60,7 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	public synchronized void setProperty(String property, String value) {
 		AssertionUtils.assertNotNull(new IllegalArgumentException("property"), property);
 		AssertionUtils.assertNotNull(new IllegalArgumentException("value"), value);
-		DB db = getDB();
+		DB db = getDB(false);
 		try {
 			getMap(db).put(property, value);
 			db.commit();
@@ -70,7 +71,7 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	
 	public synchronized void add(String value) {
 		AssertionUtils.assertNotNull(new IllegalArgumentException("value"), value);
-		DB db = getDB();
+		DB db = getDB(false);
 		try {
 			getSet(db).add(value);
 			db.commit();
@@ -112,21 +113,23 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 		return treeMap;
 	}
 	
-	private DB getDB() {
+	private DB getDB(boolean readOnly) {
 		File file = new File(path);
-		DB db = DBMaker.fileDB(file).make();
+		DB db = null;
+		if(readOnly) {
+			db = DBMaker.fileDB(file).readOnly().make();			
+		} else {
+			db = DBMaker.fileDB(file).make();
+		}
 		return db;
 	}
 	
 	private DB getReadOnlyDB() {
-		File file = new File(path);
-		DB db = DBMaker.fileDB(file).readOnly().make();
-		return db;
+		return getDB(true);
 	}
 
-
 	public void remove(String value) {
-		DB db = getDB();
+		DB db = getDB(false);
 		try {
 			getSet(db).remove(value);
 			db.commit();
