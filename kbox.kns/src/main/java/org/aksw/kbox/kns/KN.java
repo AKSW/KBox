@@ -99,11 +99,11 @@ public class KN {
 	public String getKNS() {
 		return this.kns;
 	}
-	
+
 	public String getLicense() {
 		return license;
 	}
-	
+
 	public void setLicense(String license) {
 		this.license = license;
 	}
@@ -111,11 +111,11 @@ public class KN {
 	public String getSubsets() {
 		return subsets;
 	}
-	
+
 	public void setSubsets(String subsets) {
 		this.subsets = subsets;
 	}
-	
+
 	public void printURL(PrintStream out) {
 		out.println(getName());
 	}
@@ -123,35 +123,35 @@ public class KN {
 	public String getFormat() {
 		return format;
 	}
-	
+
 	public void setFormat(String format) {
 		this.format = format;
 	}
-	
+
 	public String getVersion() {
 		return version;
 	}
-	
+
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	
+
 	public boolean equals(String name) {
 		return this.name.equals(name);
 	}
-	
+
 	public boolean equals(String name, String format, String version) {
-		return this.name.equals(name) && 
+		return this.name.equals(name) &&
 				(format == null || format.equals(this.format)) &&
 				(version == null || version.equals(this.version));
 	}
-	
+
 	public boolean contains(String name, String format, String version) {
 		return this.name.contains(name) &&
 				(format == null || format.equals(this.format)) &&
 				(version == null || version.equals(this.version));
 	}
-	
+
 	public void print(PrintStream out) {
 		out.println("KNS:" + getKNS());
 		out.println("KB:" + getName());
@@ -166,6 +166,6 @@ public class KN {
 		}
 		if(description != null) {
 			out.println("Description:" + description);
-		}		
+		}
 	}
 }

@@ -87,7 +87,7 @@ public class KNSTable {
 							}
 						}
 					} catch (Exception e) {
-						logger.error("KNS Table entry could not be parsed: " + line, e);
+						logger.error("KNS Table entry could not be parsed or could not be resolved: " + line, e);
 					}
 				}
 			}

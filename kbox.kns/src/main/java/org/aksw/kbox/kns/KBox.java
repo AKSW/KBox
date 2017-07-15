@@ -260,6 +260,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 		File localDataset = locate(resourceURL, format, version, locateMethod);
 		if(localDataset == null && install) {
 			KN resolvedKN = resolve(knsServerList, resourceURL, format, version, resolver);
+			assertNotNull(new ResourceNotResolvedException(resourceURL.toString()), resolvedKN);
 			assertNotNull(new ResourceNotResolvedException(resourceURL.toString()), resolvedKN.getTargetURL());
 			try {
 				install(resolvedKN.getTargetURL(), resourceURL, format, version, installMethod, isFactory);
