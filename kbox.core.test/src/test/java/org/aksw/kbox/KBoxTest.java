@@ -20,7 +20,6 @@ public class KBoxTest {
 		KBox.setResourceFolder(newResourceFolder);
 		assertEquals(newResourceFolder, KBox.getResourceFolder());
 		KBox.setResourceFolder(currentResourceFolder);
-		
 	}
 	
 	@Test
