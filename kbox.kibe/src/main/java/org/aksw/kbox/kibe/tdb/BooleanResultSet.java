@@ -5,11 +5,11 @@ import java.util.Iterator;
 import com.hp.hpl.jena.query.QuerySolutionMap;
 import com.hp.hpl.jena.rdf.model.Model;
 
-public class BooleanResultSet extends IteratorResultSet<Boolean>  {
-	
+public class BooleanResultSet extends IteratorResultSet<Boolean> {
+
 	private static final String VALUE = "value";
 	private Model model;
-	
+
 	BooleanResultSet(Iterator<Boolean> triples, Model model) {
 		super(triples);
 		this.model = model;
@@ -20,6 +20,6 @@ public class BooleanResultSet extends IteratorResultSet<Boolean>  {
 		QuerySolutionMap map = new QuerySolutionMap();
 		map.add(VALUE, model.createTypedLiteral(t));
 		return map;
-	}	
+	}
 
 }
