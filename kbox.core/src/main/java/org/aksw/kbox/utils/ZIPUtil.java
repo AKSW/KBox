@@ -87,7 +87,7 @@ public class ZIPUtil {
 	}
 
 	private static void copy(InputStream in, File file) throws IOException {
-		try (OutputStream out = new FileOutputStream(file)){
+		try (OutputStream out = new FileOutputStream(file)) {
 			copy(in, out);
 		}
 	}

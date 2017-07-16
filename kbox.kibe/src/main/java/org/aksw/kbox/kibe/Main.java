@@ -10,7 +10,7 @@ import java.util.Map;
 import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
-import org.aksw.kbox.kibe.console.ConsoleIntallInputStreamFactory;
+import org.aksw.kbox.kibe.console.ConsoleInstallInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.utils.ZIPUtil;
 import org.aksw.kbox.kns.CustomParamKNSServerList;
@@ -41,7 +41,7 @@ public class Main {
 	
 	public final static String COMMAND_PRAGMA = "-";
 	public final static String KB_COMMAND_SEPARATOR = ",";
-	
+
 	// COMMANDS	
 	private final static String INSTALL_COMMAND = "-install";
 	private final static String KB_COMMAND = "-kb";
@@ -65,7 +65,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Map<String, String> commands = parse(args);
-		ConsoleIntallInputStreamFactory inputStreamFactory = new ConsoleIntallInputStreamFactory();
+		ConsoleInstallInputStreamFactory inputStreamFactory = new ConsoleInstallInputStreamFactory();
 		if(commands.containsKey(CREATE_INDEX_COMMAND)) {
 			String directory = commands.get(CREATE_INDEX_COMMAND);
 			File indexFile = new File(KB_GRAPH_FILE_NAME);

@@ -11,7 +11,7 @@ import org.aksw.kbox.apple.AppLocate;
 import org.aksw.kbox.apple.Install;
 import org.aksw.kbox.apple.Locate;
 import org.aksw.kbox.apple.ZipAppInstall;
-import org.aksw.kbox.apple.stream.DefaultInputStreamFactory;
+import org.aksw.kbox.kibe.console.ConsoleInstallInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotResolvedException;
 import org.aksw.kbox.kibe.tdb.TDB;
@@ -50,7 +50,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws ResourceNotResolvedException if the given knowledge base can not be resolved.
 	 */
 	public static void install(URL knowledgeBase) throws Exception {
-		install(knowledgeBase, new DefaultInputStreamFactory());
+		install(knowledgeBase, new ConsoleInstallInputStreamFactory());
 	}
 	
 	/**
@@ -163,7 +163,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		install(resolvedKN, 
 				resourceURL,
 				install,
-				new DefaultInputStreamFactory());
+				new ConsoleInstallInputStreamFactory());
 	}
 	
 	/**
@@ -206,7 +206,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		install(resolvedKN, 
 				resourceURL,
 				install,
-				new DefaultInputStreamFactory());
+				new ConsoleInstallInputStreamFactory());
 	}
 	
 	/**
@@ -324,7 +324,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		install(resolvedKN, 
 				resourceURL,
 				install,
-				new DefaultInputStreamFactory());
+				new ConsoleInstallInputStreamFactory());
 	}
 	
 	/**
@@ -516,7 +516,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any error occurs during the indexing process.
 	 */
 	public static void installKBFromKNSServer(URL knsServer, URL knowledgebase) throws KBNotResolvedException, Exception {
-		install(knsServer, knowledgebase, new DefaultInputStreamFactory());
+		install(knsServer, knowledgebase, new ConsoleInstallInputStreamFactory());
 	}
 	
 	public static void install(URL kbNameURL, String format, String version,
@@ -566,7 +566,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		installFromKNSServer(knsServer, 
 				knowledgebase,
 				format,
-				new DefaultInputStreamFactory());
+				new ConsoleInstallInputStreamFactory());
 	}
 	
 	/**
@@ -585,7 +585,11 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 			URL knowledgebase, 
 			String format, 
 			String version) throws KBNotResolvedException, Exception {
-		installFromKNSServer(knsServer, knowledgebase, format, version, new DefaultInputStreamFactory());
+		installFromKNSServer(knsServer,
+				knowledgebase,
+				format,
+				version,
+				new ConsoleInstallInputStreamFactory());
 	}
 	
 	/**
@@ -902,7 +906,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 *         dereference or model instantiation. 
 	 */
 	public static Model createModel(URL... knowledgeNames) throws Exception {
-		return createModel(new DefaultInputStreamFactory(), true, knowledgeNames);
+		return createModel(new ConsoleInstallInputStreamFactory(), true, knowledgeNames);
 	}
 	
 	/**
@@ -918,7 +922,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 *         dereference or model instantiation. 
 	 */
 	public static Model createModel(boolean install, URL... knowledgeNames) throws Exception {
-		return createModel(new DefaultInputStreamFactory(), install, knowledgeNames);
+		return createModel(new ConsoleInstallInputStreamFactory(), install, knowledgeNames);
 	}
 	
 	/**
@@ -960,7 +964,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any of the given knowledge bases can not be found.
 	 */
 	public static ResultSet query(String sparql, URL... knowledgeNames) throws Exception {
-		Model model = createModel(new DefaultInputStreamFactory(), true, knowledgeNames);
+		Model model = createModel(new ConsoleInstallInputStreamFactory(), true, knowledgeNames);
 		return query(sparql, model);
 	}
 	
@@ -976,7 +980,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any of the given knowledge bases can not be found.
 	 */
 	public static ResultSet query(String sparql, boolean install, URL... knowledgeNames) throws Exception {
-		Model model = createModel(new DefaultInputStreamFactory(), install, knowledgeNames);
+		Model model = createModel(new ConsoleInstallInputStreamFactory(), install, knowledgeNames);
 		return query(sparql, model);
 	}
 

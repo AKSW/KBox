@@ -11,7 +11,7 @@ import org.aksw.kbox.utils.URLUtils;
 import org.apache.log4j.Logger;
 
 public class KNSTable {
-	
+
 	public final static String FILE_SERVER_TABLE_FILE_NAME = "table.kns";
 	
 	private final static Logger logger = Logger.getLogger(KNSTable.class);	
@@ -22,12 +22,12 @@ public class KNSTable {
 	public KNSTable(URL knsServer) throws MalformedURLException {		
 		this(knsServer.toString());
 	}
-	
+
 	public KNSTable(String knsServer) throws MalformedURLException {
 		this.knsServerURL = new URL(knsServer);
 		this.tableURL = new URL(knsServer + "/" + FILE_SERVER_TABLE_FILE_NAME);
 	}
-	
+
 	/**
 	 * Resolve a given resource with by the given KNS service.
 	 * 
@@ -40,7 +40,7 @@ public class KNSTable {
 	public KN resolveURL(URL resourceURL) throws IOException {
 		return resolve(knsServerURL, resourceURL);
 	}
-	
+
 	/**
 	 * Resolve a given resource with by the given KNS service.
 	 * 
@@ -54,7 +54,7 @@ public class KNSTable {
 	public static KN resolve(URL knsServerURL, URL resourceURL) throws IOException {
 		return resolve(knsServerURL, resourceURL, null, null);
 	}
-	
+
 	/**
 	 * Resolve a given resource with by the given KNS service.
 	 * 
@@ -87,14 +87,14 @@ public class KNSTable {
 							}
 						}
 					} catch (Exception e) {
-						logger.error("KNS Table entry could not be parsed or could not be resolved: " + line, e);
+						logger.warn("KNS Table entry could not be parsed or could not be resolved: " + line, e);
 					}
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	public boolean visit(KNSVisitor visitor) throws IOException {
 		InputStream is = tableURL.openStream();
 		boolean next = true;
@@ -112,7 +112,7 @@ public class KNSTable {
 						break;
 					}
 				} catch (Exception e) {
-					logger.error("KNS Table entry could not be parsed: " + line, e);
+					logger.warn("KNS Table entry could not be parsed: " + line, e);
 				}
 			}
 		}

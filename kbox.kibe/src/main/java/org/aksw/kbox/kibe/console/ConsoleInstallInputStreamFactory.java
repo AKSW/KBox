@@ -8,7 +8,7 @@ import org.aksw.kbox.InputStreamFactory;
 import org.aksw.kbox.kibe.stream.InputStreamInstaller;
 import org.aksw.kbox.utils.URLUtils;
 
-public class ConsoleIntallInputStreamFactory implements InputStreamFactory {
+public class ConsoleInstallInputStreamFactory implements InputStreamFactory {
 
 	@Override
 	public InputStream get(URL url) throws IOException {
