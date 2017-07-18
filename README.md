@@ -24,8 +24,8 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 - [How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
 - [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
 - [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
-- [How can I list available knowledge base?](https://github.com/AKSW/KBox#how-can-i-list-available-knowledge-base)
-- [How can I query a published knowledge base?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-base)
+- [How can I list available knowledge base?](https://github.com/AKSW/KBox#how-can-i-list-available-knowledge-bases)
+- [How can I query a published knowledge bases?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-base)
 - [How can I query multi-bases?](https://github.com/AKSW/KBox#how-can-i-query-multi-bases)
 - [Starting a SPARQL enpoint](https://github.com/AKSW/KBox/blob/master/README.md#starting-a-sparql-endpoint)
 - [Querying a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#querying-a-sparql-endpoint)
@@ -118,7 +118,7 @@ Where [command] is:
 ```
 3) Rock it.. ;-)
 
-### How can I list available knowledge base?
+### How can I list available knowledge bases?
 
 You can list the available knowledge graphs with list command:
 
