@@ -117,6 +117,24 @@ Where [command] is:
 ```
 3) Rock it.. ;-)
 
+### How can I list available knowledge base?
+
+You can list the available knowledge graphs with list command:
+
+```
+java -jar kbox-v0.0.1-alpha3-RC16.jar -list
+Knowledge base table list
+http://dbpedia.org/3.9/en/full
+http://dbpedia.org/3.9/en
+http://dbpedia.org/2015-10/en
+http://dbpedia.org/2015_10/en/full
+http://dbpedia.org/2015-10/en/full
+http://dbpedia.org/ontology
+http://www.w3.org/1999/02/22-rdf-syntax-ns
+https://www.w3.org/2000/01/rdf-schema
+...
+```
+
 ### How can I query a published knowledge base?
 
 Weeeelll... it's quite easy.
