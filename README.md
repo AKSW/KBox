@@ -8,7 +8,7 @@
 
 ```
 @InProceedings{Marx/KBox/ICSC/2017,
-  Title                    = {{KBox} -- {T}ransparently {S}hifting {Q}uery {E}xecution on {K}nowledge {G}raphs to the {E}dge},
+  Title                    = {{KBox}: {T}ransparently {S}hifting {Q}uery {E}xecution on {K}nowledge {G}raphs to the {E}dge},
   Author                   = {Edgard Marx and Ciro Baron and Tommaso Soru and S\"oren Auer},
   Booktitle                = {11th IEEE International Conference on Semantic Computing, Jan 30-Feb 1, 2017, San Diego, California, USA},
   Year                     = {2017}
