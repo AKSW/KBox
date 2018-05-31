@@ -271,7 +271,7 @@ Service up and running ;-) ...
 
 5) You can also query your endpoint from a KBox docker container, but do not forget to use the --link flag:
 ```
-docker run aksw/kbox --link myendpoint aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -server "http://myendpoint:8080/kbox/query"
+docker run --link myendpoint aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -server "http://myendpoint:8080/kbox/query"
 ------
 | n  |
 ======
