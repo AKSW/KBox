@@ -39,13 +39,13 @@ Moreover, working on top of RDF model, KBox is a natural extension of the Web on
 Systems usually deal with resources and knowledge that are often duplicated among several instances.
 For instance, when using the Stanford NLP library the resources and knowledge inside the library are duplicated among different applications.
 The idea is to have a common repository where users can share resources without duplication.
-In order to do that, we bring the RDF concept to bridge the gap among reource publishig, storing and locating.
+In order to do that, we bring the RDF concept to bridge the gap among resource publishing, storing and locating.
 
 ### What is possible to do with it?
 With KBox you can share resources and knowledge among several applications, but not just that.
 In order to allow an easier knowledge dissemination, we have implemented Kibe library.
 The Kibe library allows applications to virtually install and query RDF knowledge bases.
-It takes around ~50 minutes to start quering DBpedia on your computer to avoid server overheads and faults.
+It takes around ~50 minutes to start querying DBpedia on your computer to avoid server overheads and faults.
 
 ### How can I use KBox?
 You can use KBox either as a command-line program or a library in your application.
