@@ -8,7 +8,7 @@ import org.aksw.kbox.apple.ResourceAppInstall;
 
 public class InstallFactory {
 
-	Map<String, Install> methods = new HashMap<String, Install>();
+	private Map<String, Install> methods = new HashMap<String, Install>();
 
 	public Install get(RN kn) {
 		String decoder = kn.getEncoder();
