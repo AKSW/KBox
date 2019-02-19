@@ -13,9 +13,13 @@ import org.aksw.kbox.utils.StreamUtils;
 public class ResourceAppInstall extends AbstractAppInstall {	
 	@Override
 	public void install(InputStream source, File target) throws Exception {
-		File parentDir = new File(target.getParent());
-		parentDir.mkdirs();
-		target.createNewFile();
 		StreamUtils.stream(source, target);
+	}
+
+	@Override
+	protected void createPath(File destPath) throws Exception {		 
+		File parentDir = new File(destPath.getParent());
+		parentDir.mkdirs();
+		destPath.createNewFile();
 	}
 }

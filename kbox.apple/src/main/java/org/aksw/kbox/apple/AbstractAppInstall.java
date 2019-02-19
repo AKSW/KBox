@@ -33,11 +33,14 @@ public abstract class AbstractAppInstall extends AppPathBinder implements Instal
 	public void install(InputStream inputStream, URL dest, String format,
 			String version) throws Exception {
 		File destPath = new File(urlToAbsolutePath(dest, format, version));
+		createPath(destPath);
 		install(inputStream, destPath);
 		register(dest, format, version);
 		validate(dest, format, version);
 	}
 	
+	protected abstract void createPath(File destPath) throws Exception;
+
 	public abstract void install(InputStream source, File target) throws Exception;
 	
 	public void register(URL path, String format, String version) throws Exception {

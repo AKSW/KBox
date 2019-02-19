@@ -10,10 +10,9 @@ import org.zeroturnaround.zip.ZipUtil;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class ZipAppInstall extends AbstractAppInstall {
+public class ZipAppInstall extends AbstractCompressedDataInstall {
 	@Override
 	public void install(InputStream source, File target) throws Exception {
-		target.mkdirs();
 		ZipUtil.unpack(source, target);
 	}
 }

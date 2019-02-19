@@ -10,7 +10,7 @@ import org.aksw.kbox.utils.GzipUtils;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class GZipAppInstall extends AbstractAppInstall {
+public class GZipAppInstall extends AbstractCompressedDataInstall {
 	public void install(InputStream source, File target) throws Exception {
 		GzipUtils.unpack(source, target);
 	}
