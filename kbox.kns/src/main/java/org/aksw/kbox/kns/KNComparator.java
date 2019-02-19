@@ -12,11 +12,11 @@ public class KNComparator {
 		for(String[] param : params) {
 			String paramName = param[0];
 			String paramValue = param[1];
-			if(paramName == NAME) {
+			if(NAME.equals(paramName)) {
 				equals = compare(kn.getName(), paramValue);
-			} else if (paramName == VERSION) {
+			} else if (VERSION.equals(paramName)) {
 				equals = compare(kn.getVersion(), paramValue);
-			} else if (paramName == FORMAT) {
+			} else if (FORMAT.equals(paramName)) {
 				equals = compare(kn.getFormat(), paramValue);
 			}
 			if(!equals) {
