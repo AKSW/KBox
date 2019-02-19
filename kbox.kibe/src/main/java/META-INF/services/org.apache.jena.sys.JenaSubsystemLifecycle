@@ -1,0 +1,6 @@
+org.apache.jena.fuseki.access.InitSecurity
+org.apache.jena.tdb.sys.InitTDB
+org.apache.jena.riot.system.InitRIOT
+org.apache.jena.sparql.system.InitARQ
+org.apache.jena.sys.InitJenaCore
+org.apache.jena.tdb2.sys.InitTDB2
