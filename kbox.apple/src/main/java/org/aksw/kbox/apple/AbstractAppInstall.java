@@ -33,9 +33,6 @@ public abstract class AbstractAppInstall extends AppPathBinder implements Instal
 	public void install(InputStream inputStream, URL dest, String format,
 			String version) throws Exception {
 		File destPath = new File(urlToAbsolutePath(dest, format, version));
-		File parentDir = new File(destPath.getParent());
-		parentDir.mkdirs();
-		destPath.createNewFile();
 		install(inputStream, destPath);
 		register(dest, format, version);
 		validate(dest, format, version);
