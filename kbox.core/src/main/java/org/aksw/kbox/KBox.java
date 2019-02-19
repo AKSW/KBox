@@ -238,8 +238,11 @@ public class KBox extends ObjectUtils {
 		if (resource != null) {
 			return resource;
 		}
-		install(url, url, installMethod);
-		return locateMethod.locate(url);
+		if(install) {
+			install(url, url, installMethod);
+			return locateMethod.locate(url);
+		}
+		return null;
 	}
 
 	/**
