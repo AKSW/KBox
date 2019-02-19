@@ -4,7 +4,7 @@ import java.net.URL;
 
 public class AbstractPathBinder implements PathBinder {
 	
-	PathBinder pathBinder = null;
+	private PathBinder pathBinder = null;
 	
 	public AbstractPathBinder(PathBinder pathBinder) {
 		this.pathBinder = pathBinder;

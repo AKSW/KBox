@@ -9,11 +9,6 @@ public abstract class AbstractLocate extends AbstractPathBinder implements Locat
 		super(pathBinder);
 	}
 	
-	@Override
-	public String urlToAbsolutePath(URL url) throws Exception {
-		return pathBinder.urlToAbsolutePath(url);
-	}
-	
 	public String locate(String url) throws Exception {
 		File localFile = locate(new URL(url));
 		if(localFile != null) {
