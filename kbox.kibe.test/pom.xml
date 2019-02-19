@@ -16,7 +16,7 @@
   <parent>
   	<groupId>org.aksw.kbox</groupId>
   	<artifactId>kbox</artifactId>
-  	<version>0.0.1-alpha3-RC15</version>
+  	<version>0.0.2-alpha</version>
   	<relativePath>../pom.xml</relativePath>
   </parent>
   <dependencies>
@@ -28,7 +28,7 @@
 	<dependency>
     	<groupId>org.aksw.kbox</groupId>
 	    <artifactId>kbox.kibe</artifactId>
-	    <version>0.0.1-alpha3-RC15</version>
+	    <version>0.0.2-alpha</version>
 	</dependency>
   </dependencies>
   <repositories>
