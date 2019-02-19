@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.aksw.kbox.utils.ZIPUtil;
+import org.zeroturnaround.zip.ZipUtil;
+
 
 /**
  * Default install implementation for compressed files.
@@ -12,12 +13,17 @@ import org.aksw.kbox.utils.ZIPUtil;
  * @author {@linkplain http://emarx.org}
  *
  */
-public class ZipInstall extends ResourceInstall {
+public class ZipInstall extends AbstractInstall {
 	
+	public ZipInstall() {
+		super(new ZipPathBinder());
+	}
+
 	@Override
-	public void install(InputStream resource, URL target) throws Exception {
-		File destPath = new File(urlToAbsolutePath(target));
-		destPath.mkdirs();
-		ZIPUtil.unzip(resource, destPath.getAbsolutePath());
+	public void install(InputStream inputStream, URL target) throws Exception {
+		File destDir = new File(urlToAbsolutePath(target));
+		destDir.mkdirs();
+		ZipUtil.unpack(inputStream, destDir);
+		validate(target);
 	}
 }

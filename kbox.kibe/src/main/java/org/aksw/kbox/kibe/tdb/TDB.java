@@ -9,34 +9,33 @@ import java.util.List;
 import javax.naming.OperationNotSupportedException;
 
 import org.aksw.kbox.kns.ServerAddress;
-
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.tdb.TDBFactory;
-import com.hp.hpl.jena.tdb.TDBLoader;
-import com.hp.hpl.jena.tdb.transaction.DatasetGraphTransaction;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.tdb.TDBFactory;
+import org.apache.jena.tdb.TDBLoader;
+import org.apache.jena.tdb.transaction.DatasetGraphTransaction;
 
 public class TDB {
-		
+
 	public static ResultSet queryGraph(String sparql, String graph, String dbDir) throws Exception {
 		Query query = QueryFactory.create(sparql, graph);
 		return query(query, dbDir);
 	}
-	
+
 	public static Model createModel(String... dbDirs) {
 		Model mainModel = null; 
 		Dataset dataset = null;
 		for(String dbDir : dbDirs) {
 			dataset = TDBFactory.createDataset(dbDir);
 			if(mainModel == null) {
-				mainModel = dataset.getDefaultModel();				
+				mainModel = dataset.getDefaultModel();
 			} else {
 				Model secondaryModel = dataset.getDefaultModel();
 				mainModel = ModelFactory.createUnion(mainModel, secondaryModel);
@@ -45,12 +44,12 @@ public class TDB {
 		mainModel = ModelFactory.createRDFSModel(mainModel);
 		return mainModel;
 	}
-	
+
 	public static ResultSet query(Query query, String... dbDirs) throws OperationNotSupportedException {
 		Model mainModel = createModel(dbDirs);		
 		return query(query, mainModel);
 	}
-	
+
 	public static ResultSet query(String sparql, String... dbDirs) throws OperationNotSupportedException {
 		Model model = createModel(dbDirs);
 		Query query = QueryFactory.create(sparql);
@@ -61,7 +60,7 @@ public class TDB {
 		Query query = QueryFactory.create(sparql);
 		return query(query, model);
 	}
-	
+
 	public static ResultSet query(Query query, Model model) {
 		QueryExecution qe = QueryExecutionFactory.create(query, model);
 		ResultSet results = null;

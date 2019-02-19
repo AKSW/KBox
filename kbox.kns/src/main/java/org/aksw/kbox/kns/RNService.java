@@ -2,12 +2,12 @@ package org.aksw.kbox.kns;
 
 import java.net.URL;
 
-public class KNSServer {
+public class RNService {
 	
 	private URL url = null;
 	private KNSTable table = null;
 
-	public KNSServer(URL url) throws Exception {
+	public RNService(URL url) throws Exception {
 		this.url = url;
 		this.table = new KNSTable(url);
 	}

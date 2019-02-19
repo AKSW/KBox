@@ -7,7 +7,7 @@ import org.aksw.kbox.CustomParamVisitor;
 import org.aksw.kbox.CustomParams;
 import org.aksw.kbox.KBox;
 
-public class CustomParamKNSServerList extends CustomParams implements KNSServerList {
+public class CustomRNSServerList extends CustomParams implements RNServerList {
 	
 	/**
 	 * 
@@ -17,11 +17,11 @@ public class CustomParamKNSServerList extends CustomParams implements KNSServerL
 	public final static String CONTEXT_NAME = "kbox.kns";
 	public final static String KNS_FILE_NAME = CONTEXT_NAME;
 	
-	private KNSServerListVisitor visitor = null;
+	private RNSServerListVisitor visitor = null;
 	private boolean next = false;
 	private CustomParamKNSServerListVisitor customParamKNSServerListVisitor = null;
 	
-	public CustomParamKNSServerList(String path, String contex) {
+	public CustomRNSServerList(String path, String contex) {
 		super(path 
 				+ File.separator
 				+ KNS_FILE_NAME, 
@@ -30,12 +30,12 @@ public class CustomParamKNSServerList extends CustomParams implements KNSServerL
 		
 	}
 	
-	public CustomParamKNSServerList() {
+	public CustomRNSServerList() {
 		this(KBox.KBOX_DIR,
 				CONTEXT_NAME);
 	}
 	
-	public boolean visit(KNSServerListVisitor visitor) throws Exception {
+	public boolean visit(RNSServerListVisitor visitor) throws Exception {
 		this.visitor = visitor;
 		return super.visit(customParamKNSServerListVisitor);
 	}
@@ -44,7 +44,7 @@ public class CustomParamKNSServerList extends CustomParams implements KNSServerL
 
 		@Override
 		public boolean visit(String param) throws Exception {
-			KNSServer knsServer = new KNSServer(new URL(param));
+			RNService knsServer = new RNService(new URL(param));
 			next = visitor.visit(knsServer);
 			return next;
 		}

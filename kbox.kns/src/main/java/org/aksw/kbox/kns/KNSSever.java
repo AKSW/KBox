@@ -12,11 +12,11 @@ public class KNSSever {
 	}
 	
 	/**
-	 * Iterate over all Knowledge Names ({@link KN}s).
+	 * Iterate over all Knowledge Names ({@link RN}s).
 	 * 
 	 * @param visitor a {@link KNSVisitor}.
 	 * 
-	 * @return true if the {@link KNSVisitor#visit(KN)} method return true and false otherwise.
+	 * @return true if the {@link KNSVisitor#visit(RN)} method return true and false otherwise.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
@@ -25,12 +25,12 @@ public class KNSSever {
 	}
 	
 	/**
-	 * Iterate over all Knowledge Names ({@link KN}s) of a given Knowledge Name Service (KNS).
+	 * Iterate over all Knowledge Names ({@link RN}s) of a given Knowledge Name Service (KNS).
 	 * 
-	 * @param knsServerURL the {@link KNSServer}'s {@link URL}.
+	 * @param knsServerURL the {@link RNService}'s {@link URL}.
 	 * @param visitor a {@link KNSVisitor}.
 	 * 
-	 * @return true if the {@link KNSVisitor#visit(KN)} method return true and false otherwise.
+	 * @return true if the {@link KNSVisitor#visit(RN)} method return true and false otherwise.
 	 * 
 	 * @throws {@link IOException} if any error occurs during the operation.
 	 */
@@ -40,12 +40,12 @@ public class KNSSever {
 	}
 	
 	/**
-	 * Iterate over all Knowledge Names ({@link KN}s) of a given Knowledge Name Service (KNS).
+	 * Iterate over all Knowledge Names ({@link RN}s) of a given Knowledge Name Service (KNS).
 	 * 
 	 * @param table a {@link KNSTable}.
 	 * @param visitor a {@link KNSVisitor}.
 	 * 
-	 * @return true if the {@link KNSVisitor#visit(KN)} method return true and false otherwise.
+	 * @return true if the {@link KNSVisitor#visit(RN)} method return true and false otherwise.
 	 * 
 	 * @throws {@link IOException} if any error occurs during the operation.
 	 */

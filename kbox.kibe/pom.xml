@@ -4,36 +4,46 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source/>
-          <target/>
-        </configuration>
-      </plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-shade-plugin</artifactId>
+	    <version>2.1</version>
+	    <executions>    
+	      <execution>
+	        <phase>package</phase>
+	        <goals>
+	          <goal>shade</goal>
+	        </goals>
+	        <configuration>
+	           <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+	              <mainClass>org.aksw.kbox.kibe.Main</mainClass>
+	            </transformer>
+	            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+	            <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer" />
+	            <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+	              <addHeader>false</addHeader>
+	            </transformer>
+	        </configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
     </plugins>
   </build>
   <parent>
   	<groupId>org.aksw.kbox</groupId>
-  	<artifactId>parent</artifactId>
-  	<version>0.0.1-alpha3-RC15</version>
+  	<artifactId>kbox</artifactId>
+  	<version>0.0.2-alpha</version>
   	<relativePath>../pom.xml</relativePath>
   </parent>
   <dependencies>
 	<dependency>
     	<groupId>org.aksw.kbox</groupId>
 	    <artifactId>kbox.kns</artifactId>
-	    <version>0.0.1-alpha3-RC15</version>
+	    <version>0.0.2-alpha</version>
 	</dependency>
 	<dependency>
     	<groupId>org.aksw.kbox</groupId>
 	    <artifactId>kbox.fusca</artifactId>
-	    <version>0.0.1-alpha3-RC15</version>
-	</dependency>
-	<dependency>
-   		<groupId>org.apache.jena</groupId>
-	  	<artifactId>jena-tdb</artifactId>
-	   	<version>1.1.2</version>
+	    <version>0.0.2-alpha</version>
 	</dependency>
 	<dependency>
 	    <groupId>xerces</groupId>
@@ -52,9 +62,9 @@
 	</dependency>
   </dependencies>
   <repositories>
-    <repository>
-        <id>sonatype-snapshots</id>
-        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
+     <repository>
+    	<id>apache-repo-releases</id>
+    	<url>https://repository.apache.org/content/repositories/releases/</url>
+  	</repository>
   </repositories>
 </project>

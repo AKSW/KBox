@@ -25,8 +25,8 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	private String path;
 	
 	public CustomParams(String path, String context) {
-		AssertionUtils.assertNotNull(new IllegalArgumentException("context"), context);
-		AssertionUtils.assertNotNull(new IllegalArgumentException("path"), path);
+		AssertionUtils.notNull(new IllegalArgumentException("context"), context);
+		AssertionUtils.notNull(new IllegalArgumentException("path"), path);
 		this.context = context;
 		this.path = path;
 		File dbFile = new File(path);
@@ -42,65 +42,56 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	}
 	
 	public synchronized String getProperty(String property, String defaultValue) {
-		AssertionUtils.assertNotNull(new IllegalArgumentException("property"), property);
-		AssertionUtils.assertNotNull(new IllegalArgumentException("defaultValue"), defaultValue);
-		DB db = getReadOnlyDB();
+		AssertionUtils.notNull(new IllegalArgumentException("property"), property);
+		AssertionUtils.notNull(new IllegalArgumentException("defaultValue"), defaultValue);
 		String value;
-		try {
+		try (DB db = getReadOnlyDB()){
 			value = getMap(db).get(property);
 			if(value == null) {
 				return defaultValue;
 			}
 			return value;
-		} finally  {
-			db.close();
 		}
 	}
 	
 	public synchronized void setProperty(String property, String value) {
-		AssertionUtils.assertNotNull(new IllegalArgumentException("property"), property);
-		AssertionUtils.assertNotNull(new IllegalArgumentException("value"), value);
-		DB db = getDB(false);
-		try {
+		AssertionUtils.notNull(new IllegalArgumentException("property"), property);
+		AssertionUtils.notNull(new IllegalArgumentException("value"), value);
+		try (DB db = getDB(false)) {
 			getMap(db).put(property, value);
 			db.commit();
-		} finally  {
-			db.close();
 		}		
 	}
 	
 	public synchronized void add(String value) {
-		AssertionUtils.assertNotNull(new IllegalArgumentException("value"), value);
-		DB db = getDB(false);
-		try {
+		AssertionUtils.notNull(new IllegalArgumentException("value"), value);
+		try (DB db = getDB(false)) {
 			getSet(db).add(value);
 			db.commit();
-		} finally  {
-			db.close();
 		}
 	}
 		
 	public synchronized boolean visit(CustomParamVisitor visitor) throws Exception {
-		AssertionUtils.assertNotNull(new IllegalArgumentException("visitor"), visitor);
-		final DB db = getReadOnlyDB();
-		final Iterator<String> internalIterator = getSet(db).iterator();
-		Iterable<String> iterable = new Iterable<String>(
-				) {
-			
-			@Override
-			public Iterator<String> iterator() {
-				return internalIterator;
+		AssertionUtils.notNull(new IllegalArgumentException("visitor"), visitor);
+		try(DB db = getReadOnlyDB()) {
+			final Iterator<String> internalIterator = getSet(db).iterator();
+			Iterable<String> iterable = new Iterable<String>(
+					) {
+				
+				@Override
+				public Iterator<String> iterator() {
+					return internalIterator;
+				}
+			};
+			boolean next = false;
+			for(String param : iterable) {
+				next = visitor.visit(param);
+				if(!next) {
+					break;
+				}	
 			}
-		};
-		boolean next = false;
-		for(String param : iterable) {
-			next = visitor.visit(param);
-			if(!next) {
-				break;
-			}	
+			return next;
 		}
-		db.close();
-		return next;
 	}
 	
 	private HTreeMap<String, String> getMap(DB db) {
@@ -129,12 +120,9 @@ public class CustomParams implements Serializable, Visitor<CustomParamVisitor> {
 	}
 
 	public void remove(String value) {
-		DB db = getDB(false);
-		try {
+		try (DB db = getDB(false)) {
 			getSet(db).remove(value);
 			db.commit();
-		} finally  {
-			db.close();
 		}	
 	}
 }

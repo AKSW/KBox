@@ -1,4 +1,4 @@
-package org.askw.kbox.kns.exception;
+package org.aksw.kbox.kns.exception;
 
 public class ResourceNotResolvedException extends Exception {
 	/**
@@ -7,10 +7,10 @@ public class ResourceNotResolvedException extends Exception {
 	private static final long serialVersionUID = 8762611547404229890L;
 
 	public ResourceNotResolvedException() {
-		super("The knowledge base could not be found.");
+		super("The resource could not be resolved.");
 	}
 	
-	public ResourceNotResolvedException(String kb) {
-		super("The resource could not be found: " + kb);
+	public ResourceNotResolvedException(String message) {
+		super(message);
 	}
 }

@@ -33,11 +33,11 @@ public class KNSTable {
 	 * 
 	 * @param resourceURL the {@link URL} of the resource that will be resolved by the given KNS service.
 	 * 
-	 * @return the resolved {@link KN} or {@link null} in case it is not resolved.
+	 * @return the resolved {@link RN} or {@link null} in case it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public KN resolveURL(URL resourceURL) throws IOException {
+	public RN resolveURL(URL resourceURL) throws IOException {
 		return resolve(knsServerURL, resourceURL);
 	}
 
@@ -47,11 +47,11 @@ public class KNSTable {
 	 * @param knsServerURL the {@link URL} of KNS server that will resolve the given {@link URL}.
 	 * @param resourceURL the {@link URL} of the resource that will be resolved by the given KNS service.
 	 * 
-	 * @return the resolved {@link KN} or {@link null} in case it is not resolved.
+	 * @return the resolved {@link RN} or {@link null} in case it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static KN resolve(URL knsServerURL, URL resourceURL) throws IOException {
+	public static RN resolve(URL knsServerURL, URL resourceURL) throws IOException {
 		return resolve(knsServerURL, resourceURL, null, null);
 	}
 
@@ -63,20 +63,20 @@ public class KNSTable {
 	 * @param format the KB format. 
 	 * @param version the KB version.
 	 * 
-	 * @return the resolved {@link KN} or {@link null} in case it is not resolved.
+	 * @return the resolved {@link RN} or {@link null} in case it is not resolved.
 	 * 
 	 * @throws IOException if any error occurs during the operation.
 	 */
-	public static KN resolve(URL knsServerURL, URL resourceURL, String format, String version) throws IOException {
+	public static RN resolve(URL knsServerURL, URL resourceURL, String format, String version) throws IOException {
 		URL tableURL = new URL(knsServerURL.toString() + "/" + FILE_SERVER_TABLE_FILE_NAME);
 		try(InputStream is = tableURL.openStream()) {
 			try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
 				String line = null;
 				while((line = in.readLine()) != null) {
-				    KN kn = null;
+				    RN kn = null;
 					try {
 						if(!line.isEmpty()) {
-							kn = KN.parse(line);
+							kn = RN.parse(line);
 							if(kn.equals(resourceURL.toString(), format, version)) {
 							   URL target = kn.getTargetURL();
 							   if(!URLUtils.checkStatus(target, 404)) {
@@ -101,11 +101,11 @@ public class KNSTable {
 		try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
 			String line = null;
 			while((line = in.readLine()) != null) {
-			    KN kn = null;
+			    RN kn = null;
 				try {
 					String url = tableURL.toString();
 					url = url.replace("/" + FILE_SERVER_TABLE_FILE_NAME, "");
-					kn = KN.parse(line);
+					kn = RN.parse(line);
 					kn.setKNS(url);
 					next = visitor.visit(kn);
 					if(!next) {

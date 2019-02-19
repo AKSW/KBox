@@ -3,16 +3,15 @@ package org.aksw.kbox.apple;
 import java.io.File;
 import java.io.InputStream;
 
-import org.zeroturnaround.zip.ZipUtil;
+import org.aksw.kbox.utils.GzipUtils;
 
 /**
  * 
  * @author {@linkplain http://emarx.org}
  *
  */
-public class ZipAppInstall extends AbstractAppInstall {
-	@Override
+public class GZipAppInstall extends AbstractAppInstall {
 	public void install(InputStream source, File target) throws Exception {
-		ZipUtil.unpack(source, target);
+		GzipUtils.unpack(source, target);
 	}
 }

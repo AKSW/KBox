@@ -48,4 +48,6 @@ public interface Install {
 	public void install(InputStream resource, URL dest, String format, String version) throws Exception;
 	
 	public void validate(URL url, String format, String version) throws Exception;
+	
+	public void register(URL url, String format, String version) throws Exception;
 }

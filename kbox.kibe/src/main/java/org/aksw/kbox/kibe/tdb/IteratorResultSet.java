@@ -6,12 +6,13 @@ import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.QuerySolutionMap;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.sparql.engine.binding.Binding;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.engine.binding.Binding;
 
-public abstract class IteratorResultSet<T> implements com.hp.hpl.jena.query.ResultSet {
+public abstract class IteratorResultSet<T> implements ResultSet {
 	
 	private static final String SUBJECT = "subject";
 	private static final String PREDICATE = "predicate";

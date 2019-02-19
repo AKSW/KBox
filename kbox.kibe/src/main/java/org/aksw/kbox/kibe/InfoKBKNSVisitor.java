@@ -1,8 +1,9 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.kns.KN;
+import org.aksw.kbox.kns.AbstractKNSListVisitor;
+import org.aksw.kbox.kns.RN;
 
-public class InfoKBKNSVisitor extends SystemOutKNSServerListVisitor {
+public class InfoKBKNSVisitor extends AbstractKNSListVisitor {
 	
 	private String kbName = null;
 	private String format = null;
@@ -19,9 +20,10 @@ public class InfoKBKNSVisitor extends SystemOutKNSServerListVisitor {
 	}
 
 	@Override
-	public boolean visit(KN kn) {
+	public boolean visit(RN kn) {
 		if(kn.equals(kbName, format, version)) {
 			kn.print(System.out);
+			System.out.println("__________________________________________");
 		}
 		return true;
 	}

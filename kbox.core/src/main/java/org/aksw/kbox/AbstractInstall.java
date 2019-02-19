@@ -1,14 +1,17 @@
 package org.aksw.kbox;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 
-public abstract class AbstractInstall implements Install, PathBinder {
+import org.aksw.kbox.utils.StreamUtils;
+
+public abstract class AbstractInstall extends AbstractPathBinder implements Install {
 	
+	public AbstractInstall(PathBinder pathBinder) {
+		super(pathBinder);
+	}
+
 	@Override
 	public void install(URL source, URL dest) throws Exception {
 		try(InputStream is = source.openStream()) {
@@ -22,10 +25,7 @@ public abstract class AbstractInstall implements Install, PathBinder {
 		File resourceDir = destFile.getParentFile();
 		resourceDir.mkdirs();
 		destFile.createNewFile();
-		ReadableByteChannel rbc = Channels.newChannel(inputStream);
-		try (FileOutputStream fos = new FileOutputStream(destFile)) {
-			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		}
+		StreamUtils.stream(inputStream, destFile);
 		validate(dest);
 	}
 	

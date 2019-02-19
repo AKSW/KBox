@@ -26,10 +26,10 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * @throws {@link Exception} if the resource does not exist or can not be copied or some
 	 *             error occurs during the resource publication.
 	 */
-	public static void install(URL source, 
-			URL dest, 
-			String format, 
-			String version, 
+	public static void install(URL source,
+			URL dest,
+			String format,
+			String version,
 			Install install)
 			throws Exception {
 		install.install(source, dest, format, version);
@@ -51,7 +51,7 @@ public class KBox extends org.aksw.kbox.KBox {
 	 */
 	public static void install(InputStream source, 
 			URL dest, 
-			String format, 
+			String format,
 			String version, 
 			Install install)
 			throws Exception {
@@ -76,19 +76,23 @@ public class KBox extends org.aksw.kbox.KBox {
 	 * 
 	 * @param source the URL of the file that is going to be published at the
 	 *        given {@link URL}.
-	 * @param dest the {@link URL} where the file is going to be published.
+	 * @param target the {@link URL} where the resource is going to be published.
 	 * @param install a customized method for installation.
 	 * 
 	 * @throws {@link Exception} if the resource does not exist or can not be copied or some
 	 *             error occurs during the resource publication.
 	 */
 	public static void install(URL source, 
-			URL dest, 
+			URL target,
 			String format,
-			String version, 
-			Install install, 
+			String version,
+			Install install,
 			InputStreamFactory isFactory)
 			throws Exception {
-		install.install(source, dest, format, version, isFactory);
+		install.install(source, target, format, version, isFactory);
+	}
+
+	public static void register(URL resourceName, File localPath, String format, String version) {
+		
 	}
 }

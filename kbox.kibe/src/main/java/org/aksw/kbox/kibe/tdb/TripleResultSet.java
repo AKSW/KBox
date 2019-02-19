@@ -2,9 +2,9 @@ package org.aksw.kbox.kibe.tdb;
 
 import java.util.Iterator;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.QuerySolutionMap;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.rdf.model.Model;
 
 public class TripleResultSet extends IteratorResultSet<Triple> {
 	

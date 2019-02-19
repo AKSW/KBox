@@ -1,7 +1,5 @@
 package org.aksw.kbox;
 
-import java.net.URL;
-
 /**
  * Default install implementation for files.
  * 
@@ -10,9 +8,8 @@ import java.net.URL;
  */
 public class ResourceInstall extends AbstractInstall {
 
-	@Override
-	public String urlToAbsolutePath(URL url) throws Exception {
-		return KBox.urlToAbsolutePath(url);
+	public ResourceInstall() {
+		super(new ResourcePathBinder());
 	}	
 
 }

@@ -10,10 +10,9 @@ import java.util.Date;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.apache.jena.query.ResultSet;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.hp.hpl.jena.query.ResultSet;
 
 public class TDBTest {
 	

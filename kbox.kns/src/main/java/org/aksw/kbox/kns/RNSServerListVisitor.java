@@ -7,5 +7,5 @@ import org.aksw.kbox.Visitor;
  * @author {@linkplain http://emarx.org}
  *
  */
-public interface KNSServerListVisitor extends Visitor<KNSServer> {	
+public interface RNSServerListVisitor extends Visitor<RNService> {	
 }

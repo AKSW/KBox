@@ -1,18 +1,13 @@
 package org.aksw.kbox.fusca;
 
 import org.aksw.kbox.fusca.exception.ServerStartException;
-import org.apache.jena.fuseki.Fuseki;
-import org.apache.jena.fuseki.FusekiException;
-import org.apache.jena.fuseki.server.FusekiConfig;
-import org.apache.jena.fuseki.server.SPARQLServer;
-import org.apache.jena.fuseki.server.ServerConfig;
-
-import com.hp.hpl.jena.query.ARQ;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.sparql.core.DatasetGraph;
-import com.hp.hpl.jena.tdb.TDBFactory;
+import org.apache.jena.fuseki.main.FusekiServer;
+import org.apache.jena.query.ARQ;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.core.DatasetGraph;
+import org.apache.jena.tdb.TDBFactory;
 
 /**
  * 
@@ -50,30 +45,18 @@ public class Server {
 
 	public void start() throws ServerStartException {
 		try {
-			listener.starting();
-			String staticContentDir = pagePath + Fuseki.PagesStatic;
-			ServerConfig serverConfig = FusekiConfig.defaultConfiguration(subDomain, dsg,
-						false, false);
-			
-			serverConfig.port = port;
-			serverConfig.pages = staticContentDir;
-			serverConfig.mgtPort = -1;
-			serverConfig.pagesPort = port;
-			serverConfig.loopback = false;
-			serverConfig.enableCompression = true;
-			serverConfig.jettyConfigFile = null;
-			serverConfig.authConfigFile = null;
-			serverConfig.verboseLogging = false;
-
-			SPARQLServer server = new SPARQLServer(serverConfig);
-			Fuseki.setServer(server);
+			listener.starting();			
+			String staticContentDir = pagePath;
+			FusekiServer server = FusekiServer.create()
+					.add("/" + subDomain, dsg)
+					.enablePing(true)
+					.enableStats(true)
+					.staticFileBase(staticContentDir)
+					.port(port)
+					.build();
 			server.start();
 			listener.started();
-			try {
-				server.getServer().join();
-			} catch (Exception e) {			
-			}
-		} catch (FusekiException e) {
+		} catch (Exception e) {
 			throw new ServerStartException("Failed to start the server.", e);
 		}
 	}

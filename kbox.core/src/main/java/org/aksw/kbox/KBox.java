@@ -30,8 +30,6 @@ public class KBox extends ObjectUtils {
 	private static final String CHK = ".chk";
 
 	private final static Logger logger = Logger.getLogger(KBox.class);
-	
-	private static String cachedResourceFolderPath = null;
 
 	static {
 		try {
@@ -76,6 +74,7 @@ public class KBox extends ObjectUtils {
 			path += hostDir + File.separator;
 		}
 		for (String pathDir : pathDirs) {
+			pathDir = pathDir.replace(":", File.separator);
 			path += pathDir + File.separator;
 		}
 		path = path.substring(0, path.length() - 1);
@@ -142,7 +141,6 @@ public class KBox extends ObjectUtils {
 		}
 		CustomParams params = getParams();
 		params.setProperty(KBOX_RESOURCE_FOLDER, resourceFolderPath);
-		cachedResourceFolderPath = resourceFolderPath;
 	}
 
 	/**
@@ -151,13 +149,10 @@ public class KBox extends ObjectUtils {
 	 * @return the full path of the default resource folder.
 	 */
 	public static String getResourceFolder() {
-		if (cachedResourceFolderPath != null) {
-			return cachedResourceFolderPath;
-		}
 		CustomParams params = getParams();
-		cachedResourceFolderPath = params.getProperty(KBOX_RESOURCE_FOLDER,
+		String resourceFolderPath = params.getProperty(KBOX_RESOURCE_FOLDER,
 				KBOX_DIR);
-		return cachedResourceFolderPath;
+		return resourceFolderPath;
 	}
 
 	/**
@@ -209,7 +204,7 @@ public class KBox extends ObjectUtils {
 	 * @param method the method that will be used to install the resource in case
 	 *        it is not installed and install install param is set true.
 	 * 
-	 * @return a file pointing to a local copy of the resource.
+	 * @return a {@link File} pointing to a local copy of the resource or {@link null} otherwise.
 	 * 
 	 * @throws Exception if the resource can not be located or some error occurs
 	 *             while creating the local mirror.
@@ -232,7 +227,7 @@ public class KBox extends ObjectUtils {
 	 * @param method the method that will be used to install the resource in case
 	 *        it is not installed and install install param is set true.
 	 * 
-	 * @return a file pointing to a local copy of the resource.
+	 * @return a {@link File} pointing to a local copy of the resource or {@link null} otherwise.
 	 * 
 	 * @throws Exception if the resource can not be located or some error occurs
 	 *             while creating the local mirror.
@@ -240,11 +235,11 @@ public class KBox extends ObjectUtils {
 	public static File getResource(URL url, Locate locateMethod, Install installMethod, boolean install)
 			throws Exception {
 		File resource = locateMethod.locate(url);
-		if (!install) {
+		if (resource != null) {
 			return resource;
 		}
 		install(url, url, installMethod);
-		return resource;
+		return locateMethod.locate(url);
 	}
 
 	/**
@@ -253,7 +248,7 @@ public class KBox extends ObjectUtils {
 	 * 
 	 * @param url the remote {@link URL} of the resource to be retrieved.
 	 * 
-	 * @return an InputStream pointing to a local copy of the
+	 * @return an {@link InputStream} pointing to a local copy of the
 	 *         resource.
 	 *         
 	 * @throws Exception if the resource can not be located or some error occurs

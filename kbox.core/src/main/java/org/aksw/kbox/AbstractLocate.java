@@ -3,7 +3,17 @@ package org.aksw.kbox;
 import java.io.File;
 import java.net.URL;
 
-public abstract class AbstractLocate implements Locate, PathBinder {
+public abstract class AbstractLocate extends AbstractPathBinder implements Locate {
+
+	public AbstractLocate(PathBinder pathBinder) {
+		super(pathBinder);
+	}
+	
+	@Override
+	public String urlToAbsolutePath(URL url) throws Exception {
+		return pathBinder.urlToAbsolutePath(url);
+	}
+	
 	public String locate(String url) throws Exception {
 		File localFile = locate(new URL(url));
 		if(localFile != null) {

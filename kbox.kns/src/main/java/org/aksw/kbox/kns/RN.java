@@ -5,10 +5,15 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
 
+import org.aksw.kbox.utils.ObjectUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-public class KN {
+public class RN extends KNComparator {
+	
+	public static final String DEFAULT_VERSION = "unknown";
+	public static final String DEFAULT_FORMAT = "unknown";
+	
 	private String name;
 	private String target;
 	private String desc;
@@ -17,14 +22,15 @@ public class KN {
 	private String subsets;
 	private String format;
 	private String version;
+	private String encoder;
 	
-	public KN(String name, String target, String desc) {
+	public RN(String name, String target, String desc) {
 		this.name = name;
 		this.target = target;
 		this.desc = desc;
 	}
 	
-	public KN(String name, String target, String license, String subsets, String desc) {
+	public RN(String name, String target, String license, String subsets, String desc) {
 		this.name = name;
 		this.target = target;
 		this.license = license;
@@ -32,7 +38,13 @@ public class KN {
 		this.desc = desc;
 	}
 	
-	public KN(String name, String target, String format, String version, String license, String subsets, String desc) {
+	public RN(String name, 
+			String target, 
+			String format, 
+			String version, 
+			String license, 
+			String subsets, 
+			String desc) {
 		this.name = name;
 		this.target = target;
 		this.format = format;
@@ -40,6 +52,24 @@ public class KN {
 		this.license = license;
 		this.subsets = subsets;
 		this.desc = desc;
+	}
+	
+	public RN(String name, 
+			String target, 
+			String format, 
+			String version, 
+			String license, 
+			String subsets, 
+			String desc, 
+			String encoder) {
+		this.name = name;
+		this.target = target;
+		this.format = format;
+	    this.version = version;
+		this.license = license;
+		this.subsets = subsets;
+		this.desc = desc;
+		this.encoder = encoder;
 	}
 	
 	public String getName() {
@@ -62,15 +92,16 @@ public class KN {
 		this.target = target;
 	}
 	
-	public static KN parse(String json) throws Exception {
+	public static RN parse(String json) throws Exception {
 		JSONParser jsonParser = new JSONParser();
 		Reader stringReader = new StringReader(json);
 		JSONObject jsonObject = (JSONObject) jsonParser.parse(stringReader);
 		String name = (String) jsonObject.get("name");
 		String target = (String) jsonObject.get("target");
 		String desc = (String) jsonObject.get("description");
-		String version = (String) jsonObject.get("version");
-		String format = (String) jsonObject.get("format");
+		String version = (String) ObjectUtils.getValue(jsonObject.get("version"), DEFAULT_VERSION);
+		String format = (String) ObjectUtils.getValue(jsonObject.get("format"), DEFAULT_FORMAT);
+		String encoder = (String) jsonObject.get("decoder");
 		Object o = jsonObject.get("license");
 		String license = null;
 		if(o != null) {
@@ -81,7 +112,7 @@ public class KN {
 		if(o != null) {
 			subsets = o.toString().replace("\\", "");
 		}
-		return new KN(name, target, format, version, license, subsets, desc);
+		return new RN(name, target, format, version, license, subsets, desc, encoder);
 	}
 	
 	public void setDesc(String desc) {
@@ -135,9 +166,18 @@ public class KN {
 	public void setVersion(String version) {
 		this.version = version;
 	}
+	
+	public String getEncoder() {
+		return encoder;
+	}
+	
+	public void setEncoder(String encoder) {
+		this.encoder = encoder;
+	}
 
 	public boolean equals(String name) {
-		return this.name.equals(name);
+		return (this.name == name ||
+				(this.name != null && this.name.equals(name)));
 	}
 
 	public boolean equals(String name, String format, String version) {
@@ -168,4 +208,6 @@ public class KN {
 			out.println("Description:" + description);
 		}
 	}
+
+	
 }

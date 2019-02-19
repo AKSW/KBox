@@ -10,7 +10,7 @@ public class KBNotResolvedException extends Exception {
 		super("The knowledge base could not be resolved.");
 	}
 	
-	public KBNotResolvedException(String kb) {
-		super("The knowledge base " + kb + " could not be resolved.");
+	public KBNotResolvedException(String message) {
+		super(message);
 	}
 }

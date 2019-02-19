@@ -1,10 +1,10 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.kns.KN;
-import org.aksw.kbox.kns.KNSServerListVisitor;
+import org.aksw.kbox.kns.RN;
+import org.aksw.kbox.kns.RNSServerListVisitor;
 
-public interface KNListVisitor extends KNSServerListVisitor {
+public interface KNListVisitor extends RNSServerListVisitor {
 	
-	public boolean visit(KN kn);
+	public boolean visit(RN kn);
 	
 }

@@ -1,14 +1,14 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.kns.KNSServer;
-import org.aksw.kbox.kns.KNSServerListVisitor;
+import org.aksw.kbox.kns.RNService;
+import org.aksw.kbox.kns.RNSServerListVisitor;
 
-public class MockKNSServerListVisitor implements KNSServerListVisitor {
+public class MockKNSServerListVisitor implements RNSServerListVisitor {
 
 	private int i = 0;
 	
 	@Override
-	public boolean visit(KNSServer object) throws Exception {
+	public boolean visit(RNService object) throws Exception {
 		i++;
 		return true;
 	}
