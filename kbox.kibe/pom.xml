@@ -1,31 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>kbox.kibe</artifactId>
   <build>
     <plugins>
-      <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-shade-plugin</artifactId>
-	    <version>2.1</version>
-	    <executions>    
+	<plugin>
+	    <artifactId>maven-assembly-plugin</artifactId>
+	    <executions>
 	      <execution>
 	        <phase>package</phase>
 	        <goals>
-	          <goal>shade</goal>
+	          <goal>single</goal>
 	        </goals>
-	        <configuration>
-	           <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-	              <mainClass>org.aksw.kbox.kibe.Main</mainClass>
-	            </transformer>
-	            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-	            <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer" />
-	            <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
-	              <addHeader>false</addHeader>
-	            </transformer>
-	        </configuration>
 	      </execution>
 	    </executions>
-	  </plugin>
+	    <configuration>
+	      <archive>
+	        <manifest>
+	          <addClasspath>true</addClasspath>
+	          <mainClass>org.aksw.kbox.kibe.Main</mainClass>
+	        </manifest>
+	      </archive>
+	      <descriptorRefs>
+	        <descriptorRef>jar-with-dependencies</descriptorRef>
+	      </descriptorRefs>
+	    </configuration>
+	  </plugin> 
     </plugins>
   </build>
   <parent>
