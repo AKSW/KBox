@@ -13,11 +13,13 @@ import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleInstallInputStreamFactory;
-import org.aksw.kbox.kibe.exception.KBNotResolvedException;
+import org.aksw.kbox.kibe.exception.KBDereferencingException;
+import org.aksw.kbox.kibe.exception.KBNotLocatedException;
 import org.aksw.kbox.kns.CustomRNSServerList;
 import org.aksw.kbox.kns.RNSServerListVisitor;
 import org.aksw.kbox.kns.RNService;
 import org.aksw.kbox.kns.ServerAddress;
+import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 import org.aksw.kbox.utils.GzipUtils;
 import org.aksw.kbox.utils.URLUtils;
 import org.apache.jena.query.ResultSet;
@@ -195,7 +197,7 @@ public class Main {
 			} catch (MalformedURLException e) {
 				System.out.println(e.getMessage());
 				logger.error(e);
-			} catch (KBNotResolvedException e) {
+			} catch (KBNotLocatedException e) {
 				System.out.println("The knowledge base " + kbURL + " is not available in " + rnsServer + ".");
 			} catch (Exception e) {
 				String message = "Error installing knowledge base " + kbURL + " from " + rnsServer + ".";
@@ -447,9 +449,19 @@ public class Main {
 				File webInterfaceDir = KBox.getResource(webclient, new ZipLocate(), webClientInstall, true);
 				Server server = new Server(port, webInterfaceDir.getAbsolutePath(), subDomain, model, serverListener);
 				server.start();
-			} catch (KBNotResolvedException e) {
+			} catch (KBDereferencingException e) {
 				System.out.println(
 						"Error installing KB: " + "The knowledge base could not be found in any of the KNS servers.");
+				System.out.println("Check if the servers are online or if the requested resource exist.");
+				logger.error(e);
+			} catch (KBNotLocatedException e) {
+				System.out.println(
+						"Error installing KB: " + "The knowledge base could not be located.");
+				System.out.println("Try to install it adding the pragma -install to your command.");
+				logger.error(e);
+			} catch (ResourceNotResolvedException e) {
+				System.out.println(
+						"Error installing KB: " + "The knowledge base could not be resolved.");
 				System.out.println("Check if the servers are online or if the requested resource exist.");
 				logger.error(e);
 			} catch (ServerStartException e) {

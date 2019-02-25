@@ -12,6 +12,7 @@ import org.aksw.kbox.kibe.tdb.TDBTest;
 import org.aksw.kbox.kns.KNSSever;
 import org.aksw.kbox.kns.RN;
 import org.aksw.kbox.kns.ResourceResolver;
+import org.aksw.kbox.kns.exception.ResourceNotLacatedException;
 import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 import org.apache.jena.query.ResultSet;
 import org.junit.Assert;
@@ -63,6 +64,7 @@ public class KBoxTest {
 		URL resourceName = new URL("http://test.org");
 		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		File f = KBox.getResource(rnsServerURL, resourceName, RN.DEFAULT_FORMAT, RN.DEFAULT_VERSION, isFactory);
+		Assert.assertTrue(f.delete());
 		Assert.assertNotNull(f);
 	}
 	
@@ -73,6 +75,16 @@ public class KBoxTest {
 		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		KBox.getResource(rnsServerURL, resourceName, null, RN.DEFAULT_VERSION, isFactory);
 		Assert.fail("The query should have returned a ResourceNotFoundException.");
+	}
+	
+	@Test(expected=ResourceNotLacatedException.class)
+	public void testResourceNotLocatedException() throws Exception {
+		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
+		URL resourceName = new URL("http://test.org");
+		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
+		File resource = KBox.getResource(rnsServerURL, resourceName, RN.DEFAULT_FORMAT, RN.DEFAULT_VERSION, isFactory, false);
+		Assert.assertNull(resource);
+		Assert.fail("The query should have returned a ResourceNotLocatedException.");
 	}
 
 	@Test

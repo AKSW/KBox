@@ -35,7 +35,7 @@ public class KBoxTest {
 	
 	@Test
 	public void testPublishMethods() throws MalformedURLException, Exception {
-		File test = KBox.getResource(new URL("http://tttt"));
+		File test = KBox.getResource(new URL("http://test.org/context.txt"));
 		assertEquals(null, test);
 		URL fileToInstall = new URL("http://downloads.dbpedia.org/3.8/en/contents-nt.txt");
 		File kboxedFile = KBox.getResource(fileToInstall);
@@ -45,6 +45,7 @@ public class KBoxTest {
 		assertEquals(true, inDisk.exists());
 		kboxedFile =  KBox.getResource(new URL("http://test.org/context.txt"));
 		assertEquals(kboxedFile.getPath(), inDisk.getPath());
+		kboxedFile.deleteOnExit();
 	}
 
 }

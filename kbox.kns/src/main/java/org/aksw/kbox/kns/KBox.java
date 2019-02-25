@@ -8,6 +8,7 @@ import org.aksw.kbox.apple.AppLocate;
 import org.aksw.kbox.apple.Install;
 import org.aksw.kbox.apple.Locate;
 import org.aksw.kbox.kns.exception.ResourceDereferencingException;
+import org.aksw.kbox.kns.exception.ResourceNotLacatedException;
 import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 
 public class KBox extends org.aksw.kbox.apple.KBox {	
@@ -84,7 +85,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @return the resolved {@link RN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given RNSServer.
+	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
 	public static RN resolve(URL resourceName, 
 			String format, 
@@ -105,7 +106,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @return the resolved {@link RN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given RNSServer.
+	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
 	public static RN resolve(URL resourceName, 
 			String format, 
@@ -127,7 +128,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @return the resolved {@link RN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given RNSServer.
+	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
 	public static RN resolve(RNServerList rnsServerList, 
 			URL resourceName, 
@@ -176,12 +177,12 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @return the resolved {@link RN}  or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given RNSServer.
+	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
 	public static RN resolve(URL rnsServerURL, 
 			URL resourceName, 
 			String format, 
-			Resolver resolver) throws ResourceNotResolvedException, Exception {
+			Resolver resolver) throws ResourceNotLacatedException, Exception {
 		RN resolvedKN = resolver.resolve(resourceName, rnsServerURL, format);
 		return resolvedKN;
 	}
@@ -200,13 +201,13 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @return the resolved {@link RN}  or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given RNSServer.
+	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
 	public static RN resolve(URL rnsServerURL, 
 			URL resourceName, 
 			String format, 
 			String version, 
-			Resolver resolver) throws ResourceNotResolvedException, Exception {
+			Resolver resolver) throws ResourceNotLacatedException, Exception {
 		RN resolvedKN = resolver.resolve(resourceName, rnsServerURL, format, version);
 		return resolvedKN;
 	}
@@ -223,11 +224,11 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @return the resolved {@link URL} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotResolvedException} if the resource {@link URL} can not be resolved by the given RNSServer.
+	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
 	public static RN resolve(URL rnsServerURL, 
 			URL resourceName, 
-			Resolver resolver) throws ResourceNotResolvedException, Exception {
+			Resolver resolver) throws ResourceNotLacatedException, Exception {
 		RN resolvedKN = resolver.resolve(rnsServerURL, resourceName);
 		return resolvedKN;
 	}
@@ -391,7 +392,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 			}
 			localDataset = locate(resourceName, format, version, locateMethod);
 		} else {
-			notNull(new ResourceNotResolvedException("Resource " + resourceName.toString() + " is not installed."
+			notNull(new ResourceNotLacatedException("Resource " + resourceName.toString() + " is not installed."
 					+ " You can install it using the command install."), localDataset);
 		}
 		return localDataset;
@@ -419,11 +420,9 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 				throw new ResourceDereferencingException(resourceName.toString(), e);
 			}
 			localDataset = locate(resourceName, format, version, locateMethod);	
-		} 
-		if(localDataset == null) {
-			throw new ResourceNotResolvedException("Resource " + resourceName.toString() + " is not installed."
-					+ " You can install it using the command install.");
 		}
+		notNull(new ResourceNotLacatedException("Resource " + resourceName.toString() + " is not installed."
+					+ " You can install it using the command install."), localDataset);
 		return localDataset;
 	}
    
