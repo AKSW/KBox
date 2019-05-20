@@ -244,6 +244,37 @@ public class KBox extends ObjectUtils {
 		}
 		return null;
 	}
+	
+	/**
+	 * Get a local mirror of the remote resource or null 
+	 * if does not exist. 
+	 * If the flag install is set to true, returns a local copy 
+	 * of the resource if it already exists or create it otherwise.
+	 * 
+	 * @param url the remote {@link URL} where the resource is stored.
+	 * @param dest specify the local path where the resource can be located and/or installed.
+	 * @param install specify if the resource should be installed (true) or not
+	 *            (false).
+	 * @param method the method that will be used to install the resource in case
+	 *        it is not installed and install install param is set true.
+	 * 
+	 * @return a {@link File} pointing to a local copy of the resource or {@link null} otherwise.
+	 * 
+	 * @throws Exception if the resource can not be located or some error occurs
+	 *             while creating the local mirror.
+	 */
+	public static File getResource(URL url, URL dest, Locate locateMethod, Install installMethod, boolean install)
+			throws Exception {
+		File resource = locateMethod.locate(dest);
+		if (resource != null) {
+			return resource;
+		}
+		if(install) {
+			install(url, dest, installMethod);
+			return locateMethod.locate(dest);
+		}
+		return null;
+	}
 
 	/**
 	 * Get a local mirror of the remote resource or {@link null} if it does 

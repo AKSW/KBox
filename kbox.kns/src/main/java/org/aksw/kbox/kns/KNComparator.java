@@ -7,7 +7,7 @@ public class KNComparator {
 	public final static String FORMAT = "FORMAT";
 	
 	
-	public static boolean equals (RN kn, String[]... params) {
+	public static boolean equals (KN kn, String[]... params) {
 		boolean equals = false;
 		for(String[] param : params) {
 			String paramName = param[0];

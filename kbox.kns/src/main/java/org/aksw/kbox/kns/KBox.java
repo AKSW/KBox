@@ -5,10 +5,9 @@ import java.net.URL;
 
 import org.aksw.kbox.InputStreamFactory;
 import org.aksw.kbox.apple.AppLocate;
-import org.aksw.kbox.apple.Install;
+import org.aksw.kbox.apple.AppInstall;
 import org.aksw.kbox.apple.Locate;
 import org.aksw.kbox.kns.exception.ResourceDereferencingException;
-import org.aksw.kbox.kns.exception.ResourceNotLacatedException;
 import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 
 public class KBox extends org.aksw.kbox.apple.KBox {	
@@ -19,8 +18,8 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @param url the {@link URL} of the RNS (Resource Name Service)
 	 */
-	public static void installRNS(URL url) {
-		CustomRNSServerList rnsServerList = new CustomRNSServerList();
+	public static void installKNS(URL url) {
+		CustomKNSServerList rnsServerList = new CustomKNSServerList();
 		rnsServerList.add(url.toString());
 	}
 	
@@ -29,26 +28,9 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @param url the {@link URL} of the RNS (Resource Name Service)
 	 */
-	public static void removeRNS(URL url) {
-		CustomRNSServerList knsServerList = new CustomRNSServerList();
+	public static void removeKNS(URL url) {
+		CustomKNSServerList knsServerList = new CustomKNSServerList();
 		knsServerList.remove(url.toString());
-	}
-		
-	/**
-	 * Resolve the given {@link URL} in the available RNS.
-	 * The first RNS to be checked is the default RNS, 
-	 * thereafter the user's RNS.
-	 * 
-	 * @param rnsServerList list of RNS servers
-	 * @param resourceName the {@link URL} to be resolved by the RNS.
-	 * 
-	 * @return the resolved RN or {@link null} if it can not be resolved.
-	 * 
-	 * @throws {@link Exception} if any error occurs during the operation.
-	 */
-	public static RN resolve(RNServerList rnsServerList, URL resourceName) throws Exception {
-		ResourceResolver resolver = new ResourceResolver();
-		return resolve(rnsServerList, resourceName, resolver);
 	}
 	
 	/**
@@ -58,39 +40,14 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @param knsServerList list of RNS servers
 	 * @param resourceName the {@link URL} to be resolved by the RNS.
-	 * @param resolver the resolver to resolve the given resourceName in the {@link CustomRNSServerList}.
 	 * 
-	 * @return the resolved {@link RN} or {@link null} if it can not be resolved.
+	 * @return the resolved {@link KN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static RN resolve(RNServerList knsServerList, 
-			URL resourceName, 
-			Resolver resolver) throws Exception {
-		RNSResolverVisitor resolveVisitor = new RNSResolverVisitor(resourceName, resolver);
-		knsServerList.visit(resolveVisitor);
-		RN resolvedKN = resolveVisitor.getResolvedKN();
-		return resolvedKN;
-	}
-	
-	/**
-	 * Resolve the given {@link URL} in the available RNS.
-	 * The first RNS to be checked is the default RNS, 
-	 * thereafter the user's RNS.
-	 * 
-	 * @param resourceName the {@link URL} to be resolved by the RNS.	 
-	 * @param format the resource format. 
-	 * @param version the resource version.
-	 * 
-	 * @return the resolved {@link RN} or {@link null} if it can not be resolved.
-	 * 
-	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
-	 */
-	public static RN resolve(URL resourceName, 
-			String format, 
-			String version) throws Exception {
-		return resolve(new CustomRNSServerList(), resourceName, format, version);
+	public static KN resolve(KNSServerList knsServerList, 
+			URL resourceName) throws Exception {
+		return resolve(knsServerList, resourceName, null, null);
 	}
 	
 	/**
@@ -103,16 +60,14 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @param version the resource version.
  	 * @param resolver the resolver that will resolve the given {@link URL}.
 	 * 
-	 * @return the resolved {@link RN} or {@link null} if it can not be resolved.
+	 * @return the resolved {@link KN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
-	public static RN resolve(URL resourceName, 
+	public static KN resolve(URL resourceName, 
 			String format, 
-			String version, 
-			Resolver resolver) throws Exception {
-		return resolve(new CustomRNSServerList(), resourceName, format, version, resolver);
+			String version) throws Exception {
+		return resolve(new CustomKNSServerList(), resourceName, format, version);
 	}
 	
 	/**
@@ -125,17 +80,17 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @param format the resource format. 
 	 * @param version the resource version.
 	 * 
-	 * @return the resolved {@link RN} or {@link null} if it can not be resolved.
+	 * @return the resolved {@link KN} or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
-	public static RN resolve(RNServerList rnsServerList, 
+	public static KN resolve(KNSServerList rnsServerList, 
 			URL resourceName, 
 			String format, 
 			String version) throws Exception {
-		ResourceResolver resolver = new ResourceResolver();
-		return resolve(rnsServerList, resourceName, format, version, resolver);
+		KNSServerListResolverVisitor resolveVisitor = new KNSServerListResolverVisitor(resourceName, format, version);
+		rnsServerList.visit(resolveVisitor);
+		return resolveVisitor.getResolvedKN();
 	}
 	
 	/**
@@ -143,25 +98,16 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * The first RNS to be checked is the default RNS, 
 	 * thereafter the user's RNS.
 	 * 
-	 * @param knsServerList list of RN Services.
-	 * @param resourceName the {@link URL} to be resolved by the RNS.	 
-	 * @param format the resource format. 
-	 * @param version the resource version. 
-	 * @param resolver the resolver that will resolve the given {@link URL}.
+	 * @param rnsServerURL the {@link URL} of the RNS Server.
+	 * @param resourceName the {@link URL} to be resolved by the RNS.
 	 * 
-	 * @return the resolved {@link RN} or {@link null} if it can not be resolved.
+	 * @return the resolved {@link URL} or {@link null} if it can not be resolved.
 	 * 
-	 * @throws Exception if any error occurs during the operation.
+	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static RN resolve(RNServerList knsServerList, 
-			URL resourceName, 
-			String format, 
-			String version, 
-			Resolver resolver) throws Exception {
-		RNSResolverVisitor resolveVisitor = new RNSResolverVisitor(resourceName, format, version, resolver);
-		knsServerList.visit(resolveVisitor);
-		RN resolvedKN = resolveVisitor.getResolvedKN();
-		return resolvedKN;
+	public static KN resolve(URL rnsServerURL, 
+			URL resourceName) throws Exception {
+		return resolve(rnsServerURL, resourceName, null, null);
 	}
 	
 	/**
@@ -174,17 +120,14 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * @param format the resource format.
 	 * @param resolver the resolver that will resolve the given {@link URL}.
 	 * 
-	 * @return the resolved {@link RN}  or {@link null} if it can not be resolved.
+	 * @return the resolved {@link KN}  or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
-	public static RN resolve(URL rnsServerURL, 
+	public static KN resolve(URL rnsServerURL, 
 			URL resourceName, 
-			String format, 
-			Resolver resolver) throws ResourceNotLacatedException, Exception {
-		RN resolvedKN = resolver.resolve(resourceName, rnsServerURL, format);
-		return resolvedKN;
+			String format) throws Exception {
+		return resolve(rnsServerURL, resourceName, format, null);
 	}
 	
 	/**
@@ -193,50 +136,29 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * thereafter the user's RNS.
 	 * 
 	 * @param rnsServerURL the {@link URL}  of the RNS Server.
-	 * @param resourceName the {@link URL}  to be resolved by the RNS.	 
+	 * @param resourceURL the {@link URL}  to be resolved by the RNS.	 
 	 * @param format the resource format. 
 	 * @param version the resource version. 
 	 * @param resolver the resolver that will resolve the given {@link URL}.
 	 * 
-	 * @return the resolved {@link RN}  or {@link null} if it can not be resolved.
+	 * @return the resolved {@link KN}  or {@link null} if it can not be resolved.
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
 	 */
-	public static RN resolve(URL rnsServerURL, 
-			URL resourceName, 
+	public static KN resolve(URL rnsServerURL, 
+			URL resourceURL, 
 			String format, 
-			String version, 
-			Resolver resolver) throws ResourceNotLacatedException, Exception {
-		RN resolvedKN = resolver.resolve(resourceName, rnsServerURL, format, version);
-		return resolvedKN;
-	}
-	
-	/**
-	 * Resolve the given {@link URL} in the available RNS.
-	 * The first RNS to be checked is the default RNS, 
-	 * thereafter the user's RNS.
-	 * 
-	 * @param rnsServerURL the {@link URL} of the RNS Server.
-	 * @param resourceName the {@link URL} to be resolved by the RNS.
-	 * @param resolver the resolver that will resolve the given {@link URL}.
-	 * 
-	 * @return the resolved {@link URL} or {@link null} if it can not be resolved.
-	 * 
-	 * @throws {@link Exception} if any error occurs during the operation.
-	 * @throws {@link ResourceNotLacatedException} if the resource {@link URL} can not be resolved by the given RNSServer.
-	 */
-	public static RN resolve(URL rnsServerURL, 
-			URL resourceName, 
-			Resolver resolver) throws ResourceNotLacatedException, Exception {
-		RN resolvedKN = resolver.resolve(rnsServerURL, resourceName);
-		return resolvedKN;
+			String version) throws Exception {
+		KNSServer knsServer = new KBoxKNSServer(rnsServerURL);
+		KNSResolverVisitor resolver = new KNSResolverVisitor(resourceURL, format, version);
+		knsServer.visit(resolver);
+		return resolver.getResolvedKN();
 	}
 	
 	/**
 	 * Get the resource from the given RNS Server {@link URL} with the given format and version.
 	 * 
-	 * @param knsServerList the {@link RNServerList} to lookup for the give resource {@link URL}.
+	 * @param knsServerList the {@link KNSServerList} to lookup for the give resource {@link URL}.
 	 * @param resourceName the {@link URL} of the resource. 
 	 * @param format the resource format.
 	 * @param version the resource version.
@@ -249,7 +171,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @throws Exception if some error occurs during while getting the resource. 
 	 */
-	public static File getResource(RNServerList knsServerList, 
+	public static File getResource(KNSServerList knsServerList, 
 			URL resourceName,
 			String format,
 			String version,
@@ -259,9 +181,9 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	}
 	
 	/**
-	 * Get the resource from the given RNS Server {@link URL} with the given format and version.
+	 * Get the resource from the given KNS Server {@link URL} with the given format and version.
 	 * 
-	 * @param knsServerList the {@link RNServerList} to lookup for the give resource {@link URL}.
+	 * @param knsServerList the {@link KNSServerList} to lookup for the give resource {@link URL}.
 	 * @param resourceName the {@link URL} of the resource. 
 	 * @param format the resource format.
 	 * @param version the resource version.
@@ -272,24 +194,20 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @throws Exception if some error occurs during while getting the resource. 
 	 */
-	public static File getResource(RNServerList knsServerList,
+	public static File getResource(KNSServerList knsServerList,
 			URL resourceName,
 			String format,
 			String version,
 			InputStreamFactory isFactory,
 			boolean install
 			) throws Exception {
-		Locate resourceLocate = new AppLocate();
 		InstallFactory installFactory = new DefaultInstallFactory();
-		Resolver resourceResolver = new ResourceResolver();
 			File resource = getResource(knsServerList,
 					resourceName,
-					resourceLocate,
 					format,
 					version,
-					resourceResolver,
-					installFactory, 
 					isFactory,
+					installFactory,
 					install);
 			return resource;
 	}
@@ -297,7 +215,42 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	/**
 	 * Get the resource from the given RNS Server {@link URL} with the given format and version.
 	 * 
-	 * @param rnsServerURL the RNS Server {@link URL}.
+	 * @param knsServerList the {@link KNSServerList} to lookup for the give resource {@link URL}.
+	 * @param resourceName the {@link URL} of the resource. 
+	 * @param format the resource format.
+	 * @param version the resource version.
+	 * @param isFactory the {@link InputStreamFactory} to be used to open the resource file stream.
+	 * @param installFactory the {@link InstallFactory} to be used to lookup the install method.
+	 * @param install true if the resource should be installed and false otherwise.
+	 * 
+	 * @return the resource {@link File} or {@link null} if the resource does not exist or could not be located. 
+	 * 
+	 * @throws Exception if some error occurs during while getting the resource. 
+	 */
+	public static File getResource(KNSServerList knsServerList,
+			URL resourceName,
+			String format,
+			String version,
+			InputStreamFactory isFactory,
+			InstallFactory installFactory,
+			boolean install
+			) throws Exception {
+		Locate resourceLocate = new AppLocate();
+		File resource = getResource(knsServerList,
+					resourceName,
+					resourceLocate,
+					format,
+					version,
+					installFactory, 
+					isFactory,
+					install);
+		return resource;
+	}
+	
+	/**
+	 * Get the resource from the given KNS Server {@link URL} with the given format and version.
+	 * 
+	 * @param knsServerURL the RNS Server {@link URL}.
 	 * @param resourceName the {@link URL} of the resource. 
 	 * @param format the resource format.
 	 * @param version the resource version.
@@ -340,10 +293,10 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 			InputStreamFactory isFactory,
 			boolean install
 			) throws Exception {
-		final RNService knsServer = new RNService(rnsServerURL);
-		RNServerList knsServerList = new RNServerList() {
+		final KNSServer knsServer = new KBoxKNSServer(rnsServerURL);
+		KNSServerList knsServerList = new KNSServerList() {
 			@Override
-			public boolean visit(RNSServerListVisitor visitor) throws Exception {
+			public boolean visit(KNSServerListVisitor visitor) throws Exception {
 				visitor.visit(knsServer);
 				return false;
 			}
@@ -351,133 +304,131 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 		return getResource(knsServerList, resourceName, format, version, isFactory, install);
 	}
 	
-	public static File getResource(RNServerList knsServerList, 
+	public static File getResource(KNSServerList knsServerList, 
 			URL resourceName, 
 			Locate locateMethod,
 			String format,
 			String version,
-			Resolver resolver, 
-			Install installMethod,
+			AppInstall installMethod,
 			InputStreamFactory isFactory) throws Exception {
 		return getResource(knsServerList, 
 				resourceName, 
 				locateMethod,
 				format,
 				version,
-				resolver, 
 				installMethod, 
 				isFactory, 
 				true);
    }
 	
-   public static File getResource(RNServerList knsServerList, 
+   public static File getResource(KNSServerList knsServerList, 
 			URL resourceName, 
 			Locate locateMethod,
 			String format,
 			String version,
-			Resolver resolver,
-			Install installMethod,
+			AppInstall installMethod,
 			InputStreamFactory isFactory,
 			boolean install)
 			throws Exception {
 		File localDataset = locate(resourceName, format, version, locateMethod);
 		if(localDataset == null && install) {
-			RN resolvedKN = resolve(knsServerList, resourceName, format, version, resolver);
+			KN resolvedKN = resolve(knsServerList, resourceName, format, version);
 			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
-			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargetURL());
+			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
 			try {
-				install(resolvedKN.getTargetURL(), resourceName, format, version, installMethod, isFactory);
+				install(resolvedKN.getTargets().get(0).getURL(), resourceName, format, version, installMethod, isFactory);
 			} catch (Exception e) {
 				throw new ResourceDereferencingException(resourceName.toString(), e);
 			}
 			localDataset = locate(resourceName, format, version, locateMethod);
-		} else {
-			notNull(new ResourceNotLacatedException("Resource " + resourceName.toString() + " is not installed."
-					+ " You can install it using the command install."), localDataset);
 		}
 		return localDataset;
    }
    
-   public static File getResource(RNServerList knsServerList, 
+   public static File getResource(KNSServerList knsServerList, 
 			URL resourceName, 
 			Locate locateMethod,
 			String format,
 			String version,
-			Resolver resolver,
 			InstallFactory installFactory,
 			InputStreamFactory isFactory,
 			boolean install)
 			throws Exception {
 		File localDataset = locate(resourceName, format, version, locateMethod);
 		if(localDataset == null && install) {
-			RN resolvedKN = resolve(knsServerList, resourceName, format, version, resolver);
+			KN resolvedKN = resolve(knsServerList, resourceName, format, version);
 			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
-			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargetURL());
+			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
 			try {
-				Install installMethod = installFactory.get(resolvedKN);
-				install(resolvedKN.getTargetURL(), resourceName, format, version, installMethod, isFactory);
+				AppInstall installMethod = installFactory.get(resolvedKN);
+				install(resolvedKN.getTargets().get(0).getURL(), resourceName, format, version, installMethod, isFactory);
 			} catch (Exception e) {
 				throw new ResourceDereferencingException(resourceName.toString(), e);
 			}
 			localDataset = locate(resourceName, format, version, locateMethod);	
 		}
-		notNull(new ResourceNotLacatedException("Resource " + resourceName.toString() + " is not installed."
-					+ " You can install it using the command install."), localDataset);
 		return localDataset;
+	}
+	
+   /**
+	 * Creates a mirror for the given file in a given {@link URL}. This function allows
+	 * KBox to serve files to applications, acting as proxy to the mirrored
+	 * file. The file that is published in a give {@link URL} will be located when the
+	 * client execute the function {@link KBox#getResource(URL)}.
+	 * 
+	 * @param rn the dynamic data name {@link URL} that will be resolved.
+	 * @param target the target {@link URL} where the resource will be installed.
+	 * @param installFactory an {@link InstallFactory} method to be used for installation.
+	 * @param resolver the resolver of the given KNS and resource's {@link URL}.
+	 * @param isFactory a {@link InputStreamFactory} to be used to create a stream connection with the resolved resource's {@link URL}.
+	 * 
+	 * @throws NullArgumentException if any of the arguments is {@link null}.
+	 * @throws Exception if the resource does not exist or can not be copied or some
+	 *             error occurs during the resource publication.
+	 */
+	public static void install(KN kn, 
+			URL target,
+			InstallFactory installFactory,
+			InputStreamFactory isFactory)
+			throws Exception {		
+		notNull(new IllegalArgumentException("kn"), kn);
+		notNull(new IllegalArgumentException("target"), target);
+		notNull(new IllegalArgumentException("installFactory"), installFactory);
+		notNull(new IllegalArgumentException("isFactory"), isFactory);
+		AppInstall install = installFactory.get(kn);
+		install(kn.getTargets().get(0).getURL(),
+				target,
+				kn.getFormat(),
+				kn.getVersion(),
+				install,
+				isFactory);
 	}
    
    /**
-	 * Resolve the given {@link URL} in the available RNS.
-	 * The first RNS to be checked is the default RNS,
-	 * thereafter the user's RNS.
+	 * Resolve the given {@link URL} in the available KNS.
+	 * The first KNS to be checked is the default KNS, 
+	 * thereafter the user's KNS.
 	 * 
-	 * @param rnsServerURL the {@link URL} of the RNS Server.
-	 * @param resourceName the {@link URL} to be resolved by the RNS.
+	 * @param knsServerList list of KNS servers
+	 * @param resourceURL the {@link URL} to be resolved by the KNS.
+	 * @param resolver the resolver to resolve the given resource's {@link URL} in the {@link DefaultKNSServerList}.
 	 * 
-	 * @return the resolved {@link RN} or {@link null} if the given resource's {@link URL} can not be resolved.
-	 * 
-	 * @throws Exception if any error occurs during the operation.
-	 */
-	public static RN resolve(URL rnsServerURL, URL resourceName) throws Exception {
-		ResourceResolver resolver = new ResourceResolver();
-		return resolve(rnsServerURL, resourceName, resolver);
-	}
-	
-	/**
-	 * Resolve the given {@link URL} in the available RNS.
-	 * The first RNS to be checked is the default RNS,
-	 * thereafter the user's RNS.
-	 * 
-	 * @param rnsServerURL the {@link URL} of the RNS Server.
-	 * @param resourceName the {@link URL} to be resolved by the RNS.
-	 * @param format the resource format.
-	 * 
-	 * @return the resolved {@link RN} or {@link null} if the given resource's {@link URL} can not be resolved.
+	 * @return the resolved {@link  KN} or {@link null} if it is not resolved.
 	 * 
 	 * @throws Exception if any error occurs during the operation.
 	 */
-	public static RN resolve(URL rnsServerURL, URL resourceName, String format) throws Exception {
-		ResourceResolver resolver = new ResourceResolver();
-		return resolve(rnsServerURL, resourceName, format, resolver);
+	public static void install(KNSServerList knsServerList, 
+			URL resourceURL, 
+			String format, 
+			String version,
+			InstallFactory installFactory, 
+			InputStreamFactory isFactory) throws ResourceNotResolvedException, Exception {
+		KN resolvedKN = resolve(knsServerList, resourceURL, format, version);
+		notNull(new ResourceNotResolvedException(resourceURL.toString()), resolvedKN);
+		install(resolvedKN, 
+				resourceURL,
+				installFactory,
+				isFactory);
 	}
-	
-	/**
-	 * Resolve the given {@link URL} in the available RNS.
-	 * The first RNS to be checked is the default RNS,
-	 * thereafter the user's RNS.
-	 * 
-	 * @param rnsServerURL the {@link URL} of the RNS Server.
-	 * @param resourceName the {@link URL} to be resolved by the RNS.
-	 * @param format the resource format.
-	 * @param version the resource version.
-	 * 
-	 * @return the resolved {@link RN} or {@link null} if the given resource's {@link URL} can not be resolved.
-	 * 
-	 * @throws Exception if any error occurs during the operation.
-	 */
-	public static RN resolve(URL rnsServerURL, URL resourceName, String format, String version) throws Exception {
-		ResourceResolver resolver = new ResourceResolver();
-		return resolve(rnsServerURL, resourceName, format, version, resolver);
-	}
-	
+   
 }

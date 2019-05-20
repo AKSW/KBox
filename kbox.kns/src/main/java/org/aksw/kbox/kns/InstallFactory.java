@@ -3,15 +3,15 @@ package org.aksw.kbox.kns;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.aksw.kbox.apple.Install;
+import org.aksw.kbox.apple.AppInstall;
 import org.aksw.kbox.apple.ResourceAppInstall;
 
 public class InstallFactory {
 
-	private Map<String, Install> methods = new HashMap<String, Install>();
+	private Map<String, AppInstall> methods = new HashMap<String, AppInstall>();
 
-	public Install get(RN kn) {
-		String decoder = kn.getEncoder();
+	public AppInstall get(KN kn) {
+		String decoder = kn.getTargets().get(0).getInstall();
 		if(decoder == null) {
 			return new ResourceAppInstall();
 		}
@@ -19,11 +19,11 @@ public class InstallFactory {
 		return methods.get(decoder);
 	}
 	
-	public void put(String id, Install install) {
+	public void put(String id, AppInstall install) {
 		methods.put(id, install);
 	}
 	
-	public Install get(String format) {
+	public AppInstall get(String format) {
 		return methods.get(format);
 	}
 

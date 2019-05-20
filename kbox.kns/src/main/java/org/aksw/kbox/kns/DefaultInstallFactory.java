@@ -7,7 +7,7 @@ import org.aksw.kbox.apple.ZipAppInstall;
 public class DefaultInstallFactory extends InstallFactory {
 
 	public DefaultInstallFactory() {
-		put("kibe", new ZipAppInstall());
+		put("kb", new ZipAppInstall());
 		put("gzip", new GZipAppInstall());
 		put("zip", new ZipAppInstall());
 		put("plain", new ResourceAppInstall());

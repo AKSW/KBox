@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.aksw.kbox.utils.StreamUtils;
-
 public abstract class AbstractInstall extends AbstractPathBinder implements Install {
 	
 	public AbstractInstall(PathBinder pathBinder) {
@@ -22,12 +20,11 @@ public abstract class AbstractInstall extends AbstractPathBinder implements Inst
 	@Override
 	public void install(InputStream inputStream, URL dest) throws Exception {
 		File destFile = new File(urlToAbsolutePath(dest));
-		File resourceDir = destFile.getParentFile();
-		resourceDir.mkdirs();
-		destFile.createNewFile();
-		StreamUtils.stream(inputStream, destFile);
+		stream(inputStream, destFile);
 		validate(dest);
 	}
+	
+	abstract public void stream(InputStream inputStream, File dest) throws Exception;
 	
 	public void validate(URL url) throws Exception {
 		File f = new File(urlToAbsolutePath(url));

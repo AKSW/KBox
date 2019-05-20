@@ -1,5 +1,10 @@
 package org.aksw.kbox;
 
+import java.io.File;
+import java.io.InputStream;
+
+import org.aksw.kbox.utils.StreamUtils;
+
 /**
  * Default install implementation for files.
  * 
@@ -12,4 +17,11 @@ public class ResourceInstall extends AbstractInstall {
 		super(new ResourcePathBinder());
 	}	
 
+	public void stream(InputStream inputStream, File dest) throws Exception {
+		File resourceDir = dest.getParentFile();
+		resourceDir.mkdirs();
+		dest.createNewFile();
+		StreamUtils.stream(inputStream, dest);
+	}
+	
 }

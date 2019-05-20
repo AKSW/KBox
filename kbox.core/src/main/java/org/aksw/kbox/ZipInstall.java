@@ -2,7 +2,6 @@ package org.aksw.kbox;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
 
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -20,10 +19,8 @@ public class ZipInstall extends AbstractInstall {
 	}
 
 	@Override
-	public void install(InputStream inputStream, URL target) throws Exception {
-		File destDir = new File(urlToAbsolutePath(target));
-		destDir.mkdirs();
-		ZipUtil.unpack(inputStream, destDir);
-		validate(target);
+	public void stream(InputStream inputStream, File target) throws Exception {
+		target.mkdirs();
+		ZipUtil.unpack(inputStream, target);
 	}
 }

@@ -13,11 +13,18 @@ import org.aksw.kbox.KBox;
 public class AppPathBinder implements PathBinder {
 	public String urlToAbsolutePath(URL url, String format, String version) throws Exception {
 		return KBox.getResourceFolder()
-				+ File.separator
-				+ format
-				+ File.separator
-				+ version
+				+ pathBuilder(format)
+				+ pathBuilder(version)
 				+ File.separator
 				+ KBox.urlToPath(url);
+	}
+	
+	private String pathBuilder(String string) {
+		StringBuilder pathBuilder = new StringBuilder();
+		if(string != null) {
+			pathBuilder.append(File.separator
+				+ string);
+		}
+		return pathBuilder.toString();
 	}
 }
