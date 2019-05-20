@@ -6,13 +6,14 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.aksw.kbox.apple.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.kibe.tdb.TDBTest;
-import org.aksw.kbox.kns.KNSSever;
-import org.aksw.kbox.kns.RN;
-import org.aksw.kbox.kns.ResourceResolver;
-import org.aksw.kbox.kns.exception.ResourceNotLacatedException;
+import org.aksw.kbox.kns.KBoxKNSServer;
+import org.aksw.kbox.kns.KN;
+import org.aksw.kbox.kns.KNSServer;
 import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 import org.apache.jena.query.ResultSet;
 import org.junit.Assert;
@@ -48,14 +49,40 @@ public class KBoxTest {
 	public void testVisitKBs() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		MockKNSVisitor visitor = new MockKNSVisitor();
-		KNSSever.visit(serverURL, visitor);
-		assertEquals(1, visitor.getKNSVisitedList().size());
+		KNSServer server = new KBoxKNSServer(serverURL);
+		server.visit(visitor);
+		assertEquals(2, visitor.getKNSVisitedList().size());
 	}
 	
 	@Test
 	public void testKNEquals() throws Exception {
-		RN rn = new RN("teste", "a", "b", null, null, null, null);
+		KN rn = new KN("teste", null, "b", null, null, null, null);
 		assertTrue("teste".equals(rn.getName()));
+	}
+	
+	@Test
+	public void testResolveKN() throws Exception {
+		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
+		Assert.assertNull(resolvedKN.getTags());
+		
+		Assert.assertEquals("http://test.org", resolvedKN.getName());
+		Assert.assertEquals("http://target.org", resolvedKN.getTargets().get(0).getURL().toString());
+		Assert.assertEquals(null, resolvedKN.getVersion());
+		Assert.assertEquals(null, resolvedKN.getFormat());
+		
+		resolvedKN = KBox.resolve(serverURL, new URL("http://test2.org"), "format", "version");
+		Assert.assertTrue(resolvedKN.getTags().size() > 0);
+		Assert.assertTrue(resolvedKN.getTags().contains("tag2.test.2"));
+		
+		Assert.assertEquals("label", resolvedKN.getLabel());
+		Assert.assertEquals("version", resolvedKN.getVersion());
+		Assert.assertEquals("format", resolvedKN.getFormat());
+		Assert.assertEquals("owner", resolvedKN.getOwner());
+		Assert.assertEquals("publisher", resolvedKN.getPublisher());
+		Assert.assertEquals("license", resolvedKN.getLicense());
+		Assert.assertTrue(resolvedKN.getTargets().get(0).getChecksum().containsKey("check1"));
+		Assert.assertEquals("34233", resolvedKN.getTargets().get(0).getChecksum().get("check1"));
 	}
 	
 	@Test
@@ -63,7 +90,7 @@ public class KBoxTest {
 		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
 		URL resourceName = new URL("http://test.org");
 		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		File f = KBox.getResource(rnsServerURL, resourceName, RN.DEFAULT_FORMAT, RN.DEFAULT_VERSION, isFactory);
+		File f = KBox.getResource(rnsServerURL, resourceName, null, null, isFactory);
 		Assert.assertTrue(f.delete());
 		Assert.assertNotNull(f);
 	}
@@ -73,49 +100,57 @@ public class KBoxTest {
 		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
 		URL resourceName = new URL("http://foaf");
 		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		KBox.getResource(rnsServerURL, resourceName, null, RN.DEFAULT_VERSION, isFactory);
+		KBox.getResource(rnsServerURL, resourceName, null, null, isFactory);
 		Assert.fail("The query should have returned a ResourceNotFoundException.");
 	}
 	
-	@Test(expected=ResourceNotLacatedException.class)
-	public void testResourceNotLocatedException() throws Exception {
+	@Test(expected=ResourceNotResolvedException.class)
+	public void testResourceNotResolvedException2() throws Exception {
 		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
 		URL resourceName = new URL("http://test.org");
 		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		File resource = KBox.getResource(rnsServerURL, resourceName, RN.DEFAULT_FORMAT, RN.DEFAULT_VERSION, isFactory, false);
+		File resource = KBox.getResource(rnsServerURL, resourceName, "teste", null, isFactory, true);
 		Assert.assertNull(resource);
-		Assert.fail("The query should have returned a ResourceNotLocatedException.");
+	}
+	
+	@Test
+	public void testGetResourceNull() throws Exception {
+		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
+		URL resourceName = new URL("http://test.org");
+		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
+		File resource = KBox.getResource(rnsServerURL, resourceName, null, null, isFactory, false);
+		Assert.assertNull(resource);
 	}
 
 	@Test
 	public void testKNEqualsWithFormat() throws Exception {
-		RN rn = new RN("teste", "a", "b", "c", null, null, null);
+		KN rn = new KN("teste", null, "b", "c", null, null, null);
 		assertTrue(rn.equals("teste","b", "c"));
 	}
 
 	@Test
 	public void testKNEqualsWithFormatWithNull1() throws Exception {
-		RN rn = new RN("teste", "a", "b", "d", null, null, null);
+		KN rn = new KN("teste", null, "b", "d", null, null, null);
 		Assert.assertFalse(rn.equals("teste","b", "e"));
 	}
 
 	@Test
 	public void testKNEqualsWithFormatWithNull2() throws Exception {
-		RN rn = new RN("teste", "a", "b", "c", null, null, null);
+		KN rn = new KN("teste", null, "b", "c", null, null, null);
 		assertTrue(rn.equals("teste","b", null));
 	}
 
 	@Test
 	public void testKNEqualsWithFormatWithNull3() throws Exception {
-		RN rn = new RN("teste", "a", "b", "c", null, null, null);
+		KN rn = new KN("teste", null, "b", "c", null, null, null);
 		Assert.assertFalse(rn.equals("teste", "b", "d"));
 	}
 	
 	@Test
 	public void testResolveURLWithKBoxKNSService() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		RN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
-		assertEquals(resolvedKN.getTarget(), "http://target.org");
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
+		assertEquals(resolvedKN.getTargets().get(0).getURL().toString(), "http://target.org");
 	}
 
 	@Test
@@ -127,9 +162,15 @@ public class KBoxTest {
 	@Test
 	public void testResolveKNS() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		ResourceResolver resolver = new ResourceResolver();
-		RN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"), resolver);		
-		assertEquals(resolvedKN.getTarget(), "http://target.org");
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));		
+		assertEquals(resolvedKN.getTargets().get(0).getURL().toString(), "http://target.org");
+	}
+	
+	@Test
+	public void testResolveKNS2() throws MalformedURLException, Exception {
+		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));		
+		assertEquals(resolvedKN.getTargets().get(0).getURL().toString(), "http://target.org");
 	}
 
 	@Test
@@ -197,14 +238,13 @@ public class KBoxTest {
 			i++;
 		}
 		assertEquals(19, i);
-		
-		rs = KBox.query( 
+		rs = KBox.query(
 				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
 				new URL("http://dbpedia39"));
 		i = 0;
 		while (rs != null && rs.hasNext()) {
-		rs.next();
-		i++;
+			rs.next();
+			i++;
 		}
 		assertEquals(19, i);
 	}
@@ -223,18 +263,59 @@ public class KBoxTest {
 		KBox.visit(mockKNSVisitor);
 		assertEquals(1, mockKNSVisitor.getVisits());
 	}
+	
+	@Test
+	public void listKNSServers4() throws MalformedURLException, Exception {
+		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		MockKNSServerListVisitor mockKNSVisitor = new MockKNSServerListVisitor();
+		URLKNSServerList serverList = new URLKNSServerList(serverURL);
+		serverList.visit(mockKNSVisitor);
+		assertEquals(3, mockKNSVisitor.getVisits());
+		MockKNSVisitor knsVisitor = new MockKNSVisitor();
+		mockKNSVisitor.getServers().get(1).visit(knsVisitor);
+		assertEquals(10, knsVisitor.getKNSVisitedList().size());
+		knsVisitor = new MockKNSVisitor();
+		mockKNSVisitor.getServers().get(2).visit(knsVisitor);
+		assertEquals(10, knsVisitor.getKNSVisitedList().size());
+	}
 
 	@Test
 	public void listKNSServers2() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		KBox.installRNS(serverURL);
+		KBox.installKNS(serverURL);
 		MockKNSServerListVisitor mockKNSVisitor = new MockKNSServerListVisitor();
 		KBox.visit(mockKNSVisitor);
 		assertEquals(2, mockKNSVisitor.getVisits());
-		KBox.removeRNS(serverURL);
+		KBox.removeKNS(serverURL);
 		mockKNSVisitor = new MockKNSServerListVisitor();
 		KBox.visit(mockKNSVisitor);
 		assertEquals(1, mockKNSVisitor.getVisits());
+	}
+	
+	@Test
+	public void listKNSServers3() throws MalformedURLException, Exception {
+		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		KBox.installKNS(serverURL);
+		MockKNSServerListVisitor mockKNSVisitor = new MockKNSServerListVisitor();
+		KBox.visit(mockKNSVisitor);
+		assertEquals(2, mockKNSVisitor.getVisits());
+		KBox.removeKNS(serverURL);
+		mockKNSVisitor = new MockKNSServerListVisitor();
+		KBox.visit(mockKNSVisitor);
+		assertEquals(1, mockKNSVisitor.getVisits());
+	}
+	
+	@Test
+	public void testSPARQLKNSServer() throws MalformedURLException, Exception {
+		Map<String, String> mappings = new HashMap<String, String>();
+		mappings.put(KN.NAME, "?p");
+		SPARQLKNSServer server = new SPARQLKNSServer("http://dbpedia.org/sparql", 
+				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o} limit 10",
+				mappings
+				);
+		MockKNSVisitor knsVisitor = new MockKNSVisitor();
+		server.visit(knsVisitor);
+		assertEquals(10, knsVisitor.getKNSVisitedList().size());
 	}
 
 }

@@ -1,6 +1,6 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.kns.RN;
+import org.aksw.kbox.kns.KN;
 
 public class SearchKBKNSVisitor extends ConsoleKNSServerListVisitor {
 	
@@ -21,7 +21,7 @@ public class SearchKBKNSVisitor extends ConsoleKNSServerListVisitor {
 	}
 
 	@Override
-	public boolean visit(RN kn) {
+	public boolean visit(KN kn) {
 		if(kn.contains(kbNamePattern, format, version)) {
 			print(System.out, kn);
 		}

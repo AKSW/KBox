@@ -3,7 +3,7 @@ package org.aksw.kbox.kibe;
 import java.io.PrintStream;
 
 import org.aksw.kbox.kns.AbstractKNSListVisitor;
-import org.aksw.kbox.kns.RN;
+import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.utils.AssertionUtils;
 
 public class ConsoleKNSServerListVisitor extends AbstractKNSListVisitor {
@@ -19,17 +19,17 @@ public class ConsoleKNSServerListVisitor extends AbstractKNSListVisitor {
 	public ConsoleKNSServerListVisitor(String format, boolean pagination) {
 		this(pagination);
 		AssertionUtils.notNull(new IllegalArgumentException("format"), format);
-		this.toCompare = new String[][]{{RN.FORMAT, format}};
+		this.toCompare = new String[][]{{KN.FORMAT, format}};
 	}
 	
 	public ConsoleKNSServerListVisitor(String format, String version, boolean pagination) {
 		this(format, pagination);
 		AssertionUtils.notNull(new IllegalArgumentException("version"), version);
-		this.toCompare = new String[][]{{RN.FORMAT, format}, 
-			{RN.VERSION, version}};
+		this.toCompare = new String[][]{{KN.FORMAT, format}, 
+			{KN.VERSION, version}};
 	}
 	
-	public void print(PrintStream out, RN kn) {
+	public void print(PrintStream out, KN kn) {
 		AssertionUtils.notNull(new IllegalArgumentException("out"), out);
 		AssertionUtils.notNull(new IllegalArgumentException("kn"), kn);
 		if(lineNumber == 0) {
@@ -46,9 +46,9 @@ public class ConsoleKNSServerListVisitor extends AbstractKNSListVisitor {
 		}
 	}
 
-	public boolean visit(RN kn) throws Exception {
+	public boolean visit(KN kn) throws Exception {
 		AssertionUtils.notNull(new IllegalArgumentException("kn"), kn);
-		if(toCompare == null || RN.equals(kn, toCompare)) {
+		if(toCompare == null || KN.equals(kn, toCompare)) {
 			print(System.out, kn);
 		}
 		return true;

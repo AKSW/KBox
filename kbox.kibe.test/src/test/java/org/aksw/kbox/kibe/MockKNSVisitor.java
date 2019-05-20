@@ -3,20 +3,20 @@ package org.aksw.kbox.kibe;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aksw.kbox.kns.RN;
+import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSVisitor;
 
 public class MockKNSVisitor implements KNSVisitor {
 	
-	private List<RN> visited = new ArrayList<RN>();
+	private List<KN> visited = new ArrayList<KN>();
 
 	@Override
-	public boolean visit(RN kn) {
+	public boolean visit(KN kn) {
 		this.visited.add(kn);
 		return true;
 	}
 	
-	public List<RN> getKNSVisitedList() {
+	public List<KN> getKNSVisitedList() {
 		return visited;
 	}
 

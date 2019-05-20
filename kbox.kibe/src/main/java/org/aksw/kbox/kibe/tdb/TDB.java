@@ -1,5 +1,6 @@
 package org.aksw.kbox.kibe.tdb;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,7 +96,20 @@ public class TDB {
 			stringURLs[i] = url.toString();
 			i++;
 		}
-		TDBLoader.load(dataset.getDatasetGraphToQuery(), Arrays.asList(stringURLs));
+		TDBLoader.load(dataset.getDatasetGraphToQuery(), Arrays.asList(stringURLs), true, false);
+	}
+	
+	/**
+	 * Load a list of files into a database located in a given directory.
+	 * 
+	 * @param dir directory containing the database file.
+	 * @param inputStreams URLs of the files containing the RDF content to be loaded into the database file. 
+	 */
+	public static void bulkload(String dir, InputStream... inputStreams) {
+		DatasetGraphTransaction dataset = (DatasetGraphTransaction) TDBFactory.createDatasetGraph(dir);
+		for(InputStream is : inputStreams) {
+			TDBLoader.load(dataset.getDatasetGraphToQuery(), is, true);
+		}
 	}
 
 	/**

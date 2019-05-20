@@ -15,9 +15,9 @@ import org.aksw.kbox.fusca.exception.ServerStartException;
 import org.aksw.kbox.kibe.console.ConsoleInstallInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotLocatedException;
-import org.aksw.kbox.kns.CustomRNSServerList;
-import org.aksw.kbox.kns.RNSServerListVisitor;
-import org.aksw.kbox.kns.RNService;
+import org.aksw.kbox.kns.CustomKNSServerList;
+import org.aksw.kbox.kns.KNSServer;
+import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
 import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 import org.aksw.kbox.utils.GzipUtils;
@@ -50,10 +50,13 @@ public class Main {
 	public final static String SUB_COMMAND_PRAGMA = "/";
 	public final static String KB_COMMAND_SEPARATOR = ",";
 
+	private final static String KB_WEB_CLIENT = "http://kbox.aksw.org/webclient";
+
 	// COMMANDS
 	private final static String INSTALL_COMMAND = "-install";
 	private final static String KB_COMMAND = "-kb";
-	private final static String RNS_COMMAND = "-rns";
+	private final static String KN_COMMAND = "-kn";
+	private final static String KNS_COMMAND = "-kns";
 	private final static String REMOVE_COMMAND = "-remove";
 	private final static String SERVER_COMMAND = "-server";
 	private final static String LIST_COMMAND = "-list";
@@ -154,7 +157,7 @@ public class Main {
 			try {
 				System.out.println("Installing resource " + resource);
 				URL url = new URL(resource);
-				KBox.install(url);
+				org.aksw.kbox.KBox.install(url);
 				System.out.println("Resource installed.");
 			} catch (Exception e) {
 				String message = "Error installing the resource " + resource + ": " + e.getMessage();
@@ -178,36 +181,47 @@ public class Main {
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KB_COMMAND)
-				&& commands.containsKey(RNS_COMMAND)) {
-			String rnsServer = getSingleParam(commands, RNS_COMMAND);
+				&& commands.containsKey(KNS_COMMAND)) {
+			String knsServer = getSingleParam(commands, KNS_COMMAND);
 			String kbURL = getSingleParam(commands, KB_COMMAND);
-			String format = getSingleParam(commands, FORMAT_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			try {
-				System.out.println("Installing KB " + kbURL + " from RNS " + rnsServer);
-				if (format == null && version == null) {
-					KBox.installFromRNSServer(new URL(kbURL), new URL(rnsServer), inputStreamFactory);
-				}
-				if (format != null) {
-					KBox.installFromRNSServer(new URL(kbURL), new URL(rnsServer), format, inputStreamFactory);
-				} else {
-					KBox.installFromRNSServer(new URL(kbURL), new URL(rnsServer), format, version, inputStreamFactory);
-				}
+				System.out.println("Installing KB " + kbURL + " from KNS " + knsServer);
+				KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), KBox.KIBE_FORMAT, version, inputStreamFactory);
 				System.out.println("KB installed.");
 			} catch (MalformedURLException e) {
 				System.out.println(e.getMessage());
 				logger.error(e);
 			} catch (KBNotLocatedException e) {
-				System.out.println("The knowledge base " + kbURL + " is not available in " + rnsServer + ".");
+				System.out.println("The knowledge base " + kbURL + " is not available in " + knsServer + ".");
 			} catch (Exception e) {
-				String message = "Error installing knowledge base " + kbURL + " from " + rnsServer + ".";
+				String message = "Error installing knowledge base " + kbURL + " from " + knsServer + ".";
+				System.out.println(message);
+				logger.error(message, e);
+			}
+		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KN_COMMAND)
+				&& commands.containsKey(KNS_COMMAND)) {
+			String knsServer = getSingleParam(commands, KNS_COMMAND);
+			String knURL = getSingleParam(commands, KN_COMMAND);
+			String format = getSingleParam(commands, FORMAT_COMMAND);
+			String version = getSingleParam(commands, VERSION_COMMAND);
+			try {
+				System.out.println("Installing KN " + knURL + " from KNS " + knsServer);
+				KBox.installFromKNSServer(new URL(knURL), new URL(knsServer), format, version, inputStreamFactory);
+				System.out.println("KN installed.");
+			} catch (MalformedURLException e) {
+				System.out.println(e.getMessage());
+				logger.error(e);
+			} catch (KBNotLocatedException e) {
+				System.out.println("The knowledge name " + knURL + " is not available in " + knsServer + ".");
+			} catch (Exception e) {
+				String message = "Error installing knowledge name " + knURL + " from " + knsServer + ".";
 				System.out.println(message);
 				logger.error(message, e);
 			}
 		} else if (!commands.containsKey(SPARQL_QUERY_COMMAND) && !commands.containsKey(SERVER_COMMAND)
 				&& commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KB_COMMAND)) {
 			String graphNamesList = getSingleParam(commands, KB_COMMAND);
-			String format = getSingleParam(commands, FORMAT_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
 			URL[] urls;
@@ -215,32 +229,18 @@ public class Main {
 				urls = URLUtils.stringToURL(graphNames);
 				for (URL resourceName : urls) {
 					try {
-						if (format != null && version != null) {
-							File kbFile = KBox.locate(resourceName, format, version);
-							if (kbFile == null) {
-								KBox.install(resourceName, format, version, inputStreamFactory);
-							}
-						} else if (format != null) {
-							File kbFile = KBox.locate(resourceName, format);
-							if (kbFile == null) {
-								KBox.install(resourceName, format, inputStreamFactory);
-							}
+						File kbFile = KBox.getResource(resourceName, KBox.KIBE_FORMAT, version, true);
+						if(kbFile != null) {
+							System.out.println(resourceName + " KB installed.");
 						} else {
-							File kbFile = KBox.locate(resourceName, KBox.KIBE_FORMAT);
-							if (kbFile == null) {
-								KBox.install(resourceName, KBox.KIBE_FORMAT, inputStreamFactory);
-							}
+							System.out.println(resourceName + " KB could NOT be installed.");
 						}
-						System.out.println(resourceName + " KB installed.");
 					} catch (MalformedURLException e) {
 						String message = e.getMessage();
 						System.out.println(message);
 						logger.error(message, e);
 					} catch (Exception e) {
 						String message = "The knowledge base could not be found: URL:" + resourceName;
-						if (format != null) {
-							message += ", format: " + format;
-						}
 						if (version != null) {
 							message += ", " + "vesion: " + version;
 						}
@@ -254,13 +254,13 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(RNS_COMMAND)) {
-			String url = getSingleParam(commands, RNS_COMMAND);
+		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KNS_COMMAND)) {
+			String url = getSingleParam(commands, KNS_COMMAND);
 			try {
 				URL knsURL = new URL(url);
-				System.out.println("Installing RNS " + url);
-				KBox.installRNS(knsURL);
-				System.out.println("RNS installed.");
+				System.out.println("Installing KNS " + url);
+				KBox.installKNS(knsURL);
+				System.out.println("KNS installed.");
 			} catch (MalformedURLException e) {
 				System.out.println(e.getMessage());
 				logger.error(e);
@@ -298,15 +298,15 @@ public class Main {
 					logger.error(message, e);
 				}
 			}
-		} else if (commands.containsKey(LIST_COMMAND) && commands.containsKey(RNS_COMMAND)) {
-			System.out.println("DataNS table list");
-			CustomRNSServerList knsServerList = new CustomRNSServerList();
+		} else if (commands.containsKey(LIST_COMMAND) && commands.containsKey(KNS_COMMAND)) {
+			System.out.println("KNS table list");
+			CustomKNSServerList knsServerList = new CustomKNSServerList();
 			try {
-				knsServerList.visit(new RNSServerListVisitor() {
+				knsServerList.visit(new KNSServerListVisitor() {
 					@Override
-					public boolean visit(RNService knsServer) throws Exception {
+					public boolean visit(KNSServer knsServer) throws Exception {
 						System.out.println("\t - " + knsServer.getURL());
-						return false;
+						return true;
 					}
 				});
 			} catch (Exception e) {
@@ -315,7 +315,7 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if (commands.containsKey(LIST_COMMAND) && !commands.containsKey(RNS_COMMAND)) {
+		} else if (commands.containsKey(LIST_COMMAND) && !commands.containsKey(KNS_COMMAND)) {
 			try {
 				String format = getSingleParam(commands, FORMAT_COMMAND);
 				boolean pagination = commands.containsKey(PAGINATION_COMMAND);
@@ -335,11 +335,11 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if (commands.containsKey(REMOVE_COMMAND) && commands.containsKey(RNS_COMMAND)) {
+		} else if (commands.containsKey(REMOVE_COMMAND) && commands.containsKey(KNS_COMMAND)) {
 			String knsURL = getSingleParam(commands, REMOVE_COMMAND);
 			try {
 				System.out.println("Removing KNS " + knsURL);
-				KBox.removeRNS(new URL(knsURL));
+				KBox.removeKNS(new URL(knsURL));
 				System.out.println("KNS removed.");
 			} catch (Exception e) {
 				String message = "An error occurred while removing the KNS: " + knsURL + ".";
@@ -370,19 +370,19 @@ public class Main {
 			try {
 				KBox.visit(searchVisitor);
 			} catch (Exception e) {
-				String message = "An error occurred while enquiring searching using the pattern: " + pattern;
+				String message = "An error occurred while enquiring search using the pattern: " + pattern;
 				System.out.println(message);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INFO_COMMAND)) {
-			String graph = getSingleParam(commands, INFO_COMMAND);
+			String kn = getSingleParam(commands, INFO_COMMAND);
 			String format = getSingleParam(commands, FORMAT_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
-			InfoKBKNSVisitor visitor = new InfoKBKNSVisitor(graph, format, version);
+			InfoKBKNSVisitor visitor = new InfoKBKNSVisitor(kn, format, version);
 			try {
 				KBox.visit(visitor);
 			} catch (Exception e) {
-				String message = "An error occurred while enquiring information from the graph " + graph;
+				String message = "An error occurred while enquiring information from the KN " + kn;
 				System.out.println(message);
 				logger.error(message, e);
 			}
@@ -395,7 +395,21 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KB_COMMAND)) {
+		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KN_COMMAND)) {
+			String kbURL = getSingleParam(commands, KB_COMMAND);
+			String version = getSingleParam(commands, VERSION_COMMAND);
+			try {
+				if (version != null) {
+					System.out.println(KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT, version));
+				} else {
+					System.out.println(KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT));
+				}
+			} catch (Exception e) {
+				String message = "An error occurred while resolving the KB: " + kbURL;
+				System.out.println(message);
+				logger.error(message, e);
+			}
+		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KN_COMMAND)) {
 			String kbURL = getSingleParam(commands, KB_COMMAND);
 			String format = getSingleParam(commands, FORMAT_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
@@ -409,7 +423,7 @@ public class Main {
 					System.out.println(KBox.locate(new URL(kbURL)));
 				}
 			} catch (Exception e) {
-				String message = "An error occurred while resolving the KB: " + kbURL;
+				String message = "An error occurred while resolving the KN: " + kbURL;
 				System.out.println(message);
 				logger.error(message, e);
 			}
@@ -432,7 +446,8 @@ public class Main {
 				}
 				System.out.println("Loading Model...");
 				Model model = KBox.createModel(inputStreamFactory, install, urls);
-				final String serverAddress = "http://localhost:" + port + "/" + subDomain + "/query";
+				final int servicePort = port;
+				final String serverAddress = "http://localhost:" + servicePort + "/" + subDomain + "/sparql";
 				Listener serverListener = new Listener() {
 					@Override
 					public void starting() {
@@ -441,12 +456,14 @@ public class Main {
 
 					@Override
 					public void started() {
+						System.out.println("SPARQL client accessible at http://localhost:" + servicePort);
 						System.out.println("Service up and running ;-) ...");
 					}
 				};
 				URL webclient = Main.class.getResource("/web-client.zip");
+				URL webClientURL = new URL(KB_WEB_CLIENT);
 				Install webClientInstall = new WebAppInstall(serverAddress);
-				File webInterfaceDir = KBox.getResource(webclient, new ZipLocate(), webClientInstall, true);
+				File webInterfaceDir = KBox.getResource(webclient, webClientURL, new ZipLocate(), webClientInstall, true);
 				Server server = new Server(port, webInterfaceDir.getAbsolutePath(), subDomain, model, serverListener);
 				server.start();
 			} catch (KBDereferencingException e) {
@@ -500,28 +517,32 @@ public class Main {
 		System.out.println("             -zip\t - into a zip file.");
 		System.out.println("   * -convert <file> [<destFile>] -gzip\t - encode a given file.");
 		System.out.println(
-				"   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]\t - Query a given base (e.g. -sparql \"Select ...\" -kb \"KB1,KB2\")");
+				"   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]\t - Query a given knowledge base (e.g. -sparql \"Select ...\" -kb \"KB1,KB2\")");
 		System.out.println(
 				"                                               \t - ps: use -install in case you want to enable the auto-dereference.");
 		System.out.println(
 				"   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install] \t - Start an SPARQL endpoint in the given subDomain containing the given bases.");
 		System.out.println("   * -list [/p]\t - List all available KNS services and knowledge bases.");
-		System.out.println("   * -list -kns\t - List all availables KNS services.");
+		System.out.println("   * -list -kns\t - List all available KNS services.");
 		System.out.println("   * -install <URL>\t - Install a given resource.");
 		System.out.println("   * -install -kns <kns-URL>\t - Install a given KNS service.");
 		System.out.println(
-				"   * -install -kb <kb-URL> [-format <format> [-version <version>]]\t - Install a given knowledge base using the available KNS services to resolve it.");
-		System.out.println("   * -install -kb <kb-URL> -file <kbFile>\t - Install a given kb file in a given URL.");
+				"   * -install -kb <kb-URL> [-version <version>]\t - Install a given knowledge base using the available KNS services to resolve it.");
 		System.out.println(
-				"   * -install -kb <kb-URL> -kns <kns-URL> [-format <format> [-version <version>]]\t - Install a knowledge base from a a given KNS service with the specific format and version.");
+				"   * -install -kn <kn-URL> [-format [-version <version>]]\t - Install a given knowledge base using the available KNS services to resolve it.");
+		System.out.println("   * -install -kb <kb-URL> -file <kbFile>\t - Install a given kb file in a given Kb-URL.");
+		System.out.println(
+				"   * -install -kb <kb-URL> -kns <kns-URL> [-version <version>]\t - Install a knowledge base from a a given KNS service with the specific format and version.");
 		System.out.println("   * -remove -kns <kns-URL>\t - Remove a given KNS service.");
 		System.out.println(
-				"   * -info <kb-URL> [-format <format> [-version <version>]]\t - Gives the information about a specific KB.");
+				"   * -info <URL> [-format <format> [-version <version>]]\t - Gives the information about a specific KB.");
 		System.out.println("   * -locate <URL>\t - returns the local address of the given resource.");
 		System.out.println(
-				"   * -locate -kb <kb-URL> [-format <format> [-version <version>]]\t - returns the local address of the given KB.");
+				"   * -locate -kb <kb-URL> [-version <version>]\t - returns the local address of the given KB.");
 		System.out.println(
-				"   * -search <kb-URL-pattern> [-format <format> [-version <version>]] [/p]\t - Search for all kb-URL containing a given pattern.");
+				"   * -locate -kn <kn-URL> [-format [-version <version>]]\t - returns the local address of the given KB.");
+		System.out.println(
+				"   * -search <kn-URL-pattern> [-format <format> [-version <version>]] [/p]\t - Search for all kb-URL containing a given pattern.");
 		System.out.println("   * -r-dir\t - Show the path to the resource folder.");
 		System.out.println("   * -r-dir <resourceDir>\t - Change the path of the resource folder.");
 		System.out.println("   * -version \t - display KBox version.");

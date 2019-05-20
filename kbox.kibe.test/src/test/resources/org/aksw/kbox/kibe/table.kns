@@ -1,1 +1,2 @@
-{"name": "http://test.org", "target": "http://target.org", "desc": "My desc"}
+{"name": "http://test.org", "target": [{"plain":[{"url":"http://target.org"}]}], "desc": "My desc", "owner":"owner"}
+{"name": "http://test2.org", "label":"label", "target": [{"plain":[{"url":"http://target2.org", "dataId":{"dbpedia":"id1"}, "checksum":{"check1":"34233"}}]}], "desc": "My desc", "tags":["tag2.test.1", "tag2.test.2"], "owner":"owner", "publisher":"publisher", "format":"format", "version": {"name":"version", "tags":["last"]}, "license":"license"}

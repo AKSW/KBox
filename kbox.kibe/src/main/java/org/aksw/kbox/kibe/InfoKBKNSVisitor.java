@@ -1,7 +1,7 @@
 package org.aksw.kbox.kibe;
 
 import org.aksw.kbox.kns.AbstractKNSListVisitor;
-import org.aksw.kbox.kns.RN;
+import org.aksw.kbox.kns.KN;
 
 public class InfoKBKNSVisitor extends AbstractKNSListVisitor {
 	
@@ -20,7 +20,7 @@ public class InfoKBKNSVisitor extends AbstractKNSListVisitor {
 	}
 
 	@Override
-	public boolean visit(RN kn) {
+	public boolean visit(KN kn) {
 		if(kn.equals(kbName, format, version)) {
 			kn.print(System.out);
 			System.out.println("__________________________________________");

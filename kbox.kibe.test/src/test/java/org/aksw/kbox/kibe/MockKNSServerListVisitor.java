@@ -1,20 +1,27 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.kns.RNService;
-import org.aksw.kbox.kns.RNSServerListVisitor;
+import java.util.List;
+import java.util.ArrayList;
 
-public class MockKNSServerListVisitor implements RNSServerListVisitor {
+import org.aksw.kbox.kns.KNSServer;
+import org.aksw.kbox.kns.KNSServerListVisitor;
 
-	private int i = 0;
+public class MockKNSServerListVisitor implements KNSServerListVisitor {
+
+	private List<KNSServer> knsServers = new ArrayList<>();
 	
 	@Override
-	public boolean visit(RNService object) throws Exception {
-		i++;
+	public boolean visit(KNSServer object) throws Exception {
+		knsServers.add(object);
 		return true;
 	}
 	
 	public int getVisits() {
-		return i;
+		return knsServers.size();
+	}
+	
+	public List<KNSServer> getServers() {
+		return knsServers;
 	}
 
 }
