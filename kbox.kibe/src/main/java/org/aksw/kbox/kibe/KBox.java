@@ -610,7 +610,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 			InputStreamFactory isFactory, 
 			boolean install, 
 			URL... knowledgeNames) throws Exception {
-		String[] knowledgeBasesPaths = get(isFactory, install, knowledgeNames);
+		File[] knowledgeBasesPaths = getKB(isFactory, install, knowledgeNames);
 		return TDB.query(sparql, knowledgeBasesPaths);
 	}
 	
@@ -629,11 +629,30 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	public static Model createModel(InputStreamFactory isFactory,
 			boolean install,
 			URL... resourceNames) throws Exception {
-		String[] knowledgeBasesPaths = get(isFactory, install, resourceNames);
+		File[] knowledgeBasesPaths = getKB(isFactory, install, resourceNames);
 		return TDB.createModel(knowledgeBasesPaths);
 	}
 	
 	/**
+	 * 
+	 * Query the given knowledge bases.
+	 * 
+	 * @param isFactory a {@link InputStreamFactory} to stream the given KB in case they are not locally available.
+	 * @param install when true the knowledge base is auto-dereferenced when not found or not otherwise.
+	 * @param resourceNames the knowledge base Names to be queried.
+	 * 
+	 * @return a model with the given RDF KB names.
+	 * 
+	 * @throws Exception if any of the given knowledge bases can not be found.
+	 */
+	public static Model createModel(URL knsServer, URL[] resourceNames, InputStreamFactory isFactory,
+			boolean install) throws Exception {
+		File[] knowledgeBasesPaths = getKB(knsServer, resourceNames, isFactory, install);
+		return TDB.createModel(knowledgeBasesPaths);
+	}
+	
+	/**
+	 * Return the local path(s) from the given knowledge name(s).
 	 * 
 	 * @param isFactory a {@link InputStreamFactory} to stream the given KB in case they are not locally available.
 	 * @param install flag indicating to install the KB in case it cannot be located.
@@ -642,14 +661,14 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if an error occurs during resolving or dereferencing any of the KBs.
 	 */
-	public static String[] get(InputStreamFactory isFactory, 
+	public static File[] getKB(InputStreamFactory isFactory, 
 			boolean install, 
 			URL... urls) throws Exception {
-		String[] knowledgeBasesPaths = new String[urls.length];
+		File[] knowledgeBasesPaths = new File[urls.length];
 		int i = 0;
 		Locate kbLocate = new AppLocate();
 		DefaultKNSServerList knsServerList = new DefaultKNSServerList();
-		AppInstall installFactory = new ZipAppInstall();
+		InstallFactory installFactory = new DefaultInstallFactory();
 		for(URL knowledgeBase : urls) {
 			try {
 				File kbDir = getResource(knsServerList,
@@ -660,7 +679,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 						installFactory,
 						isFactory,
 						install);
-				knowledgeBasesPaths[i] = kbDir.getAbsolutePath();
+				knowledgeBasesPaths[i] = kbDir;
 				i++;
 			} catch (ResourceNotResolvedException e) {
 				throw new KBNotResolvedException("The Knowledge base " + knowledgeBase.toString() + " is not installed."
@@ -673,6 +692,43 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		return knowledgeBasesPaths;
 	}
 	
+	/**
+	 * Return the local path(s) from the given knowledge name(s).
+	 * 
+	 * @param isFactory a {@link InputStreamFactory} to stream the given KB in case they are not locally available.
+	 * @param install flag indicating to install the KB in case it cannot be located.
+	 * @param kns an array containing the KBs' KN(s) {@link URL}(s).
+	 * @return An array containing the relative path to the KB(s).
+	 * 
+	 * @throws Exception if an error occurs during resolving or dereferencing any of the KBs.
+	 */
+	public static File[] getKB(URL knsServer, URL[] kns, InputStreamFactory isFactory, boolean install) throws Exception {
+		File[] knowledgeBasesPaths = new File[kns.length];
+		int i = 0;
+		Locate kbLocate = new AppLocate();
+		InstallFactory installFactory = new DefaultInstallFactory();
+		for(URL knowledgeBase : kns) {
+			try {
+				File kbDir = getResource(knsServer,
+						knowledgeBase,
+						kbLocate,
+						KIBE_FORMAT,
+						KIBE_VERSION,
+						installFactory,
+						isFactory,
+						install);
+				knowledgeBasesPaths[i] = kbDir;
+				i++;
+			} catch (ResourceNotResolvedException e) {
+				throw new KBNotResolvedException("The Knowledge base " + knowledgeBase.toString() + " is not installed."
+						+ " You can install it setting the flag install.");
+			} catch (ResourceDereferencingException e) {
+				throw new KBDereferencingException(knowledgeBase.toString(), e);
+			}
+			
+		}
+		return knowledgeBasesPaths;
+	}
 	
 	
 	/**
@@ -745,8 +801,7 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * @throws Exception if any of the given knowledge bases can not be found.
 	 */
 	public static ResultSet query(String sparql, URL... knowledgeNames) throws Exception {
-		Model model = createModel(new ConsoleInstallInputStreamFactory(), true, knowledgeNames);
-		return query(sparql, model);
+		return query(sparql, true, knowledgeNames);
 	}
 	
 	/**
@@ -762,6 +817,39 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 */
 	public static ResultSet query(String sparql, boolean install, URL... knowledgeNames) throws Exception {
 		Model model = createModel(new ConsoleInstallInputStreamFactory(), install, knowledgeNames);
+		return query(sparql, model);
+	}
+	
+	/**
+	 * Query the given knowledge bases.
+	 * 
+	 * @param sparql the SPARQL query.
+	 * @param install specify if the knowledge base should be installed (true) or not (false).
+	 * @param knowledgeNames the RDF KB names to be queried.
+	 * 
+	 * @return a result set with the given query solution.
+	 * 
+	 * @throws Exception if any of the given knowledge bases can not be found.
+	 */
+	public static ResultSet query(URL knsServer, URL[] knowledgeNames, String sparql, boolean install) throws Exception {
+		Model model = createModel(knsServer, knowledgeNames, new ConsoleInstallInputStreamFactory(), install);
+		return query(sparql, model);
+	}
+	
+	/**
+	 * Query the given knowledge bases.
+	 * 
+	 * @param sparql the SPARQL query.
+	 * @param install specify if the knowledge base should be installed (true) or not (false).
+	 * @param knowledgeName the RDF KB name to be queried.
+	 * 
+	 * @return a result set with the given query solution.
+	 * 
+	 * @throws Exception if any of the given knowledge bases can not be found.
+	 */
+	public static ResultSet query(URL knsServer, URL knowledgeName, String sparql, boolean install) throws Exception {
+		URL[] knsArray = new URL[]{knowledgeName};
+		Model model = createModel(knsServer, knsArray, new ConsoleInstallInputStreamFactory(), install);
 		return query(sparql, model);
 	}
 
@@ -862,6 +950,12 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	public static void visit(KNSServerListVisitor visitor) throws Exception {
 		DefaultKNSServerList kibeKNSServerList = new DefaultKNSServerList();
 		kibeKNSServerList.visit(visitor);
+	}
+	
+	public static File getResource(URL knsServer, URL resourceName, String format, String version, boolean install) throws Exception {
+		InputStreamFactory inputStreamFactory = new ConsoleInstallInputStreamFactory();
+		DefaultInstallFactory installFactory = new DefaultInstallFactory();
+		return getResource(knsServer, resourceName, format, version, inputStreamFactory, installFactory, install);		
 	}
 
 	public static File getResource(URL resourceName, String format, String version, boolean install) throws Exception {

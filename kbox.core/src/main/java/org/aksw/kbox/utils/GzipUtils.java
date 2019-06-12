@@ -18,15 +18,17 @@ public class GzipUtils {
         }
     }
     
-    public static void pack(InputStream inputStream, File destPath) throws IOException {
-        try (GzipCompressorOutputStream out = new GzipCompressorOutputStream(new FileOutputStream(destPath))){
-            IOUtils.copy(inputStream, out);
+    public static void pack(InputStream input, File output) throws IOException {
+        try (GzipCompressorOutputStream out = new GzipCompressorOutputStream(new FileOutputStream(output))){
+            IOUtils.copy(input, out);
         }
     }
 
-    public static void unpack(InputStream inputStream, File output) throws IOException {
-        try (GzipCompressorInputStream in = new GzipCompressorInputStream(inputStream)){
-            IOUtils.copy(in, new FileOutputStream(output));
+    public static void unpack(InputStream input, File output) throws IOException {
+        try (GzipCompressorInputStream in = new GzipCompressorInputStream(input)){
+        	try(FileOutputStream out = new FileOutputStream(output)){
+        		IOUtils.copy(in, out);
+        	}
         }
     }
 }

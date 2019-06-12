@@ -20,6 +20,8 @@ public class ResourceAppInstall extends AbstractAppInstall {
 	protected void createPath(File destPath) throws Exception {		 
 		File parentDir = new File(destPath.getParent());
 		parentDir.mkdirs();
-		destPath.createNewFile();
+		if(!destPath.exists() && !destPath.createNewFile()) {
+			throw new Exception("File cannot be created. Provided path might be invalid.");
+		}
 	}
 }

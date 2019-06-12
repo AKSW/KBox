@@ -51,7 +51,7 @@ public class KBoxTest {
 		MockKNSVisitor visitor = new MockKNSVisitor();
 		KNSServer server = new KBoxKNSServer(serverURL);
 		server.visit(visitor);
-		assertEquals(2, visitor.getKNSVisitedList().size());
+		assertEquals(7, visitor.getKNSVisitedList().size());
 	}
 	
 	@Test
@@ -67,7 +67,7 @@ public class KBoxTest {
 		Assert.assertNull(resolvedKN.getTags());
 		
 		Assert.assertEquals("http://test.org", resolvedKN.getName());
-		Assert.assertEquals("http://target.org", resolvedKN.getTargets().get(0).getURL().toString());
+		Assert.assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", resolvedKN.getTargets().get(0).getURL().toString());
 		Assert.assertEquals(null, resolvedKN.getVersion());
 		Assert.assertEquals(null, resolvedKN.getFormat());
 		
@@ -89,8 +89,8 @@ public class KBoxTest {
 	public void testGetResource() throws Exception {
 		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
 		URL resourceName = new URL("http://test.org");
-		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		File f = KBox.getResource(rnsServerURL, resourceName, null, null, isFactory);
+		URL knsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
+		File f = KBox.getResource(knsServerURL, resourceName, null, null, isFactory);
 		Assert.assertTrue(f.delete());
 		Assert.assertNotNull(f);
 	}
@@ -150,7 +150,8 @@ public class KBoxTest {
 	public void testResolveURLWithKBoxKNSService() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
-		assertEquals(resolvedKN.getTargets().get(0).getURL().toString(), "http://target.org");
+		assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", 
+				resolvedKN.getTargets().get(0).getURL().toString());
 	}
 
 	@Test
@@ -163,20 +164,36 @@ public class KBoxTest {
 	public void testResolveKNS() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
 		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));		
-		assertEquals(resolvedKN.getTargets().get(0).getURL().toString(), "http://target.org");
+		assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", 
+				resolvedKN.getTargets().get(0).getURL().toString());
 	}
 	
 	@Test
 	public void testResolveKNS2() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));		
-		assertEquals(resolvedKN.getTargets().get(0).getURL().toString(), "http://target.org");
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
+		assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", 
+				resolvedKN.getTargets().get(0).getURL().toString());
 	}
 
 	@Test
 	public void testNewDir() throws Exception {
 		File f = KBox.newDir(new URL("http://dbpedia.org/en/full"));
 		assertTrue(f.getAbsolutePath().endsWith("en" + File.separator + "full"));
+	}
+	
+	@Test
+	public void testInstallBZ2() throws Exception {
+		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		File fileDir = KBox.getResource(knsServerURL, new URL("http://dbpedia.org"), "xml", "0", true);
+		Assert.assertNotNull(fileDir);
+	}
+	
+	@Test
+	public void testInstallZIP() throws Exception {
+		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		File fileDir = KBox.getResource(knsServerURL, new URL("http://dbpedia.org/zip"), "xml", "0", true);
+		Assert.assertNotNull(fileDir);
 	}
 
 	@Test
@@ -238,19 +255,62 @@ public class KBoxTest {
 			i++;
 		}
 		assertEquals(19, i);
-		rs = KBox.query(
-				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
-				new URL("http://dbpedia39"));
-		i = 0;
+	}
+	
+	@Test
+	public void testQueryKBXML() throws Exception {
+		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		ResultSet rs = KBox.query(knsServerURL, new URL("http://dbpedia.org/3.9/xml"), 
+				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", true);
+		int i = 0;
 		while (rs != null && rs.hasNext()) {
 			rs.next();
 			i++;
 		}
 		assertEquals(19, i);
 	}
-
+	
+	@Test
+	public void testQueryKBZip() throws Exception {
+		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		ResultSet rs = KBox.query(knsServerURL, new URL("http://dbpedia.org/3.9/zip"),
+				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", true);
+		int i = 0;
+		while (rs != null && rs.hasNext()) {
+			rs.next();
+			i++;
+		}
+		assertEquals(19, i);
+	}
+	
+	@Test
+	public void testQueryKBXMLWithTag() throws Exception {
+		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		ResultSet rs = KBox.query(knsServerURL, new URL("http://dbpedia.org"),
+				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", true);
+		int i = 0;
+		while (rs != null && rs.hasNext()) {
+			rs.next();
+			i++;
+		}
+		assertEquals(19, i);
+	}
+	
+	@Test
+	public void testQueryKBBZ2() throws Exception {
+		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
+		ResultSet rs = KBox.query(knsServerURL, new URL("http://dbpedia.org/3.9/bz2"),
+				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", true);
+		int i = 0;
+		while (rs != null && rs.hasNext()) {
+			rs.next();
+			i++;
+		}
+		assertEquals(19, i);
+	}
+	
 	@Test(expected=Exception.class)
-	public void testQueryNotInstalledKB() throws Exception {
+	public void testQueryKB() throws Exception {
 		KBox.query(
 					"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
 					new URL("http://dbpedia39.o"));

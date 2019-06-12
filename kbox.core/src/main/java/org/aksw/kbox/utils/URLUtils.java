@@ -18,10 +18,13 @@ public class URLUtils {
 	
 	public static boolean checkStatus(URL url, int code) throws IOException {
 		URLConnection conn = url.openConnection();
-		HttpURLConnection huc =  (HttpURLConnection) url.openConnection(); 
-		huc.setRequestMethod("HEAD");
-		conn.connect();
-		return huc.getResponseCode() == code;
+		if(conn instanceof HttpURLConnection) {
+			HttpURLConnection huc =  (HttpURLConnection) conn;
+			huc.setRequestMethod("HEAD");
+			conn.connect();
+			return huc.getResponseCode() == code;
+		}
+		return false;
 	}
 	
 	public static URL[] fileToURL(File... files) throws MalformedURLException {

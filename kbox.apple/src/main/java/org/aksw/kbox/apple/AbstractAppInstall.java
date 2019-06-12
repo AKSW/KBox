@@ -30,7 +30,7 @@ public abstract class AbstractAppInstall extends AppPathBinder implements AppIns
 	public void install(URL resource, URL dest, String format, String version, InputStreamFactory isFactory) throws Exception {
 		URL forwardURL = URLUtils.getURLForward(resource);
 		try(InputStream is = isFactory.get(forwardURL)) {
-			install(is, dest, format, version);			
+			install(is, dest, format, version);
 		}
 	}
 	

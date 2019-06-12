@@ -4,12 +4,20 @@ import java.io.File;
 import java.net.URL;
 
 import org.aksw.kbox.InputStreamFactory;
-import org.aksw.kbox.apple.AppLocate;
 import org.aksw.kbox.apple.AppInstall;
+import org.aksw.kbox.apple.AppLocate;
 import org.aksw.kbox.apple.Locate;
 import org.aksw.kbox.kns.exception.ResourceDereferencingException;
 import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 
+/**
+ * 
+ * @author http://emarx.org
+ * 
+ * @TODO all getResource methods should be mutual dependent 
+ * @TODO the method install should also implement locate
+ * 
+ */
 public class KBox extends org.aksw.kbox.apple.KBox {	
 
 	/**
@@ -75,7 +83,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * The first RNS to be checked is the default RNS, 
 	 * thereafter the user's RNS.
 	 * 
-	 * @param rnsServerList list of RN Services.
+	 * @param knsServerList list of RN Services.
 	 * @param resourceName the {@link URL} to be resolved by the RNS.	 
 	 * @param format the resource format. 
 	 * @param version the resource version.
@@ -84,12 +92,12 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static KN resolve(KNSServerList rnsServerList, 
+	public static KN resolve(KNSServerList knsServerList, 
 			URL resourceName, 
 			String format, 
 			String version) throws Exception {
 		KNSServerListResolverVisitor resolveVisitor = new KNSServerListResolverVisitor(resourceName, format, version);
-		rnsServerList.visit(resolveVisitor);
+		knsServerList.visit(resolveVisitor);
 		return resolveVisitor.getResolvedKN();
 	}
 	
@@ -105,9 +113,9 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static KN resolve(URL rnsServerURL, 
+	public static KN resolve(URL knsServerURL, 
 			URL resourceName) throws Exception {
-		return resolve(rnsServerURL, resourceName, null, null);
+		return resolve(knsServerURL, resourceName, null, null);
 	}
 	
 	/**
@@ -135,7 +143,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * The first RNS to be checked is the default RNS, 
 	 * thereafter the user's RNS.
 	 * 
-	 * @param rnsServerURL the {@link URL}  of the RNS Server.
+	 * @param knsServerURL the {@link URL}  of the RNS Server.
 	 * @param resourceURL the {@link URL}  to be resolved by the RNS.	 
 	 * @param format the resource format. 
 	 * @param version the resource version. 
@@ -145,11 +153,11 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @throws {@link Exception} if any error occurs during the operation.
 	 */
-	public static KN resolve(URL rnsServerURL, 
+	public static KN resolve(URL knsServerURL, 
 			URL resourceURL, 
 			String format, 
 			String version) throws Exception {
-		KNSServer knsServer = new KBoxKNSServer(rnsServerURL);
+		KNSServer knsServer = new KBoxKNSServer(knsServerURL);
 		KNSResolverVisitor resolver = new KNSResolverVisitor(resourceURL, format, version);
 		knsServer.visit(resolver);
 		return resolver.getResolvedKN();
@@ -263,19 +271,19 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @throws Exception if some error occurs during while getting the resource. 
 	 */
-	public static File getResource(URL rnsServerURL,
+	public static File getResource(URL knsServerURL,
 			URL resourceName,
 			String format, 
 			String version,
 			InputStreamFactory isFactory
 			) throws Exception {
-		return getResource(rnsServerURL, resourceName, format, version, isFactory, true);
+		return getResource(knsServerURL, resourceName, format, version, isFactory, true);
 	}
 	
 	/**
 	 * Get the resource from the given RNS Server {@link URL} with the given format and version.
 	 * 
-	 * @param rnsServerURL the RNS Server {@link URL}.
+	 * @param knsServerURL the KNS Server {@link URL}.
 	 * @param resourceName the {@link URL} of the resource. 
 	 * @param format the resource format.
 	 * @param version the resource version.
@@ -286,14 +294,14 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 	 * 
 	 * @throws Exception if some error occurs during while getting the resource. 
 	 */
-	public static File getResource(URL rnsServerURL, 
+	public static File getResource(URL knsServerURL, 
 			URL resourceName, 
 			String format, 
 			String version, 
 			InputStreamFactory isFactory,
 			boolean install
 			) throws Exception {
-		final KNSServer knsServer = new KBoxKNSServer(rnsServerURL);
+		final KNSServer knsServer = new KBoxKNSServer(knsServerURL);
 		KNSServerList knsServerList = new KNSServerList() {
 			@Override
 			public boolean visit(KNSServerListVisitor visitor) throws Exception {
@@ -302,6 +310,40 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 			}
 		};
 		return getResource(knsServerList, resourceName, format, version, isFactory, install);
+	}
+	
+	/**
+	 * Get the resource from the given RNS Server {@link URL} with the given format and version.
+	 * 
+	 * @param knsServerURL the KNS Server {@link URL}.
+	 * @param resourceName the {@link URL} of the resource. 
+	 * @param format the resource format.
+	 * @param version the resource version.
+	 * @param isFactory the {@link InputStreamFactory} to open the resource file stream.
+	 * @param installFactory the {@link InstallFactory} to instantiate the install method.
+	 * @param install true if the resource should be installed and false otherwise.
+	 * 
+	 * @return the resource {@link File} or null if the resource does not exist or could not be located. 
+	 * 
+	 * @throws Exception if some error occurs during while getting the resource. 
+	 */
+	public static File getResource(URL knsServerURL, 
+			URL resourceName, 
+			String format, 
+			String version, 
+			InputStreamFactory isFactory,
+			InstallFactory installFactory,
+			boolean install
+			) throws Exception {
+		final KNSServer knsServer = new KBoxKNSServer(knsServerURL);
+		KNSServerList knsServerList = new KNSServerList() {
+			@Override
+			public boolean visit(KNSServerListVisitor visitor) throws Exception {
+				visitor.visit(knsServer);
+				return false;
+			}
+		};
+		return getResource(knsServerList, resourceName, format, version, isFactory, installFactory, install);
 	}
 	
 	public static File getResource(KNSServerList knsServerList, 
@@ -335,15 +377,41 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 			KN resolvedKN = resolve(knsServerList, resourceName, format, version);
 			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
 			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
+			URL resourceNameURL = new URL(resolvedKN.getName());
 			try {
-				install(resolvedKN.getTargets().get(0).getURL(), resourceName, format, version, installMethod, isFactory);
+				install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
 			} catch (Exception e) {
 				throw new ResourceDereferencingException(resourceName.toString(), e);
 			}
-			localDataset = locate(resourceName, format, version, locateMethod);
+			localDataset = locate(resourceNameURL, format, version, locateMethod);
 		}
 		return localDataset;
    }
+   
+   public static File getResource(URL knsServerURL, 
+			URL resourceName, 
+			Locate locateMethod,
+			String format,
+			String version,
+			AppInstall installMethod,
+			InputStreamFactory isFactory,
+			boolean install)
+			throws Exception {
+		File localDataset = locate(resourceName, format, version, locateMethod);
+		if(localDataset == null && install) {
+			KN resolvedKN = resolve(knsServerURL, resourceName, format, version);
+			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
+			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
+			URL resourceNameURL = new URL(resolvedKN.getName());
+			try {
+				install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
+			} catch (Exception e) {
+				throw new ResourceDereferencingException(resourceName.toString(), e);
+			}
+			localDataset = locate(resourceNameURL, format, version, locateMethod);
+		}
+		return localDataset;
+  }
    
    public static File getResource(KNSServerList knsServerList, 
 			URL resourceName, 
@@ -359,13 +427,40 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 			KN resolvedKN = resolve(knsServerList, resourceName, format, version);
 			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
 			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
+			URL resourceNameURL = new URL(resolvedKN.getName());
 			try {
 				AppInstall installMethod = installFactory.get(resolvedKN);
-				install(resolvedKN.getTargets().get(0).getURL(), resourceName, format, version, installMethod, isFactory);
+				install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
 			} catch (Exception e) {
 				throw new ResourceDereferencingException(resourceName.toString(), e);
 			}
-			localDataset = locate(resourceName, format, version, locateMethod);	
+			localDataset = locate(resourceNameURL, format, version, locateMethod);
+		}
+		return localDataset;
+	}
+   
+   public static File getResource(URL knsServerURL, 
+			URL resourceName, 
+			Locate locateMethod,
+			String format,
+			String version,
+			InstallFactory installFactory,
+			InputStreamFactory isFactory,
+			boolean install)
+			throws Exception {
+		File localDataset = locate(resourceName, format, version, locateMethod);
+		if(localDataset == null && install) {
+			KN resolvedKN = resolve(knsServerURL, resourceName, format, version);
+			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
+			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
+			URL resourceNameURL = new URL(resolvedKN.getName());
+			try {
+				AppInstall installMethod = installFactory.get(resolvedKN);
+				install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
+			} catch (Exception e) {
+				throw new ResourceDereferencingException(resourceName.toString(), e);
+			}
+			localDataset = locate(resourceNameURL, format, version, locateMethod);	
 		}
 		return localDataset;
 	}

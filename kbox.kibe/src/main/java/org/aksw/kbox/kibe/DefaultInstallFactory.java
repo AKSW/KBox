@@ -1,19 +1,21 @@
 package org.aksw.kbox.kibe;
 
-import org.aksw.kbox.apple.GZipAppInstall;
-import org.aksw.kbox.apple.ResourceAppInstall;
-import org.aksw.kbox.apple.ZipAppInstall;
-import org.aksw.kbox.kns.InstallFactory;
+import org.apache.jena.riot.Lang;
 
-public class DefaultInstallFactory extends InstallFactory {
+public class DefaultInstallFactory extends org.aksw.kbox.kns.DefaultInstallFactory {
 
 	public DefaultInstallFactory() {
-		put("kb", new ZipAppInstall());
-		put("gzip", new GZipAppInstall());
-		put("zip", new ZipAppInstall());
-		put("plain", new ResourceAppInstall());
 		put("rdf2kb", new RDF2KBInstall());
-		put("bz2rdf2kb", new RDF2KBInstall());
+		put("bz2xmlrdf2kb", new BZ2RDF2KBInstall(Lang.RDFXML));
+		put("zipxmlrdf2kb", new CompressedRDF2KBInstall(Lang.RDFXML));
+		put("bz2jsonld2kb", new BZ2RDF2KBInstall(Lang.JSONLD));
+		put("zipjsonld2kb", new CompressedRDF2KBInstall(Lang.JSONLD));
+		put("bz2nq2kb", new BZ2RDF2KBInstall(Lang.NQ));
+		put("zipnqf2kb", new CompressedRDF2KBInstall(Lang.NQ));
+		put("bz2ttl2kb", new BZ2RDF2KBInstall(Lang.TTL));
+		put("zipttl2kb", new CompressedRDF2KBInstall(Lang.TTL));
+		put("bz2nt2kb", new BZ2RDF2KBInstall(Lang.NT));
+		put("zipnt2kb", new CompressedRDF2KBInstall(Lang.NT));
 	}
 
 }

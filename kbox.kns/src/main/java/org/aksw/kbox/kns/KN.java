@@ -1,8 +1,10 @@
 package org.aksw.kbox.kns;
 
+import java.io.File;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,6 +118,13 @@ public class KN extends KNComparator {
 		this.targets = sources;
 	}
 	
+	/**
+	 * 
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 * TODO: implement mirror.
+	 */
 	public static KN parse(String json) throws Exception {
 		JSONParser jsonParser = new JSONParser();
 		Reader stringReader = new StringReader(json);
@@ -124,38 +133,49 @@ public class KN extends KNComparator {
 		JSONArray jsonTarget = (JSONArray) jsonObject.get(TARGET);
 		java.util.List<Target> sources = new ArrayList<Target>();
 		if(jsonTarget != null) {
-			for(int s = 0; s < jsonTarget.size(); s++) {
-				JSONObject jsonSource = (JSONObject) jsonTarget.get(s);
-				String install = (String) jsonSource.keySet().toArray()[0];
-				JSONArray jsonSources = (JSONArray) jsonSource.values().toArray()[0];
-				if(jsonSources != null) {
-					for(int i= 0; i < jsonSources.size(); i++) {
-						JSONObject jsonSourceEntry = (JSONObject)jsonSources.get(i);
-						String url = (String)jsonSourceEntry.get(URL);
-						JSONObject jsonChecksum = (JSONObject) jsonSourceEntry.get(CHECKSUM);
-						Map<String, String> checksum = new HashMap<String, String>();
-						if(jsonChecksum != null) {
-							for(int c = 0; c < jsonChecksum.keySet().size(); c++) {
-								String key = (String) jsonChecksum.keySet().toArray()[c];
-								String value = (String) jsonChecksum.values().toArray()[c];
-								checksum.put(key, value);
+			for(int m = 0; m < jsonTarget.size(); m++) {
+				JSONArray jsonMirror = (JSONArray) jsonTarget.get(m);
+				for(int s = 0; s < jsonMirror.size(); s++) {
+					JSONObject jsonSource = (JSONObject) jsonMirror.get(s);
+					String install = (String) jsonSource.keySet().toArray()[0];
+					JSONArray jsonSources = (JSONArray) jsonSource.values().toArray()[0];
+					if(jsonSources != null) {
+						for(int i= 0; i < jsonSources.size(); i++) {
+							JSONObject jsonSourceEntry = (JSONObject)jsonSources.get(i);
+							String url = (String)jsonSourceEntry.get(URL);
+							JSONObject jsonChecksum = (JSONObject) jsonSourceEntry.get(CHECKSUM);
+							Map<String, String> checksum = new HashMap<String, String>();
+							if(jsonChecksum != null) {
+								for(int c = 0; c < jsonChecksum.keySet().size(); c++) {
+									String key = (String) jsonChecksum.keySet().toArray()[c];
+									String value = (String) jsonChecksum.values().toArray()[c];
+									checksum.put(key, value);
+								}
 							}
-						}
-						JSONObject jsonDataId = (JSONObject) jsonSourceEntry.get(DATAID);
-						Map<String, String> dataId = new HashMap<String, String>();
-						if(jsonDataId != null) {
-							for(int di = 0; di < jsonDataId.keySet().size(); di++) {
-								String key = (String) jsonDataId.keySet().toArray()[di];
-								String value = (String) jsonDataId.values().toArray()[di];
-								dataId.put(key, value);
+							JSONObject jsonDataId = (JSONObject) jsonSourceEntry.get(DATAID);
+							Map<String, String> dataId = new HashMap<String, String>();
+							if(jsonDataId != null) {
+								for(int di = 0; di < jsonDataId.keySet().size(); di++) {
+									String key = (String) jsonDataId.keySet().toArray()[di];
+									String value = (String) jsonDataId.values().toArray()[di];
+									dataId.put(key, value);
+								}
 							}
+							Target source = new Target();
+							source.setInstall(install);
+							source.setChecksum(checksum);
+							source.setDataId(dataId);
+							URI uri = new URI(url);
+							URL knName = null;
+							if(uri.isAbsolute()) {
+								knName = new URL(url);
+							} else {
+								File file = new File(url);
+								knName = file.toURI().toURL();
+							}
+							source.setURL(knName);
+							sources.add(source);
 						}
-						Target source = new Target();
-						source.setInstall(install);
-						source.setChecksum(checksum);
-						source.setDataId(dataId);
-						source.setURL(new URL(url));
-						sources.add(source);
 					}
 				}
 			}
@@ -266,25 +286,38 @@ public class KN extends KNComparator {
 	}
 
 	public boolean equals(String name) {
-		return (this.name == name ||
-				(this.name != null && this.name.equals(name)));
+		return (this.name == name || 
+				(this.name != null && (this.name.equals(name) 
+						|| tags.contains(name))));
 	}
 
 	public boolean equals(String name, String format, String version) {
-		return this.name.equals(name) &&
+		return (this.name.equals(name) || (tags!= null && tags.contains(name))) &&
 				(format == null || format.equals(this.format)) &&
 				(version == null || version.equals(this.version));
 	}
 
 	public boolean contains(String name, String format, String version) {
-		return this.name.contains(name) &&
+		return (this.name.contains(name) || tagContains(name)) &&
 				(format == null || format.equals(this.format)) &&
 				(version == null || version.equals(this.version));
+	}
+	
+	private boolean tagContains(String pattern) {
+		if(tags != null) {
+			for(String tag : tags) {
+				if(tag.contains(pattern)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void print(PrintStream out) {
 		println(out, "KNS:", kns);
-		println(out, "KB:", name);
+		println(out, "KN:", name);
+		println(out, "Tags:", tags);
 		println(out, "label:", label);
 		println(out, "Description:", desc);
 		println(out, "Subsets:", subsets);
@@ -295,9 +328,9 @@ public class KN extends KNComparator {
 		println(out, "Version:", version);
 	}
 	
-	private void println(PrintStream out, String label, String variable) {
+	private void println(PrintStream out, String label, Object variable) {
 		if(variable != null) {
-			out.println(label + variable);
+			out.println(label + variable.toString());
 		}
 	}
 

@@ -10,6 +10,7 @@ public class DefaultInputStreamFactory implements InputStreamFactory {
 
 	@Override
 	public InputStream get(URL url) throws IOException {
+		System.setProperty("http.agent", "Chrome");
 		return url.openStream();
 	}
 

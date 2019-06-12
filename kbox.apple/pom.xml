@@ -25,6 +25,11 @@
 		    <artifactId>kbox.core</artifactId>
 		    <version>0.0.2-alpha</version>
 	  </dependency>
+	  <dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>commons-compress</artifactId>
+	    <version>1.18</version>
+	  </dependency>
   </dependencies> 
   <repositories>
     <repository>

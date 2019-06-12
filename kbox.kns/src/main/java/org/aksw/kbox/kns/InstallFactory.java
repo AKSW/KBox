@@ -20,11 +20,11 @@ public class InstallFactory {
 	}
 	
 	public void put(String id, AppInstall install) {
-		methods.put(id, install);
+		methods.put(id.toLowerCase(), install);
 	}
 	
 	public AppInstall get(String format) {
-		return methods.get(format);
+		return methods.get(format.toLowerCase());
 	}
 
 }
