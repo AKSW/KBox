@@ -25,7 +25,7 @@ public class BZ2RDF2KBInstall extends AbstractDirectoryDataInstall {
 	@Override
 	public void install(InputStream source, File target) throws Exception {
 		try(BufferedInputStream in = new BufferedInputStream(source)) {
-			try (BZip2CompressorInputStream bzIn = new BZip2CompressorInputStream(in);) {		    
+			try (BZip2CompressorInputStream bzIn = new BZip2CompressorInputStream(in)) {		    
 		        TDB.bulkload(target.getAbsolutePath(), bzIn, lang);
 			}
 		}

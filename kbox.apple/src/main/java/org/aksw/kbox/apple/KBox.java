@@ -12,6 +12,12 @@ import org.aksw.kbox.InputStreamFactory;
  *
  */
 public class KBox extends org.aksw.kbox.KBox {
+	
+	
+	static {
+		System.setProperty("http.agent", "Chrome");
+	}
+	
 	/**
 	 * Creates a mirror for the given file in a given {@link URL}. This function allows
 	 * KBox to serve files to applications, acting as proxy to the mirrored
