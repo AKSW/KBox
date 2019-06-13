@@ -14,10 +14,12 @@ import org.apache.commons.compress.utils.IOUtils;
 
 public class UncompressUtil {
 	public static void unpack(InputStream is, File output) throws IOException, CompressorException {
-	    BufferedInputStream bis = new BufferedInputStream(is);
-	    CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis);
-	    try(OutputStream out = new FileOutputStream(output)) {
-	    	IOUtils.copy(input, out);
+	    try(BufferedInputStream bis = new BufferedInputStream(is)) {
+		    try(CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis)) {
+			    try(OutputStream out = new FileOutputStream(output)) {
+			    	IOUtils.copy(input, out);
+			    }
+		    }
 	    }
 	}
 }

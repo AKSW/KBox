@@ -3,6 +3,7 @@ package org.aksw.kbox.apple;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.InvalidParameterException;
 
 import org.aksw.kbox.InputStreamFactory;
 import org.aksw.kbox.apple.stream.DefaultInputStreamFactory;
@@ -59,7 +60,15 @@ public abstract class AbstractAppInstall extends AppPathBinder implements AppIns
 		validate(dest, format, version);
 	}
 	
-	protected abstract void createPath(File destPath) throws Exception;
+	protected void createPath(File destPath) throws Exception {
+		if(destPath.isDirectory()) {
+			throw new InvalidParameterException("The parameter destPath should be a file.");
+		}
+		File parentDir = new File(destPath.getParent());
+		if(parentDir.mkdirs() && (!destPath.exists() && !destPath.createNewFile())) {
+			throw new Exception("File cannot be created. Provided path might be invalid.");
+		}
+	}
 
 	public abstract void install(InputStream source, File target) throws Exception;
 	
