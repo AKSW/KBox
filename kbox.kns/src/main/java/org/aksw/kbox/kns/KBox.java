@@ -428,7 +428,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 		   notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
 		   notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
 		   URL resourceNameURL = new URL(resolvedKN.getName());
-		   localDataset = locate(resourceName, format, version, locateMethod);
+		   localDataset = locate(resourceNameURL, format, version, locateMethod);
 		   if(localDataset == null && install) {
 				try {
 					AppInstall installMethod = installFactory.get(resolvedKN);

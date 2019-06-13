@@ -63,10 +63,10 @@ public class KBoxTest {
 	@Test
 	public void testResolveKN() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org/5MB.zip"));
 		Assert.assertNull(resolvedKN.getTags());
 		
-		Assert.assertEquals("http://test.org", resolvedKN.getName());
+		Assert.assertEquals("http://test.org/5MB.zip", resolvedKN.getName());
 		Assert.assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", resolvedKN.getTargets().get(0).getURL().toString());
 		Assert.assertEquals(null, resolvedKN.getVersion());
 		Assert.assertEquals(null, resolvedKN.getFormat());
@@ -88,11 +88,11 @@ public class KBoxTest {
 	@Test
 	public void testGetResource() throws Exception {
 		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
-		URL resourceName = new URL("http://test.org");
+		URL resourceName = new URL("http://test.org/5MB.zip");
 		URL knsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		File f = KBox.getResource(knsServerURL, resourceName, null, null, isFactory);
-		Assert.assertTrue(f.delete());
 		Assert.assertNotNull(f);
+		Assert.assertTrue(f.delete());
 	}
 	
 	@Test(expected=ResourceNotResolvedException.class)
@@ -110,15 +110,6 @@ public class KBoxTest {
 		URL resourceName = new URL("http://test.org");
 		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		File resource = KBox.getResource(rnsServerURL, resourceName, "teste", null, isFactory, true);
-		Assert.assertNull(resource);
-	}
-	
-	@Test
-	public void testGetResourceNull() throws Exception {
-		DefaultInputStreamFactory isFactory = new DefaultInputStreamFactory();
-		URL resourceName = new URL("http://test.org");
-		URL rnsServerURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		File resource = KBox.getResource(rnsServerURL, resourceName, null, null, isFactory, false);
 		Assert.assertNull(resource);
 	}
 
@@ -149,7 +140,7 @@ public class KBoxTest {
 	@Test
 	public void testResolveURLWithKBoxKNSService() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
-		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org/5MB.zip"));
 		assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", 
 				resolvedKN.getTargets().get(0).getURL().toString());
 	}
@@ -163,7 +154,7 @@ public class KBoxTest {
 	@Test
 	public void testResolveKNS() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));		
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org/5MB.zip"));		
 		assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", 
 				resolvedKN.getTargets().get(0).getURL().toString());
 	}
@@ -171,7 +162,7 @@ public class KBoxTest {
 	@Test
 	public void testResolveKNS2() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org"));
+		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org/5MB.zip"));
 		assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", 
 				resolvedKN.getTargets().get(0).getURL().toString());
 	}
@@ -187,6 +178,7 @@ public class KBoxTest {
 		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
 		File fileDir = KBox.getResource(knsServerURL, new URL("http://dbpedia.org"), "xml", "0", true);
 		Assert.assertNotNull(fileDir);
+		Assert.assertTrue(fileDir.delete());
 	}
 	
 	@Test
