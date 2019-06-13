@@ -422,19 +422,22 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 			InputStreamFactory isFactory,
 			boolean install)
 			throws Exception {
-	   KN resolvedKN = resolve(knsServerList, resourceName, format, version);
-	   notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
-	   notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
-	   URL resourceNameURL = new URL(resolvedKN.getName());
-	   File localDataset = locate(resourceNameURL, format, version, locateMethod);
-	   if(localDataset == null && install) {
-			try {
-				AppInstall installMethod = installFactory.get(resolvedKN);
-				install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
-			} catch (Exception e) {
-				throw new ResourceDereferencingException(resourceName.toString(), e);
-			}
-			localDataset = locate(resourceNameURL, format, version, locateMethod);
+	   File localDataset = locate(resourceName, format, version, locateMethod);
+	   if(localDataset == null) {
+		   KN resolvedKN = resolve(knsServerList, resourceName, format, version);
+		   notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
+		   notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
+		   URL resourceNameURL = new URL(resolvedKN.getName());
+		   localDataset = locate(resourceName, format, version, locateMethod);
+		   if(localDataset == null && install) {
+				try {
+					AppInstall installMethod = installFactory.get(resolvedKN);
+					install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
+				} catch (Exception e) {
+					throw new ResourceDereferencingException(resourceName.toString(), e);
+				}
+				localDataset = locate(resourceNameURL, format, version, locateMethod);
+		   }
 	   }
 	   return localDataset;
    }
