@@ -16,13 +16,13 @@ import org.apache.jena.riot.Lang;
  *
  */
 public class CompressedRDF2KBInstall extends AbstractDirectoryDataInstall {
-	
+
 	Lang lang;
-	
+
 	public CompressedRDF2KBInstall(Lang lang) {
 		this.lang = lang;
 	}
-	
+
 	@Override
 	public void install(InputStream source, File target) throws Exception {
 		try (ArchiveInputStream i =  new ArchiveStreamFactory()
@@ -30,10 +30,9 @@ public class CompressedRDF2KBInstall extends AbstractDirectoryDataInstall {
 		    ArchiveEntry entry = null;
 		    while ((entry = i.getNextEntry()) != null) {
 		        if (!i.canReadEntryData(entry)) {
-		            // log something?
 		            continue;
 		        }
-	            TDB.bulkload(target.getAbsolutePath(), i, lang);
+	            TDB.bulkload(target.getAbsolutePath(), lang, i);
 		    }
 		}
 	}

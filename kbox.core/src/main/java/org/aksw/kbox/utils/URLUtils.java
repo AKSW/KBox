@@ -4,10 +4,19 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class URLUtils {
+	
+	private static Set<String> protocolsWithHost = new HashSet<String>( 
+		      Arrays.asList( new String[]{ "file", "ftp", "http", "https" } ) 
+		  );
+	
 	public static URL[] stringToURL(String... urls) throws Exception {
 		URL[] urlArray = new URL[urls.length];
 		for(int i=0; i < urls.length; i++) {
@@ -57,5 +66,17 @@ public class URLUtils {
 			return new URL(location);
 		}
 		return url;
+	}
+	
+	public static boolean hasValidURLHost(URI uri) {
+		return protocolsWithHost.contains(uri.getScheme());
+	}
+	
+	public static String getContentType(URL url) throws Exception {
+		URL forwardURL = getURLForward(url);
+		HttpURLConnection connection = (HttpURLConnection)  forwardURL.openConnection();
+		connection.setRequestMethod("HEAD");
+		connection.connect();
+		return connection.getContentType();
 	}
 }

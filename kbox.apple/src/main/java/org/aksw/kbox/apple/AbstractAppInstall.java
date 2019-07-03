@@ -1,13 +1,16 @@
 package org.aksw.kbox.apple;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.security.InvalidParameterException;
 
 import org.aksw.kbox.InputStreamFactory;
 import org.aksw.kbox.apple.stream.DefaultInputStreamFactory;
 import org.aksw.kbox.utils.URLUtils;
+import org.apache.commons.compress.utils.IOUtils;
 
 /**
  * 
@@ -38,6 +41,35 @@ public abstract class AbstractAppInstall extends AppPathBinder implements AppIns
 	public void install(URL[] resources, URL dest, String format, String version, InputStreamFactory isFactory) throws Exception {
 		for(URL resource : resources) {
 			install(resource, dest, format, version, isFactory);
+		}
+	}
+	
+	public void install(URL source, File dest, InputStreamFactory isFactory) throws Exception {
+		try(FileOutputStream out = new FileOutputStream(dest)) {
+			install(source, out, isFactory);
+		}
+	}
+	
+	public void install(URL source, OutputStream dest, InputStreamFactory isFactory) throws Exception {
+		URL forwardURL = URLUtils.getURLForward(source);
+		try(InputStream is = isFactory.get(forwardURL)) {
+			install(is, dest);
+		}
+	}
+	
+	public void install(URL[] source, OutputStream dest, InputStreamFactory isFactory) throws Exception {
+		for(URL resource : source) {
+			install(resource, dest, isFactory);
+		}
+	}
+	
+	public void install(InputStream is, OutputStream dest) throws Exception {
+		IOUtils.copy(is, dest);
+	}
+
+	public void install(URL[] sources, File dest, InputStreamFactory isFactory) throws Exception {
+		for(URL resource : sources) {
+			install(resource, dest, isFactory);
 		}
 	}
 	

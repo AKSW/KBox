@@ -14,7 +14,7 @@ public class ConsoleInstallInputStreamFactory implements InputStreamFactory {
 
 	@Override
 	public InputStream get(URL url) throws IOException {
-		ConsoleStreamListener listener = new ConsoleStreamListener(MESSAGE, URLUtils.getContentLength(url));
+		ConsoleStreamListener listener = new ConsoleStreamListener(MESSAGE + " " + url, URLUtils.getContentLength(url));
 		InputStreamInstaller installer = new InputStreamInstaller(url.openStream(), listener);
 		return installer;
 	}

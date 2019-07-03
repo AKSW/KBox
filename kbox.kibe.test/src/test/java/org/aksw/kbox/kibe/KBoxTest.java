@@ -64,7 +64,7 @@ public class KBoxTest {
 	public void testResolveKN() throws Exception {
 		URL serverURL = KBoxTest.class.getResource("/org/aksw/kbox/kibe/");
 		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org/5MB.zip"));
-		Assert.assertNull(resolvedKN.getTags());
+		Assert.assertNull(resolvedKN.getNameTags());
 		
 		Assert.assertEquals("http://test.org/5MB.zip", resolvedKN.getName());
 		Assert.assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", resolvedKN.getTargets().get(0).getURL().toString());
@@ -72,8 +72,8 @@ public class KBoxTest {
 		Assert.assertEquals(null, resolvedKN.getFormat());
 		
 		resolvedKN = KBox.resolve(serverURL, new URL("http://test2.org"), "format", "version");
-		Assert.assertTrue(resolvedKN.getTags().size() > 0);
-		Assert.assertTrue(resolvedKN.getTags().contains("tag2.test.2"));
+		Assert.assertTrue(resolvedKN.getNameTags().size() > 0);
+		Assert.assertTrue(resolvedKN.getNameTags().contains("tag2.test.2"));
 		
 		Assert.assertEquals("label", resolvedKN.getLabel());
 		Assert.assertEquals("version", resolvedKN.getVersion());
@@ -163,7 +163,7 @@ public class KBoxTest {
 	public void testResolveKNS2() throws MalformedURLException, Exception {
 		URL serverURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
 		KN resolvedKN = KBox.resolve(serverURL, new URL("http://test.org/5MB.zip"));
-		assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip", 
+		assertEquals("http://ipv4.download.thinkbroadband.com:81/5MB.zip",
 				resolvedKN.getTargets().get(0).getURL().toString());
 	}
 
@@ -252,8 +252,8 @@ public class KBoxTest {
 	@Test
 	public void testQueryKBXML() throws Exception {
 		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		ResultSet rs = KBox.query(knsServerURL, new URL("http://dbpedia.org/3.9/xml"), 
-				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", true);
+		ResultSet rs = KBox.query(knsServerURL, "Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", 
+				true, new URL("http://dbpedia.org/3.9/xml"));
 		int i = 0;
 		while (rs != null && rs.hasNext()) {
 			rs.next();
@@ -265,8 +265,8 @@ public class KBoxTest {
 	@Test
 	public void testQueryKBZip() throws Exception {
 		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		ResultSet rs = KBox.query(knsServerURL, new URL("http://dbpedia.org/3.9/zip"),
-				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", true);
+		ResultSet rs = KBox.query(knsServerURL, "Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", 
+				true, new URL("http://dbpedia.org/3.9/zip"));
 		int i = 0;
 		while (rs != null && rs.hasNext()) {
 			rs.next();
@@ -278,8 +278,8 @@ public class KBoxTest {
 	@Test
 	public void testQueryKBXMLWithTag() throws Exception {
 		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		ResultSet rs = KBox.query(knsServerURL, new URL("http://dbpedia.org"),
-				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", true);
+		ResultSet rs = KBox.query(knsServerURL, "Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", 
+				true, new URL("http://dbpedia.org"));
 		int i = 0;
 		while (rs != null && rs.hasNext()) {
 			rs.next();
@@ -291,8 +291,8 @@ public class KBoxTest {
 	@Test
 	public void testQueryKBBZ2() throws Exception {
 		URL knsServerURL = TDBTest.class.getResource("/org/aksw/kbox/kibe/");
-		ResultSet rs = KBox.query(knsServerURL, new URL("http://dbpedia.org/3.9/bz2"),
-				"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", true);
+		ResultSet rs = KBox.query(knsServerURL, "Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}", 
+				true, new URL("http://dbpedia.org/3.9/bz2"));
 		int i = 0;
 		while (rs != null && rs.hasNext()) {
 			rs.next();
@@ -303,8 +303,7 @@ public class KBoxTest {
 	
 	@Test(expected=Exception.class)
 	public void testQueryKB() throws Exception {
-		KBox.query(
-					"Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
+		KBox.query("Select ?p where {<http://dbpedia.org/ontology/Place> ?p ?o}",
 					new URL("http://dbpedia39.o"));
 		Assert.fail("The query should have returned an Exception.");
 	}

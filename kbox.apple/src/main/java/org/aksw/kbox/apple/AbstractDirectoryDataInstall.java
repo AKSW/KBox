@@ -1,7 +1,11 @@
 package org.aksw.kbox.apple;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.security.InvalidParameterException;
+
+import org.aksw.kbox.InputStreamFactory;
 
 /**
  * 
@@ -14,5 +18,11 @@ public abstract class AbstractDirectoryDataInstall extends AbstractMultiSourceAp
 			throw new InvalidParameterException("The parameter destPath should be a directory.");
 		}
 		destPath.mkdirs();
+	}
+	
+	public void install(URL source, File dest, InputStreamFactory isFactory) throws Exception {
+		try(InputStream is = isFactory.get(source)) {
+			install(is, dest);
+		}
 	}
 }

@@ -34,7 +34,8 @@ public abstract class AbstractMultiSourceAppInstall extends AbstractAppInstall {
 	@Override
 	public void install(InputStream[] inputStreams, URL dest, String format, String version) throws Exception {
 		List<InputStream> streams = Arrays.asList(inputStreams);
-		SequenceInputStream sInputStream = new SequenceInputStream(Collections.enumeration(streams));
-		install(sInputStream, dest, format, version);
+		try(SequenceInputStream sInputStream = new SequenceInputStream(Collections.enumeration(streams))) {
+			install(sInputStream, dest, format, version);
+		}
 	}
 }

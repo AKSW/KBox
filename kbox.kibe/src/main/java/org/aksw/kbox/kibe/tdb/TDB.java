@@ -118,23 +118,36 @@ public class TDB {
 	 * Load a list of files into a database located in a given directory.
 	 * 
 	 * @param dir directory containing the database file.
-	 * @param inputStreams URLs of the files containing the RDF content to be loaded into the database file.
-	 * @param lang the RDF streams syntax
+	 * @param urls URLs of the files containing the RDF content to be loaded into the database file. 
 	 */
-	public static void bulkload(String dir, InputStream[] inputStreams, Lang lang) {
-		List<InputStream> streams = Arrays.asList(inputStreams);
-		SequenceInputStream sInputStream = new SequenceInputStream(Collections.enumeration(streams));
-		bulkload(dir, sInputStream, lang);
+	public static void bulkload(String dir, InputStream... inputStreams) {
+		DatasetGraphTransaction dataset = (DatasetGraphTransaction) TDBFactory.createDatasetGraph(dir);
+		List<InputStream> streamsList = Arrays.asList(inputStreams);
+		SequenceInputStream sInputStream = new SequenceInputStream(Collections.enumeration(streamsList));
+		TDBLoader.load(dataset.getDatasetGraphToQuery(), sInputStream, true);
 	}
 	
 	/**
 	 * Load a list of files into a database located in a given directory.
 	 * 
-	 * @param dir directory containing the database file.
+	 * @param dir directory containing the database file. 
+	 * @param lang the RDF streams syntax.
 	 * @param inputStreams URLs of the files containing the RDF content to be loaded into the database file.
-	 * @param lang the RDF streams syntax
 	 */
-	public static void bulkload(String dir, InputStream inputStream, Lang lang) {
+	public static void bulkload(String dir, Lang lang, InputStream... inputStreams) {
+		List<InputStream> streams = Arrays.asList(inputStreams);
+		SequenceInputStream sInputStream = new SequenceInputStream(Collections.enumeration(streams));
+		bulkload(dir, lang, sInputStream);
+	}
+	
+	/**
+	 * Load a list of files into a database located in a given directory.
+	 * 
+	 * @param dir directory containing the database file.	 * 
+	 * @param lang the RDF streams syntax.
+	 * @param inputStream URLs of the files containing the RDF content to be loaded into the database file.
+	 */
+	public static void bulkload(String dir, Lang lang, InputStream inputStream) {
 		DatasetGraph dataset = TDBFactory.createDatasetGraph(dir);
 		RDFDataMgr.read(dataset, inputStream, lang);
 		dataset.close();

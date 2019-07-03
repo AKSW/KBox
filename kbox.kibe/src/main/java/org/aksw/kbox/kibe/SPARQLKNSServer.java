@@ -9,7 +9,7 @@ import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSServer;
 import org.aksw.kbox.kns.KNSVisitor;
 import org.aksw.kbox.kns.ServerAddress;
-import org.aksw.kbox.kns.Target;
+import org.aksw.kbox.kns.Source;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 
@@ -43,8 +43,8 @@ public class SPARQLKNSServer extends KNSServer {
 			for(String varMapping : paramMap.keySet()) {
 				String var = paramMap.get(varMapping);
 				String varValue = qe.get(var).toString();
-				Target t = new Target();
-				List<Target> targets = new ArrayList<Target>();
+				Source t = new Source();
+				List<Source> targets = new ArrayList<Source>();
 				if(KN.NAME.equals(varMapping)) {
 					kn.setName(varValue);
 				} else if(KN.LICENSE.equals(varMapping)) {

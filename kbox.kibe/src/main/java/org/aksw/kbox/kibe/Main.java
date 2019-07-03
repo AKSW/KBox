@@ -4,11 +4,14 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.aksw.kbox.Install;
 import org.aksw.kbox.ZipLocate;
+import org.aksw.kbox.apple.AppInstall;
 import org.aksw.kbox.fusca.Listener;
 import org.aksw.kbox.fusca.Server;
 import org.aksw.kbox.fusca.exception.ServerStartException;
@@ -16,9 +19,11 @@ import org.aksw.kbox.kibe.console.ConsoleInstallInputStreamFactory;
 import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotLocatedException;
 import org.aksw.kbox.kns.CustomKNSServerList;
+import org.aksw.kbox.kns.InstallFactory;
 import org.aksw.kbox.kns.KNSServer;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
+import org.aksw.kbox.kns.Source;
 import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 import org.aksw.kbox.utils.GzipUtils;
 import org.aksw.kbox.utils.URLUtils;
@@ -34,7 +39,7 @@ public class Main {
 	private final static Logger logger = Logger.getLogger(Main.class);
 
 	// CONSTANTS
-	private final static String VERSION = "v0.0.2-alpha";
+	private final static String VERSION = "v0.0.2-alpha1";
 
 	public final static String KNS_FILE_NAME = "kbox.kibe.kns";
 	public final static String CONTEXT_NAME = "kbox.kibe";
@@ -75,6 +80,8 @@ public class Main {
 	private final static String LOCATE_COMMAND = "-locate";
 	private final static String SEVER_COMMAND_SUBDOMAIN = "-subDomain";
 	private final static String FORMAT_COMMAND = "-format";
+	private final static String RDF_COMMAND = "-rdf";
+	private final static String TARGET_COMMAND = "-target";
 
 	public static void main(String[] args) {
 		Map<String, String[]> commands = parse(args);
@@ -216,6 +223,49 @@ public class Main {
 				System.out.println("The knowledge name " + knURL + " is not available in " + knsServer + ".");
 			} catch (Exception e) {
 				String message = "Error installing knowledge name " + knURL + " from " + knsServer + ".";
+				System.out.println(message);
+				logger.error(message, e);
+			}
+		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(RDF_COMMAND)
+				&& commands.containsKey(KB_COMMAND)) {
+			String install = DefaultInstallFactory.RDF2KB;
+			String source = getSingleParam(commands, RDF_COMMAND);
+			if(commands.containsKey(INSTALL_COMMAND)) {
+				install = getSingleParam(commands, INSTALL_COMMAND, install);
+			}
+			String kbURL = getSingleParam(commands, KB_COMMAND);
+			String version = getSingleParam(commands, VERSION_COMMAND);
+			try {
+				String[] filePaths = source.split(KB_COMMAND_SEPARATOR);
+				List<URL> inputRDFFiles = new java.util.ArrayList<URL>();
+				for(String filePath : filePaths) {
+					if(!filePath.startsWith("http")) {
+						File sourceFile = new File(filePath);
+						if(sourceFile != null && sourceFile.isDirectory()) {
+							inputRDFFiles.addAll(Arrays.asList(URLUtils.fileToURL(sourceFile.listFiles())));
+						} else {
+							inputRDFFiles.add(sourceFile.toURI().toURL());
+						}
+					} else {
+						URL fileURL = new URL(filePath);
+						inputRDFFiles.add(fileURL);
+					}
+				}
+				System.out.println("Installing KB " + kbURL + " from files " + source);
+				InstallFactory installFactory = new DefaultInstallFactory();
+				AppInstall installMethod = installFactory.get(install);
+				KBox.install(inputRDFFiles.toArray(new URL[inputRDFFiles.size()]), 
+						new URL(kbURL),
+						KBox.KIBE_FORMAT,
+						version,
+						installMethod,
+						inputStreamFactory);
+				System.out.println("KN installed.");
+			} catch (MalformedURLException e) {
+				System.out.println(e.getMessage());
+				logger.error(e);
+			} catch (Exception e) {
+				String message = "Error installing knowledge name " + kbURL + " from files " + source + ".";
 				System.out.println(message);
 				logger.error(message, e);
 			}
@@ -395,39 +445,28 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KN_COMMAND)) {
+		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KB_COMMAND)) {
 			String kbURL = getSingleParam(commands, KB_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			try {
-				if (version != null) {
-					System.out.println(KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT, version));
-				} else {
-					System.out.println(KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT));
-				}
+				System.out.println(KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT, version));
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KB: " + kbURL;
 				System.out.println(message);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KN_COMMAND)) {
-			String kbURL = getSingleParam(commands, KB_COMMAND);
+			String kbURL = getSingleParam(commands, KN_COMMAND);
 			String format = getSingleParam(commands, FORMAT_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			try {
-				if (format != null && version != null) {
-					System.out.println(KBox.locate(new URL(kbURL), format, version));
-				}
-				if (format != null) {
-					System.out.println(KBox.locate(new URL(kbURL), format));
-				} else {
-					System.out.println(KBox.locate(new URL(kbURL)));
-				}
+				System.out.println(KBox.locate(new URL(kbURL), format, version));
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KN: " + kbURL;
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if (commands.containsKey(SERVER_COMMAND) && commands.containsKey(KB_COMMAND)) {
+		} else if (commands.containsKey(SERVER_COMMAND)) {
 			int port = 8080;
 			String subDomain = "kbox";
 			if (commands.containsKey(SERVER_COMMAND_PORT)) {
@@ -436,16 +475,48 @@ public class Main {
 			if (commands.containsKey(SEVER_COMMAND_SUBDOMAIN)) {
 				subDomain = getSingleParam(commands, SEVER_COMMAND_SUBDOMAIN);
 			}
-			String graphNamesList = getSingleParam(commands, KB_COMMAND);
-			String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
-			boolean install = commands.containsKey(INSTALL_COMMAND);
-			URL[] urls = new URL[graphNames.length];
 			try {
-				for (int i = 0; i < graphNames.length; i++) {
-					urls[i] = new URL(graphNames[i]);
-				}
 				System.out.println("Loading Model...");
-				Model model = KBox.createModel(inputStreamFactory, install, urls);
+				Model model = null;
+				if(commands.containsKey(KB_COMMAND)) {
+					String graphNamesList = getSingleParam(commands, KB_COMMAND);
+					String[] graphNames = graphNamesList.split(KB_COMMAND_SEPARATOR);
+					boolean install = commands.containsKey(INSTALL_COMMAND);
+					URL[] urls = new URL[graphNames.length];
+					for (int i = 0; i < graphNames.length; i++) {
+						urls[i] = new URL(graphNames[i]);
+					}
+					model = KBox.createModel(inputStreamFactory, install, urls);
+				} if(commands.containsKey(TARGET_COMMAND)) {
+					String targetArray = getSingleParam(commands, TARGET_COMMAND);
+					List<Source> sources = Source.toTarget(targetArray);
+					model = KBox.createTempModel(inputStreamFactory, sources.toArray(new Source[sources.size()]));
+				}  else if (commands.containsKey(RDF_COMMAND)){
+					String install = DefaultInstallFactory.RDF2KB;
+					if(commands.containsKey(INSTALL_COMMAND)) {
+						install = getSingleParam(commands, INSTALL_COMMAND, install);
+					}
+					String fileNamesList = getSingleParam(commands, RDF_COMMAND);
+					String[] filePaths = fileNamesList.split(KB_COMMAND_SEPARATOR);
+					List<URL> inputRDFFiles = new java.util.ArrayList<URL>();
+					for(String filePath : filePaths) {
+						if(!(filePath.startsWith("http") || filePath.startsWith("ftp"))) {
+							File sourceFile = new File(filePath);
+							if(sourceFile != null && sourceFile.isDirectory()) {
+								inputRDFFiles.addAll(Arrays.asList(URLUtils.fileToURL(sourceFile.listFiles())));
+							} else {
+								inputRDFFiles.add(sourceFile.toURI().toURL());
+							}
+						} else {
+							URL fileURL = new URL(filePath);
+							inputRDFFiles.add(fileURL);
+						}
+					}
+					model = KBox.createTempModel( 
+							inputRDFFiles.toArray(new URL[inputRDFFiles.size()]),
+							install,
+							inputStreamFactory);
+				}
 				final int servicePort = port;
 				final String serverAddress = "http://localhost:" + servicePort + "/" + subDomain + "/sparql";
 				Listener serverListener = new Listener() {
@@ -496,10 +567,6 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
-		} else if (commands.containsKey(VERSION_COMMAND)) {
-			printVersion();
-		} else {
-			printHelp();
 		}
 	}
 
@@ -521,18 +588,24 @@ public class Main {
 		System.out.println(
 				"                                               \t - ps: use -install in case you want to enable the auto-dereference.");
 		System.out.println(
-				"   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install] \t - Start an SPARQL endpoint in the given subDomain containing the given bases.");
+				"   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <kb-URL> [-install] \t - Start an SPARQL endpoint in the given subDomain containing the given bases.");
+		System.out.println(
+				"   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -rdf <directories|files> [-install [install]]\t - Start an SPARQL endpoint in the given subDomain containing the given RDF files.");
+		System.out.println(
+				"   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -target <target>\t - Start an SPARQL endpoint in the given subDomain containing the target RDF files.");
 		System.out.println("   * -list [/p]\t - List all available KNS services and knowledge bases.");
 		System.out.println("   * -list -kns\t - List all available KNS services.");
 		System.out.println("   * -install <URL>\t - Install a given resource.");
 		System.out.println("   * -install -kns <kns-URL>\t - Install a given KNS service.");
 		System.out.println(
 				"   * -install -kb <kb-URL> [-version <version>]\t - Install a given knowledge base using the available KNS services to resolve it.");
-		System.out.println(
-				"   * -install -kn <kn-URL> [-format [-version <version>]]\t - Install a given knowledge base using the available KNS services to resolve it.");
 		System.out.println("   * -install -kb <kb-URL> -file <kbFile>\t - Install a given kb file in a given Kb-URL.");
 		System.out.println(
-				"   * -install -kb <kb-URL> -kns <kns-URL> [-version <version>]\t - Install a knowledge base from a a given KNS service with the specific format and version.");
+				"   * -install -kb <kb-URL> -kns <kns-URL> [-version <version>]\t - Install a knowledge base from a a given KNS service with the specific version.");
+		System.out.println(
+				"   * -install [install] -kb <kb-URL> -rdf <directories|files> [-version <version>]\t - Install a knowledge base from a a given RDF files with the specific version.");
+		System.out.println(
+				"   * -install -kn <kn-URL> [-format [-version <version>]]\t - Install a given knowledge base using the available KNS services to resolve it.");
 		System.out.println("   * -remove -kns <kns-URL>\t - Remove a given KNS service.");
 		System.out.println(
 				"   * -info <URL> [-format <format> [-version <version>]]\t - Gives the information about a specific KB.");
@@ -555,6 +628,26 @@ public class Main {
 			ResultSetFormatter.out(System.out, rs);
 		}
 	}
+	
+	/**
+	 * Retrieve the value of the first command's parameter.
+	 * 
+	 * @param commands
+	 *            the parsed commands.
+	 * @param command
+	 *            the command to retrieve the parameter.
+	 * @param defaultValue
+	 *            the defaultValue to return in case command value is null.
+	 *            
+	 * @return the value of the first command's parameter or defaultValue in case it is null.
+	 */
+	public static String getSingleParam(Map<String, String[]> commands, String command, String defaultValue) {
+		String value = getSingleParam(commands, command);
+		if (value == null) {
+			return defaultValue;
+		}
+		return null;
+	}
 
 	/**
 	 * Retrieve the value of the first command's parameter.
@@ -569,6 +662,23 @@ public class Main {
 	public static String getSingleParam(Map<String, String[]> commands, String command) {
 		if (commands.containsKey(command)) {
 			return commands.get(command)[0];
+		}
+		return null;
+	}
+	
+	/**
+	 * Retrieve the value of the first command's parameter.
+	 * 
+	 * @param commands
+	 *            the parsed commands.
+	 * @param command
+	 *            the command to retrieve the parameter.
+	 * 
+	 * @return the value of the first command's parameter.
+	 */
+	public static String getParam(Map<String, String[]> commands, String command, int i) {
+		if (commands.containsKey(command) && commands.get(command).length > i + 1) {
+			return commands.get(command)[i];
 		}
 		return null;
 	}

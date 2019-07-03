@@ -2,6 +2,7 @@ package org.aksw.kbox.kns;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 
 import org.aksw.kbox.InputStreamFactory;
 import org.aksw.kbox.apple.AppInstall;
@@ -345,73 +346,6 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 		};
 		return getResource(knsServerList, resourceName, format, version, isFactory, installFactory, install);
 	}
-	
-	public static File getResource(KNSServerList knsServerList, 
-			URL resourceName, 
-			Locate locateMethod,
-			String format,
-			String version,
-			AppInstall installMethod,
-			InputStreamFactory isFactory) throws Exception {
-		return getResource(knsServerList, 
-				resourceName, 
-				locateMethod,
-				format,
-				version,
-				installMethod, 
-				isFactory, 
-				true);
-   }
-	
-   public static File getResource(KNSServerList knsServerList, 
-			URL resourceName, 
-			Locate locateMethod,
-			String format,
-			String version,
-			AppInstall installMethod,
-			InputStreamFactory isFactory,
-			boolean install)
-			throws Exception {
-		File localDataset = locate(resourceName, format, version, locateMethod);
-		if(localDataset == null && install) {
-			KN resolvedKN = resolve(knsServerList, resourceName, format, version);
-			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
-			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
-			URL resourceNameURL = new URL(resolvedKN.getName());
-			try {
-				install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
-			} catch (Exception e) {
-				throw new ResourceDereferencingException(resourceName.toString(), e);
-			}
-			localDataset = locate(resourceNameURL, format, version, locateMethod);
-		}
-		return localDataset;
-   }
-   
-   public static File getResource(URL knsServerURL, 
-			URL resourceName, 
-			Locate locateMethod,
-			String format,
-			String version,
-			AppInstall installMethod,
-			InputStreamFactory isFactory,
-			boolean install)
-			throws Exception {
-		File localDataset = locate(resourceName, format, version, locateMethod);
-		if(localDataset == null && install) {
-			KN resolvedKN = resolve(knsServerURL, resourceName, format, version);
-			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN);
-			notNull(new ResourceNotResolvedException(resourceName.toString()), resolvedKN.getTargets().get(0).getURL());
-			URL resourceNameURL = new URL(resolvedKN.getName());
-			try {
-				install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
-			} catch (Exception e) {
-				throw new ResourceDereferencingException(resourceName.toString(), e);
-			}
-			localDataset = locate(resourceNameURL, format, version, locateMethod);
-		}
-		return localDataset;
-  }
    
    public static File getResource(KNSServerList knsServerList, 
 			URL resourceName, 
@@ -431,8 +365,7 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 		   localDataset = locate(resourceNameURL, format, version, locateMethod);
 		   if(localDataset == null && install) {
 				try {
-					AppInstall installMethod = installFactory.get(resolvedKN);
-					install(resolvedKN.getTargets().get(0).getURL(), resourceNameURL, format, version, installMethod, isFactory);
+					install(resolvedKN.getTargets(), resourceNameURL, format, version, installFactory, isFactory);
 				} catch (Exception e) {
 					throw new ResourceDereferencingException(resourceName.toString(), e);
 				}
@@ -440,6 +373,18 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 		   }
 	   }
 	   return localDataset;
+   }
+   
+   public static void install(List<Source> sources, 
+		   URL target, 
+		   String format, 
+		   String version, 
+		   InstallFactory installFactory, 
+		   InputStreamFactory isFactory) throws Exception {
+	   for(Source source : sources) {
+		   AppInstall installMethod = installFactory.get(source.getInstall());
+		   install(source.getURL(), target, format, version, installMethod, isFactory);
+	   }
    }
    
    public static File getResource(URL knsServerURL, 
@@ -527,6 +472,5 @@ public class KBox extends org.aksw.kbox.apple.KBox {
 				resourceURL,
 				installFactory,
 				isFactory);
-	}
-   
+	}   
 }

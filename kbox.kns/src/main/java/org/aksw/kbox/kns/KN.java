@@ -1,16 +1,10 @@
 package org.aksw.kbox.kns;
 
-import java.io.File;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.json.simple.JSONArray;
@@ -38,7 +32,7 @@ public class KN extends KNComparator {
 	public static final String LABEL = "label";
 	
 	private String name;
-	private List<Target> targets;
+	private List<Source> targets;
 	private String desc;
 	private String kns;
 	private String license;
@@ -49,18 +43,18 @@ public class KN extends KNComparator {
 	private String owner;
 	private String label;
 	private Set<String> versionTags;
-	private Set<String> tags;
+	private Set<String> nameTags;
 	
 	public KN() {
 	}
 	
-	public KN(String name, List<Target> targets, String desc) {
+	public KN(String name, List<Source> targets, String desc) {
 		this.name = name;
 		this.targets = targets;
 		this.desc = desc;
 	}
 	
-	public KN(String name, List<Target> targets, String license, String subsets, String desc) {
+	public KN(String name, List<Source> targets, String license, String subsets, String desc) {
 		this.name = name;
 		this.targets = targets;
 		this.license = license;
@@ -69,7 +63,7 @@ public class KN extends KNComparator {
 	}
 	
 	public KN(String name, 
-			List<Target> targets,
+			List<Source> targets,
 			String format, 
 			String version, 
 			String license, 
@@ -85,7 +79,7 @@ public class KN extends KNComparator {
 	}
 	
 	public KN(String name, 
-			List<Target> targets,
+			List<Source> targets,
 			String format, 
 			String version, 
 			String license, 
@@ -110,11 +104,11 @@ public class KN extends KNComparator {
 		this.name = name;
 	}
 	
-	public List<Target> getTargets() {
+	public List<Source> getTargets() {
 		return targets;
 	}
 	
-	public void setTargets(List<Target> sources) {
+	public void setTargets(List<Source> sources) {
 		this.targets = sources;
 	}
 	
@@ -131,55 +125,7 @@ public class KN extends KNComparator {
 		JSONObject jsonObject = (JSONObject) jsonParser.parse(stringReader);
 		String name = (String) jsonObject.get(NAME);
 		JSONArray jsonTarget = (JSONArray) jsonObject.get(TARGET);
-		java.util.List<Target> sources = new ArrayList<Target>();
-		if(jsonTarget != null) {
-			for(int m = 0; m < jsonTarget.size(); m++) {
-				JSONArray jsonMirror = (JSONArray) jsonTarget.get(m);
-				for(int s = 0; s < jsonMirror.size(); s++) {
-					JSONObject jsonSource = (JSONObject) jsonMirror.get(s);
-					String install = (String) jsonSource.keySet().toArray()[0];
-					JSONArray jsonSources = (JSONArray) jsonSource.values().toArray()[0];
-					if(jsonSources != null) {
-						for(int i= 0; i < jsonSources.size(); i++) {
-							JSONObject jsonSourceEntry = (JSONObject)jsonSources.get(i);
-							String url = (String)jsonSourceEntry.get(URL);
-							JSONObject jsonChecksum = (JSONObject) jsonSourceEntry.get(CHECKSUM);
-							Map<String, String> checksum = new HashMap<String, String>();
-							if(jsonChecksum != null) {
-								for(int c = 0; c < jsonChecksum.keySet().size(); c++) {
-									String key = (String) jsonChecksum.keySet().toArray()[c];
-									String value = (String) jsonChecksum.values().toArray()[c];
-									checksum.put(key, value);
-								}
-							}
-							JSONObject jsonDataId = (JSONObject) jsonSourceEntry.get(DATAID);
-							Map<String, String> dataId = new HashMap<String, String>();
-							if(jsonDataId != null) {
-								for(int di = 0; di < jsonDataId.keySet().size(); di++) {
-									String key = (String) jsonDataId.keySet().toArray()[di];
-									String value = (String) jsonDataId.values().toArray()[di];
-									dataId.put(key, value);
-								}
-							}
-							Target source = new Target();
-							source.setInstall(install);
-							source.setChecksum(checksum);
-							source.setDataId(dataId);
-							URI uri = new URI(url);
-							URL knName = null;
-							if(uri.isAbsolute()) {
-								knName = new URL(url);
-							} else {
-								File file = new File(url);
-								knName = file.toURI().toURL();
-							}
-							source.setURL(knName);
-							sources.add(source);
-						}
-					}
-				}
-			}
-		}
+		List<Source> sources = Source.toTarget(jsonTarget);
 		String desc = (String) jsonObject.get(DESC);
 		String publisher = (String) jsonObject.get(PUBLISHER);
 		String owner = (String) jsonObject.get(OWNER);
@@ -219,7 +165,7 @@ public class KN extends KNComparator {
 		
 		KN kn = new KN(name, sources, format, version, license, subsets, desc, publisher);
 		kn.setOwner(owner);
-		kn.setTags(tags);
+		kn.setNameTags(tags);
 		kn.setLabel(label);
 		kn.setVersionTags(versionTags);
 		return kn;
@@ -288,22 +234,24 @@ public class KN extends KNComparator {
 	public boolean equals(String name) {
 		return (this.name == name || 
 				(this.name != null && (this.name.equals(name) 
-						|| tags.contains(name))));
+						|| contains(nameTags, name))));
 	}
 
 	public boolean equals(String name, String format, String version) {
-		return (this.name.equals(name) || (tags!= null && tags.contains(name))) &&
+		return (this.name.equals(name) || contains(nameTags, name)) &&
 				(format == null || format.equals(this.format)) &&
-				(version == null || version.equals(this.version));
+				(version == null || version.equals(this.version) 
+					|| contains(versionTags, name));
 	}
 
 	public boolean contains(String name, String format, String version) {
-		return (this.name.contains(name) || tagContains(name)) &&
+		return (this.name.contains(name) || contains(nameTags, name)) &&
 				(format == null || format.equals(this.format)) &&
-				(version == null || version.equals(this.version));
+				(version == null || version.equals(this.version) 
+					|| contains(versionTags, name));
 	}
-	
-	private boolean tagContains(String pattern) {
+
+	private boolean contains(Set<String> tags, String pattern) {
 		if(tags != null) {
 			for(String tag : tags) {
 				if(tag.contains(pattern)) {
@@ -317,7 +265,7 @@ public class KN extends KNComparator {
 	public void print(PrintStream out) {
 		println(out, "KNS:", kns);
 		println(out, "KN:", name);
-		println(out, "Tags:", tags);
+		println(out, "Name Tags:", nameTags);
 		println(out, "label:", label);
 		println(out, "Description:", desc);
 		println(out, "Subsets:", subsets);
@@ -326,8 +274,9 @@ public class KN extends KNComparator {
 		println(out, "Owner:", owner);
 		println(out, "Format:", format);
 		println(out, "Version:", version);
+		println(out, "version Tags:", versionTags);
 	}
-	
+
 	private void println(PrintStream out, String label, Object variable) {
 		if(variable != null) {
 			out.println(label + variable.toString());
@@ -342,12 +291,12 @@ public class KN extends KNComparator {
 		this.owner = owner;
 	}
 
-	public Set<String> getTags() {
-		return tags;
+	public Set<String> getNameTags() {
+		return nameTags;
 	}
 
-	public void setTags(Set<String> tags) {
-		this.tags = tags;
+	public void setNameTags(Set<String> tags) {
+		this.nameTags = tags;
 	}
 
 	public String getLabel() {

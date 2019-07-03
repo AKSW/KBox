@@ -16,7 +16,6 @@ import org.aksw.kbox.InputStreamFactory;
 public class RDFDir2KBInstall extends RDF2KBInstall {	
 	@Override
 	public void install(URL[] resources, URL dest, String format, String version, InputStreamFactory isFactory) throws Exception {
-		
 		super.install(resources, dest, format, version, isFactory);
 	}
 	

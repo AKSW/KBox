@@ -23,11 +23,14 @@ import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSServerList;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
+import org.aksw.kbox.kns.Source;
 import org.aksw.kbox.kns.exception.ResourceDereferencingException;
 import org.aksw.kbox.kns.exception.ResourceNotResolvedException;
 import org.aksw.kbox.utils.URLUtils;
+import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.tdb.TDBFactory;
 import org.zeroturnaround.zip.ZipUtil;
 
 /**
@@ -645,8 +648,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if any of the given knowledge bases can not be found.
 	 */
-	public static Model createModel(URL knsServer, URL[] resourceNames, InputStreamFactory isFactory,
-			boolean install) throws Exception {
+	public static Model createModel(URL knsServer, InputStreamFactory isFactory,
+			boolean install, URL... resourceNames) throws Exception {
 		File[] knowledgeBasesPaths = getKB(knsServer, resourceNames, isFactory, install);
 		return TDB.createModel(knowledgeBasesPaths);
 	}
@@ -831,25 +834,8 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 	 * 
 	 * @throws Exception if any of the given knowledge bases can not be found.
 	 */
-	public static ResultSet query(URL knsServer, URL[] knowledgeNames, String sparql, boolean install) throws Exception {
-		Model model = createModel(knsServer, knowledgeNames, new ConsoleInstallInputStreamFactory(), install);
-		return query(sparql, model);
-	}
-	
-	/**
-	 * Query the given knowledge bases.
-	 * 
-	 * @param sparql the SPARQL query.
-	 * @param install specify if the knowledge base should be installed (true) or not (false).
-	 * @param knowledgeName the RDF KB name to be queried.
-	 * 
-	 * @return a result set with the given query solution.
-	 * 
-	 * @throws Exception if any of the given knowledge bases can not be found.
-	 */
-	public static ResultSet query(URL knsServer, URL knowledgeName, String sparql, boolean install) throws Exception {
-		URL[] knsArray = new URL[]{knowledgeName};
-		Model model = createModel(knsServer, knsArray, new ConsoleInstallInputStreamFactory(), install);
+	public static ResultSet query(URL knsServer, String sparql, boolean install, URL... knowledgeNames) throws Exception {
+		Model model = createModel(knsServer, new ConsoleInstallInputStreamFactory(), install, knowledgeNames);
 		return query(sparql, model);
 	}
 
@@ -962,5 +948,25 @@ public class KBox extends org.aksw.kbox.kns.KBox {
 		DefaultKNSServerList kibeKNSServerList = new DefaultKNSServerList();
 		InputStreamFactory inputStreamFactory = new ConsoleInstallInputStreamFactory();
 		return getResource(kibeKNSServerList, resourceName, format, version, inputStreamFactory, install);		
+	}
+	
+	public static Model createTempModel(URL[] files, String install, InputStreamFactory isFactory) throws Exception {
+		DefaultInstallFactory installFactory = new DefaultInstallFactory();
+		AppInstall appInstall = installFactory.get(install);
+		Path tempKBDir = Files.createTempDirectory("kb");
+		Dataset dataset = TDBFactory.createDataset(tempKBDir.toString());
+		appInstall.install(files, tempKBDir.toFile(), isFactory);
+		return dataset.getDefaultModel();
+	}
+
+	public static Model createTempModel(InputStreamFactory isFactory, Source... sources) throws Exception {
+		DefaultInstallFactory installFactory = new DefaultInstallFactory();
+		Path tempKBDir = Files.createTempDirectory("kb");
+		Dataset dataset = TDBFactory.createDataset(tempKBDir.toString());
+		for(Source source : sources) {
+			AppInstall appInstall = installFactory.get(source.getInstall());
+			appInstall.install(source.getURL(), tempKBDir.toFile(), isFactory);
+		}
+		return dataset.getDefaultModel();
 	}
 }
