@@ -218,7 +218,9 @@ or JAVA API
 ```
 URL url = new URL("Select (count(distinct ?s) as ?n) where {?s ?p ?o}");
 ServerAddress serverURL = new ServerAddress("http://localhost:8080/kbox/query");
-ResultSet rs = KBox.query(sparql, serverURL);
+try(ResultSet rs = KBox.query(sparql, serverURL);) { // do not forget to close the result set.
+
+}
 ```
 
 ### Listing the resource folder
