@@ -17,8 +17,9 @@
 }
 ```
 
-KBox is an abbreviation for Knowledge Box. 
-The rationale behind KBox is to allow users to have a single place to share resources and knowledge among different applications as well as instances.
+KBox is an abbreviation for Knowledge Box. it is a data deployment framework designed to facilitate data deployment whether on the cloud or in the edge (personal computers or smart devices).
+KBox is designed to conver different aspects of data deployment, it can be used to describe how the data is built as well as its dependencies.
+The rationale behind KBox is to allow users to deploy models for data driven application.
 Moreover, working on top of RDF model, KBox is a natural extension of the Web on your computer.
 
 - [Why use KBox?](https://github.com/AKSW/KBox#why-use-kbox)
