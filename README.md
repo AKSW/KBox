@@ -19,7 +19,7 @@
 
 KBox is an abbreviation for Knowledge Box. it is a data management framework designed to facilitate data deployment whether on the cloud, personal computers or smart devices (edge).
 KBox is designed to conver different aspects of data management, it can be used to describe how the data is built as well as its dependencies.
-The concept of a data management might be familiar to you if you are familiar with programing languages such as JavaScript that uses npm for library management, Ruby uses gem, and .NET use NuGet. KBox is the option for data management.
+The concept of a data management might be familiar to you if you are familiar with code library management such as npm for JavaScript, gem for Ruby, and NutGet for .NET. KBox is the option for data management.
 The rationale behind KBox is to allow users to manage data models for data driven applications.
 Moreover, to make it easier to manage Knowledge Graphs, KBox has embedded one of the most popular RDF frameworks, Jena.
 That allow users to natively share, deploy and query RDF Knowledge Graphs at scale.
