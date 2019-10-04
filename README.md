@@ -22,7 +22,7 @@ KBox is designed to conver different aspects of data management, it can be used 
 The concept of a data management might be familiar to you if you are familiar with code library management such as npm for JavaScript, gem for Ruby, and NutGet for .NET. KBox is the option for data management.
 The rationale behind KBox is to allow users to manage data models for data driven applications.
 Moreover, to make it easier to manage Knowledge Graphs, KBox has embedded one of the most popular RDF frameworks, Jena.
-That allow users to natively share, deploy and query RDF Knowledge Graphs at scale.
+Allowing users to natively share, deploy and query RDF Knowledge Graphs at scale.
 
 - [Why use KBox?](https://github.com/AKSW/KBox#why-use-kbox)
 - [What is possible to do with it?](https://github.com/AKSW/KBox#what-is-possible-to-do-with-it)
