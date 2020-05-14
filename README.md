@@ -200,9 +200,9 @@ Loading Model...
 Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
 ```
-If you succesfully deploied your client, now you can query it accessing http://localhost:8080
+If you successfully deployed your client, now you can query it accessing http://localhost:8080
 
-![KBox client](https://github.com/AKSW/KBox/blob/master/kbox_web_client.png)
+![KBox client](https://github.com/AKSW/KBox/blob/master/kbox_web_client.png | width=300)
 
 ### Querying a SPARQL endpoint
 
