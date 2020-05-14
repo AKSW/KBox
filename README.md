@@ -202,7 +202,7 @@ Service up and running ;-) ...
 ```
 If you successfully deployed your client, now you can query it accessing http://localhost:8080
 
-<img src="https://github.com/AKSW/KBox/blob/master/kbox_web_client.png" alt="KBox client" width="600">
+<img src="https://github.com/AKSW/KBox/blob/master/kbox_web_client.png" alt="KBox client" width="800">
 
 ### Querying a SPARQL endpoint
 
