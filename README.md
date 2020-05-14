@@ -200,7 +200,7 @@ Loading Model...
 Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
 ```
-If you successfully deployed your client, now you can query it accessing http://localhost:8080
+If you successfully instantiate your server, now you can access the web client at http://localhost:8080 as shown bellow:
 
 <img src="https://github.com/AKSW/KBox/blob/master/kbox_web_client.png" alt="KBox client" width="800">
 
