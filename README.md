@@ -33,6 +33,7 @@ KBox is an abbreviation for Knowledge Box. it is a data management framework des
 - [Changing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#changing-the-resource-folder)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
+- [How can I create my own custom build(jar) of KBox?](https://github.com/AKSW/KBox#How-can-I-create-my-own-custom-build(.jar)-of-KBox?)
 - [Check our Wiki for old APIs](https://github.com/AKSW/KBox/wiki)
 
 ### Why use KBox?
@@ -303,3 +304,14 @@ Information needed:
 7. The Dataset URI name: the URI name that will be used by users to dereference your dataset;
 8. The Dataset description: Give us a few words to help others to know what your dataset is about;
 9. Tell us one reason why KBox is awesome. :-)
+
+
+### How can I create my own custom build(.jar) of KBox?
+If you want to do some modifications or changes to the KBox and want to use the KBox with those modifications, you have to create your own custom build (jar). To do that follow these steps,
+1. Open a terminal on the KBox home directory
+2. Issue the following command in the terminal to build the project. 
+`mvn clean install`
+3. Then navigate to `kbox.kibe/target` directory
+4. In there you will be able to see a jar file named similar to *kbox.kibe-x.x.x-........-jar-with-dependencies.jar*
+5. This is the jar that contains all the modifications you did.
+
