@@ -1,14 +1,5 @@
 package org.aksw.kbox.kibe;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.aksw.kbox.Install;
 import org.aksw.kbox.ZipLocate;
 import org.aksw.kbox.apple.AppInstall;
@@ -20,7 +11,6 @@ import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotLocatedException;
 import org.aksw.kbox.kns.CustomKNSServerList;
 import org.aksw.kbox.kns.InstallFactory;
-import org.aksw.kbox.kns.KNSServer;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
 import org.aksw.kbox.kns.Source;
@@ -32,8 +22,19 @@ import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.zeroturnaround.zip.ZipUtil;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -377,20 +378,21 @@ public class Main {
 				}
 			}
 		} else if (commands.containsKey(LIST_COMMAND) && commands.containsKey(KNS_COMMAND)) {
-			System.out.println("KNS table list");
+			printOutput("KNS table list");
 			CustomKNSServerList knsServerList = new CustomKNSServerList();
+			List<String> knsList = new ArrayList<>();
 			try {
-				knsServerList.visit(new KNSServerListVisitor() {
-					@Override
-					public boolean visit(KNSServer knsServer) throws Exception {
-						System.out.println("\t - " + knsServer.getURL());
-						return true;
-					}
+				knsServerList.visit((KNSServerListVisitor) knsServer -> {
+					knsList.add(knsServer.getURL().toString());
+					printOutput("\t - " + knsServer.getURL());
+					return true;
 				});
+				listKnsCommandJsonOutput(knsList, true);
 			} catch (Exception e) {
 				String message = "An error occurred while listing the available knowledge bases: "
 						+ e.getCause().getMessage();
-				System.out.println(message);
+				printOutput(message);
+				listKnsCommandJsonOutput(knsList, false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LIST_COMMAND) && !commands.containsKey(KNS_COMMAND)) {
@@ -762,6 +764,23 @@ public class Main {
 		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("install", success);
-		System.out.println(jsonObject.toJSONString());
+		System.out.println(jsonObject.toString(4));
+	}
+
+	private static void listKnsCommandJsonOutput(List<String> knsList, boolean success) {
+		if (!isJsonOutput) {
+			return;
+		}
+		JSONObject jsonObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		if (success) {
+			for (String url : knsList) {
+				jsonArray.put(url);
+			}
+		}
+		jsonObject.put("success", success);
+		jsonObject.put("knsList", jsonArray);
+		System.out.println(jsonObject.toString(4));
+//		System.out.println(jsonObject.toJSONString().replaceAll("\\\\", ""));
 	}
 }
