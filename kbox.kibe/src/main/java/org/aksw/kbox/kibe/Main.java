@@ -1,14 +1,5 @@
 package org.aksw.kbox.kibe;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.aksw.kbox.Install;
 import org.aksw.kbox.ZipLocate;
 import org.aksw.kbox.apple.AppInstall;
@@ -20,7 +11,6 @@ import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotLocatedException;
 import org.aksw.kbox.kns.CustomKNSServerList;
 import org.aksw.kbox.kns.InstallFactory;
-import org.aksw.kbox.kns.KNSServer;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
 import org.aksw.kbox.kns.Source;
@@ -32,7 +22,19 @@ import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.zeroturnaround.zip.ZipUtil;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -56,6 +58,9 @@ public class Main {
 	public final static String KB_COMMAND_SEPARATOR = ",";
 
 	private final static String KB_WEB_CLIENT = "http://kbox.aksw.org/webclient";
+
+	private final static String JSON_OUTPUT_FORMAT = "json";
+	private final static int JSON_INDENTATION = 4;
 
 	// COMMANDS
 	private final static String INSTALL_COMMAND = "-install";
@@ -82,10 +87,18 @@ public class Main {
 	private final static String FORMAT_COMMAND = "-format";
 	private final static String RDF_COMMAND = "-rdf";
 	private final static String TARGET_COMMAND = "-target";
+	private final static String OUTPUT = "-o";
+
+	// STATIC VARIABLES
+	private static boolean isJsonOutput;
 
 	public static void main(String[] args) {
 		Map<String, String[]> commands = parse(args);
 		ConsoleInstallInputStreamFactory inputStreamFactory = new ConsoleInstallInputStreamFactory();
+		/*for (Map.Entry<String, String[]> entry : commands.entrySet()) {
+			System.out.println("Key: " + entry.getKey() + " Value: " + Arrays.toString(entry.getValue()));
+		}*/
+		isJsonOutput = containsJsonOutputCommand(commands);
 		if (commands.containsKey(CONVERT_COMMAND) && !commands.containsKey(ZIP_ENCODE_COMMAND)
 				&& !commands.containsKey(GZIP_ENCODE_COMMAND)) {
 			String directoryParam = commands.get(CONVERT_COMMAND)[0];
@@ -162,13 +175,15 @@ public class Main {
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.size() == 1) {
 			String resource = getSingleParam(commands, INSTALL_COMMAND);
 			try {
-				System.out.println("Installing resource " + resource);
+				printOutput("Installing resource " + resource);
 				URL url = new URL(resource);
 				org.aksw.kbox.KBox.install(url);
-				System.out.println("Resource installed.");
+				printOutput("Resource installed.");
+				jsonActionOutput("install", true);
 			} catch (Exception e) {
 				String message = "Error installing the resource " + resource + ": " + e.getMessage();
-				System.out.println(message);
+				printOutput(message);
+				jsonActionOutput("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KB_COMMAND)
@@ -179,12 +194,14 @@ public class Main {
 				String resource = getSingleParam(commands, FILE_COMMAND);
 				File resourceFile = new File(resource);
 				URL file = resourceFile.toURI().toURL();
-				System.out.println("Installing KB " + kb2Install);
+				printOutput("Installing KB " + kb2Install);
 				KBox.install(file, kbURL, inputStreamFactory);
-				System.out.println("KB installed.");
+				printOutput("KB installed.");
+				jsonActionOutput("install", true);
 			} catch (Exception e) {
 				String message = "Error installing the knowledge base " + kb2Install + ": " + e.getMessage();
-				System.out.println(message);
+				printOutput(message);
+				jsonActionOutput("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KB_COMMAND)
@@ -193,17 +210,21 @@ public class Main {
 			String kbURL = getSingleParam(commands, KB_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			try {
-				System.out.println("Installing KB " + kbURL + " from KNS " + knsServer);
+				printOutput("Installing KB " + kbURL + " from KNS " + knsServer);
 				KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), KBox.KIBE_FORMAT, version, inputStreamFactory);
-				System.out.println("KB installed.");
+				printOutput("KB installed.");
+				jsonActionOutput("install", true);
 			} catch (MalformedURLException e) {
-				System.out.println(e.getMessage());
+				printOutput(e.getMessage());
+				jsonActionOutput("install", false);
 				logger.error(e);
 			} catch (KBNotLocatedException e) {
-				System.out.println("The knowledge base " + kbURL + " is not available in " + knsServer + ".");
+				printOutput("The knowledge base " + kbURL + " is not available in " + knsServer + ".");
+				jsonActionOutput("install", false);
 			} catch (Exception e) {
 				String message = "Error installing knowledge base " + kbURL + " from " + knsServer + ".";
-				System.out.println(message);
+				printOutput(message);
+				jsonActionOutput("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KN_COMMAND)
@@ -213,17 +234,21 @@ public class Main {
 			String format = getSingleParam(commands, FORMAT_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			try {
-				System.out.println("Installing KN " + knURL + " from KNS " + knsServer);
+				printOutput("Installing KN " + knURL + " from KNS " + knsServer);
 				KBox.installFromKNSServer(new URL(knURL), new URL(knsServer), format, version, inputStreamFactory);
-				System.out.println("KN installed.");
+				printOutput("KN installed.");
+				jsonActionOutput("install", true);
 			} catch (MalformedURLException e) {
-				System.out.println(e.getMessage());
+				printOutput(e.getMessage());
+				jsonActionOutput("install", false);
 				logger.error(e);
 			} catch (KBNotLocatedException e) {
-				System.out.println("The knowledge name " + knURL + " is not available in " + knsServer + ".");
+				printOutput("The knowledge name " + knURL + " is not available in " + knsServer + ".");
+				jsonActionOutput("install", false);
 			} catch (Exception e) {
 				String message = "Error installing knowledge name " + knURL + " from " + knsServer + ".";
-				System.out.println(message);
+				printOutput(message);
+				jsonActionOutput("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(RDF_COMMAND)
@@ -251,7 +276,7 @@ public class Main {
 						inputRDFFiles.add(fileURL);
 					}
 				}
-				System.out.println("Installing KB " + kbURL + " from files " + source);
+				printOutput("Installing KB " + kbURL + " from files " + source);
 				InstallFactory installFactory = new DefaultInstallFactory();
 				AppInstall installMethod = installFactory.get(install);
 				KBox.install(inputRDFFiles.toArray(new URL[inputRDFFiles.size()]), 
@@ -260,13 +285,16 @@ public class Main {
 						version,
 						installMethod,
 						inputStreamFactory);
-				System.out.println("KN installed.");
+				printOutput("KN installed.");
+				jsonActionOutput("install", true);
 			} catch (MalformedURLException e) {
-				System.out.println(e.getMessage());
+				printOutput(e.getMessage());
+				jsonActionOutput("install", false);
 				logger.error(e);
 			} catch (Exception e) {
 				String message = "Error installing knowledge name " + kbURL + " from files " + source + ".";
-				System.out.println(message);
+				printOutput(message);
+				jsonActionOutput("install", false);
 				logger.error(message, e);
 			}
 		} else if (!commands.containsKey(SPARQL_QUERY_COMMAND) && !commands.containsKey(SERVER_COMMAND)
@@ -308,11 +336,13 @@ public class Main {
 			String url = getSingleParam(commands, KNS_COMMAND);
 			try {
 				URL knsURL = new URL(url);
-				System.out.println("Installing KNS " + url);
+				printOutput("Installing KNS " + url);
 				KBox.installKNS(knsURL);
-				System.out.println("KNS installed.");
+				printOutput("KNS installed.");
+				jsonActionOutput("install", true);
 			} catch (MalformedURLException e) {
-				System.out.println(e.getMessage());
+				printOutput(e.getMessage());
+				jsonActionOutput("install", false);
 				logger.error(e);
 			}
 		} else if (commands.containsKey(SPARQL_QUERY_COMMAND)
@@ -349,20 +379,21 @@ public class Main {
 				}
 			}
 		} else if (commands.containsKey(LIST_COMMAND) && commands.containsKey(KNS_COMMAND)) {
-			System.out.println("KNS table list");
+			printOutput("KNS table list");
 			CustomKNSServerList knsServerList = new CustomKNSServerList();
+			List<String> knsList = new ArrayList<>();
 			try {
-				knsServerList.visit(new KNSServerListVisitor() {
-					@Override
-					public boolean visit(KNSServer knsServer) throws Exception {
-						System.out.println("\t - " + knsServer.getURL());
-						return true;
-					}
+				knsServerList.visit((KNSServerListVisitor) knsServer -> {
+					knsList.add(knsServer.getURL().toString());
+					printOutput("\t - " + knsServer.getURL());
+					return true;
 				});
+				listKnsCommandJsonOutput(knsList, true);
 			} catch (Exception e) {
 				String message = "An error occurred while listing the available knowledge bases: "
 						+ e.getCause().getMessage();
-				System.out.println(message);
+				printOutput(message);
+				listKnsCommandJsonOutput(knsList, false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LIST_COMMAND) && !commands.containsKey(KNS_COMMAND)) {
@@ -388,12 +419,14 @@ public class Main {
 		} else if (commands.containsKey(REMOVE_COMMAND) && commands.containsKey(KNS_COMMAND)) {
 			String knsURL = getSingleParam(commands, REMOVE_COMMAND);
 			try {
-				System.out.println("Removing KNS " + knsURL);
+				printOutput("Removing KNS " + knsURL);
 				KBox.removeKNS(new URL(knsURL));
-				System.out.println("KNS removed.");
+				printOutput("KNS removed.");
+				jsonActionOutput("remove", true);
 			} catch (Exception e) {
 				String message = "An error occurred while removing the KNS: " + knsURL + ".";
-				System.out.println(message);
+				printOutput(message);
+				jsonActionOutput("remove", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(RESOURCE_DIR_COMMAND)) {
@@ -439,20 +472,26 @@ public class Main {
 		} else if (commands.containsKey(LOCATE_COMMAND) && !commands.containsKey(KB_COMMAND)) {
 			String resourceURL = getSingleParam(commands, LOCATE_COMMAND);
 			try {
-				System.out.println(org.aksw.kbox.KBox.locate(new URL(resourceURL)));
+				String path = org.aksw.kbox.KBox.locate(new URL(resourceURL)).getAbsolutePath();
+				printOutput(path);
+				locateCommandJsonOutput(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the resource: " + resourceURL;
-				System.out.println(message);
+				printOutput(message);
+				locateCommandJsonOutput(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KB_COMMAND)) {
 			String kbURL = getSingleParam(commands, KB_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			try {
-				System.out.println(KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT, version));
+				String path = KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT, version).getAbsolutePath();
+				printOutput(path);
+				locateCommandJsonOutput(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KB: " + kbURL;
-				System.out.println(message);
+				printOutput(message);
+				locateCommandJsonOutput(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KN_COMMAND)) {
@@ -460,10 +499,13 @@ public class Main {
 			String format = getSingleParam(commands, FORMAT_COMMAND);
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			try {
-				System.out.println(KBox.locate(new URL(kbURL), format, version));
+				String path = KBox.locate(new URL(kbURL), format, version).getAbsolutePath();
+				printOutput(path);
+				locateCommandJsonOutput(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KN: " + kbURL;
-				System.out.println(message);
+				printOutput(message);
+				locateCommandJsonOutput(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(SERVER_COMMAND)) {
@@ -575,7 +617,13 @@ public class Main {
 	}
 
 	public static void printVersion() {
-		System.out.println("KBox version " + VERSION);
+		if (!isJsonOutput) {
+			System.out.println("KBox version " + VERSION);
+		} else {
+			JSONObject obj = new JSONObject();
+			obj.put("version", VERSION);
+			System.out.println(obj.toString(JSON_INDENTATION));
+		}
 	}
 
 	public static void printHelp() {
@@ -711,5 +759,64 @@ public class Main {
 			}
 		}
 		return map;
+	}
+
+	/**
+	 * Check if the user expecting json output.
+	 *
+	 * @param commands
+	 *            the parsed commands..
+	 *
+	 * @return a boolean flag.
+	 */
+	private static boolean containsJsonOutputCommand(Map<String, String[]> commands) {
+		if (commands.containsKey(OUTPUT)) {
+			boolean result = commands.get(OUTPUT)[0].equalsIgnoreCase(JSON_OUTPUT_FORMAT);
+			commands.remove(OUTPUT); // removing the -o from map, so it won't affect to other if conditions
+			return result;
+		}
+		return false;
+	}
+
+
+	private static void printOutput(String msg) {
+		if (!isJsonOutput) {
+			System.out.println(msg);
+		}
+	}
+
+	private static void jsonActionOutput(String action, boolean success) {
+		if (!isJsonOutput) {
+			return;
+		}
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put(action, success);
+		System.out.println(jsonObject.toString(JSON_INDENTATION));
+	}
+
+	private static void locateCommandJsonOutput(String path) {
+		if (!isJsonOutput) {
+			return;
+		}
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("path", path);
+		System.out.println(jsonObject.toString(JSON_INDENTATION));
+	}
+
+	private static void listKnsCommandJsonOutput(List<String> knsList, boolean success) {
+		if (!isJsonOutput) {
+			return;
+		}
+		JSONObject jsonObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		if (success) {
+			for (String url : knsList) {
+				jsonArray.put(url);
+			}
+		}
+		jsonObject.put("success", success);
+		jsonObject.put("knsList", jsonArray);
+		System.out.println(jsonObject.toString(JSON_INDENTATION));
+//		System.out.println(jsonObject.toJSONString().replaceAll("\\\\", ""));
 	}
 }
