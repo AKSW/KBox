@@ -434,15 +434,18 @@ public class Main {
 			if (resourceDir != null) {
 				try {
 					KBox.setResourceFolder(resourceDir);
-					System.out.println("Resource directory redirected to " + resourceDir + ".");
+					printOutput("Resource directory redirected to " + resourceDir + ".");
+					showPathInJsonFormat(resourceDir);
 				} catch (Exception e) {
 					String message = "Error changing KBox resource repository to " + resourceDir + ".";
-					System.out.println(message);
+					printOutput(message);
+					showPathInJsonFormat(resourceDir);
 					logger.error(message, e);
 				}
 			} else {
 				resourceDir = KBox.getResourceFolder();
-				System.out.println("Your current resource directory is: " + resourceDir);
+				printOutput("Your current resource directory is: " + resourceDir);
+				showPathInJsonFormat(resourceDir);
 			}
 		} else if (commands.containsKey(SEARCH_COMMAND)) {
 			String pattern = getSingleParam(commands, SEARCH_COMMAND);
@@ -474,11 +477,11 @@ public class Main {
 			try {
 				String path = org.aksw.kbox.KBox.locate(new URL(resourceURL)).getAbsolutePath();
 				printOutput(path);
-				locateCommandJsonOutput(path);
+				showPathInJsonFormat(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the resource: " + resourceURL;
 				printOutput(message);
-				locateCommandJsonOutput(null);
+				showPathInJsonFormat(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KB_COMMAND)) {
@@ -487,11 +490,11 @@ public class Main {
 			try {
 				String path = KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT, version).getAbsolutePath();
 				printOutput(path);
-				locateCommandJsonOutput(path);
+				showPathInJsonFormat(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KB: " + kbURL;
 				printOutput(message);
-				locateCommandJsonOutput(null);
+				showPathInJsonFormat(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KN_COMMAND)) {
@@ -501,11 +504,11 @@ public class Main {
 			try {
 				String path = KBox.locate(new URL(kbURL), format, version).getAbsolutePath();
 				printOutput(path);
-				locateCommandJsonOutput(path);
+				showPathInJsonFormat(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KN: " + kbURL;
 				printOutput(message);
-				locateCommandJsonOutput(null);
+				showPathInJsonFormat(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(SERVER_COMMAND)) {
@@ -794,7 +797,7 @@ public class Main {
 		System.out.println(jsonObject.toString(JSON_INDENTATION));
 	}
 
-	private static void locateCommandJsonOutput(String path) {
+	private static void showPathInJsonFormat(String path) {
 		if (!isJsonOutput) {
 			return;
 		}
