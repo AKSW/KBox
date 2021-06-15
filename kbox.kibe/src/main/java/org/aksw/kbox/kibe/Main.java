@@ -567,6 +567,10 @@ public class Main {
 				System.out.println(message);
 				logger.error(message, e);
 			}
+		} else if (commands.containsKey(VERSION_COMMAND)) {
+			printVersion();
+		} else {
+			printHelp();
 		}
 	}
 
