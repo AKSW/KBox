@@ -309,27 +309,32 @@ public class Main {
 					try {
 						File kbFile = KBox.getResource(resourceName, KBox.KIBE_FORMAT, version, true);
 						if(kbFile != null) {
-							System.out.println(resourceName + " KB installed.");
+							printOutput(resourceName + " KB installed.");
+							jsonActionOutput("install", true);
 						} else {
-							System.out.println(resourceName + " KB could NOT be installed.");
+							printOutput(resourceName + " KB could NOT be installed.");
+							jsonActionOutput("install", false);
 						}
 					} catch (MalformedURLException e) {
 						String message = e.getMessage();
-						System.out.println(message);
+						printOutput(message);
+						jsonActionOutput("install", false);
 						logger.error(message, e);
 					} catch (Exception e) {
 						String message = "The knowledge base could not be found: URL:" + resourceName;
 						if (version != null) {
-							message += ", " + "vesion: " + version;
+							message += ", " + "version: " + version;
 						}
-						System.out.println(message);
+						printOutput(message);
+						jsonActionOutput("install", false);
 						logger.error(message, e);
 					}
 				}
 			} catch (Exception e) {
 				String message = "An error occurred while parsing the KB Name list \"" + graphNames + "\": "
 						+ e.getMessage();
-				System.out.println(message);
+				printOutput(message);
+				jsonActionOutput("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KNS_COMMAND)) {
@@ -774,6 +779,10 @@ public class Main {
 	 */
 	private static boolean containsJsonOutputCommand(Map<String, String[]> commands) {
 		if (commands.containsKey(OUTPUT)) {
+			if (commands.get(OUTPUT)[0] == null) {
+				System.out.println("Output format not specified. Hence showing default outputs.");
+				return false;
+			}
 			boolean result = commands.get(OUTPUT)[0].equalsIgnoreCase(JSON_OUTPUT_FORMAT);
 			commands.remove(OUTPUT); // removing the -o from map, so it won't affect to other if conditions
 			return result;
