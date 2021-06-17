@@ -11,6 +11,7 @@ import org.aksw.kbox.kibe.exception.KBDereferencingException;
 import org.aksw.kbox.kibe.exception.KBNotLocatedException;
 import org.aksw.kbox.kns.CustomKNSServerList;
 import org.aksw.kbox.kns.InstallFactory;
+import org.aksw.kbox.kns.KN;
 import org.aksw.kbox.kns.KNSServerListVisitor;
 import org.aksw.kbox.kns.ServerAddress;
 import org.aksw.kbox.kns.Source;
@@ -61,6 +62,7 @@ public class Main {
 
 	private final static String JSON_OUTPUT_FORMAT = "json";
 	private final static int JSON_INDENTATION = 4;
+	private static final List<String> visitedKNList = new ArrayList<>();
 
 	// COMMANDS
 	private final static String INSTALL_COMMAND = "-install";
@@ -412,14 +414,17 @@ public class Main {
 					listAllVisitor = new ConsoleKNSServerListVisitor(pagination);
 				}
 				KBox.visit(listAllVisitor);
+				printVisitedKNinJson();
 			} catch (UnknownHostException e) {
 				String message = "An error occurred while listing the available resources. Check your connection.";
-				System.out.println(message);
+				printOutput(message);
 				logger.error(message, e);
+				jsonActionOutput("success", false);
 			} catch (Exception e) {
 				String message = "An error occurred while listing the available resources: " + e.getMessage();
-				System.out.println(message);
+				printOutput(message);
 				logger.error(message, e);
+				jsonActionOutput("success", false);
 			}
 		} else if (commands.containsKey(REMOVE_COMMAND) && commands.containsKey(KNS_COMMAND)) {
 			String knsURL = getSingleParam(commands, REMOVE_COMMAND);
@@ -460,10 +465,12 @@ public class Main {
 					commands.containsKey(PAGINATION_COMMAND));
 			try {
 				KBox.visit(searchVisitor);
+				printVisitedKNinJson();
 			} catch (Exception e) {
 				String message = "An error occurred while enquiring search using the pattern: " + pattern;
-				System.out.println(message);
+				printOutput(message);
 				logger.error(message, e);
+				jsonActionOutput("success", false);
 			}
 		} else if (commands.containsKey(INFO_COMMAND)) {
 			String kn = getSingleParam(commands, INFO_COMMAND);
@@ -474,7 +481,8 @@ public class Main {
 				KBox.visit(visitor);
 			} catch (Exception e) {
 				String message = "An error occurred while enquiring information from the KN " + kn;
-				System.out.println(message);
+				printOutput(message);
+				jsonActionOutput("success", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && !commands.containsKey(KB_COMMAND)) {
@@ -830,5 +838,36 @@ public class Main {
 		jsonObject.put("knsList", jsonArray);
 		System.out.println(jsonObject.toString(JSON_INDENTATION));
 //		System.out.println(jsonObject.toJSONString().replaceAll("\\\\", ""));
+	}
+
+	private static void printVisitedKNinJson() {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("success", true);
+		JSONArray visitedKNs = new JSONArray();
+		for (String kn : visitedKNList) {
+			String[] split = kn.split(",");
+			JSONObject jsonKN = new JSONObject();
+			jsonKN.put("name", split[0]);
+			jsonKN.put("format", split[1]);
+			jsonKN.put("version", split[2]);
+			visitedKNs.put(jsonKN);
+		}
+		jsonObject.put("results", visitedKNs);
+		System.out.println(jsonObject.toString(JSON_INDENTATION));
+	}
+
+	public static void printKNInfo(KN kn) {
+		JSONObject knJsonObj = new JSONObject();
+		knJsonObj.put("success", true);
+		knJsonObj.put("info", kn.getJsonObject());
+		System.out.println(knJsonObj.toString(JSON_INDENTATION));
+	}
+
+	public static void addVisitedKN(String kn) {
+		visitedKNList.add(kn);
+	}
+
+	public static boolean getIsJsonOutput() {
+		return isJsonOutput;
 	}
 }
