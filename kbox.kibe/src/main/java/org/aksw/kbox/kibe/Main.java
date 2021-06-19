@@ -181,11 +181,11 @@ public class Main {
 				URL url = new URL(resource);
 				org.aksw.kbox.KBox.install(url);
 				printOutput("Resource installed.");
-				jsonActionOutput("install", true);
+				printActionStatusInJson("install", true);
 			} catch (Exception e) {
 				String message = "Error installing the resource " + resource + ": " + e.getMessage();
 				printOutput(message);
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KB_COMMAND)
@@ -199,11 +199,11 @@ public class Main {
 				printOutput("Installing KB " + kb2Install);
 				KBox.install(file, kbURL, inputStreamFactory);
 				printOutput("KB installed.");
-				jsonActionOutput("install", true);
+				printActionStatusInJson("install", true);
 			} catch (Exception e) {
 				String message = "Error installing the knowledge base " + kb2Install + ": " + e.getMessage();
 				printOutput(message);
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KB_COMMAND)
@@ -215,18 +215,18 @@ public class Main {
 				printOutput("Installing KB " + kbURL + " from KNS " + knsServer);
 				KBox.installFromKNSServer(new URL(kbURL), new URL(knsServer), KBox.KIBE_FORMAT, version, inputStreamFactory);
 				printOutput("KB installed.");
-				jsonActionOutput("install", true);
+				printActionStatusInJson("install", true);
 			} catch (MalformedURLException e) {
 				printOutput(e.getMessage());
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(e);
 			} catch (KBNotLocatedException e) {
 				printOutput("The knowledge base " + kbURL + " is not available in " + knsServer + ".");
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 			} catch (Exception e) {
 				String message = "Error installing knowledge base " + kbURL + " from " + knsServer + ".";
 				printOutput(message);
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KN_COMMAND)
@@ -239,18 +239,18 @@ public class Main {
 				printOutput("Installing KN " + knURL + " from KNS " + knsServer);
 				KBox.installFromKNSServer(new URL(knURL), new URL(knsServer), format, version, inputStreamFactory);
 				printOutput("KN installed.");
-				jsonActionOutput("install", true);
+				printActionStatusInJson("install", true);
 			} catch (MalformedURLException e) {
 				printOutput(e.getMessage());
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(e);
 			} catch (KBNotLocatedException e) {
 				printOutput("The knowledge name " + knURL + " is not available in " + knsServer + ".");
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 			} catch (Exception e) {
 				String message = "Error installing knowledge name " + knURL + " from " + knsServer + ".";
 				printOutput(message);
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(RDF_COMMAND)
@@ -288,15 +288,15 @@ public class Main {
 						installMethod,
 						inputStreamFactory);
 				printOutput("KN installed.");
-				jsonActionOutput("install", true);
+				printActionStatusInJson("install", true);
 			} catch (MalformedURLException e) {
 				printOutput(e.getMessage());
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(e);
 			} catch (Exception e) {
 				String message = "Error installing knowledge name " + kbURL + " from files " + source + ".";
 				printOutput(message);
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(message, e);
 			}
 		} else if (!commands.containsKey(SPARQL_QUERY_COMMAND) && !commands.containsKey(SERVER_COMMAND)
@@ -312,15 +312,15 @@ public class Main {
 						File kbFile = KBox.getResource(resourceName, KBox.KIBE_FORMAT, version, true);
 						if(kbFile != null) {
 							printOutput(resourceName + " KB installed.");
-							jsonActionOutput("install", true);
+							printActionStatusInJson("install", true);
 						} else {
 							printOutput(resourceName + " KB could NOT be installed.");
-							jsonActionOutput("install", false);
+							printActionStatusInJson("install", false);
 						}
 					} catch (MalformedURLException e) {
 						String message = e.getMessage();
 						printOutput(message);
-						jsonActionOutput("install", false);
+						printActionStatusInJson("install", false);
 						logger.error(message, e);
 					} catch (Exception e) {
 						String message = "The knowledge base could not be found: URL:" + resourceName;
@@ -328,7 +328,7 @@ public class Main {
 							message += ", " + "version: " + version;
 						}
 						printOutput(message);
-						jsonActionOutput("install", false);
+						printActionStatusInJson("install", false);
 						logger.error(message, e);
 					}
 				}
@@ -336,7 +336,7 @@ public class Main {
 				String message = "An error occurred while parsing the KB Name list \"" + graphNames + "\": "
 						+ e.getMessage();
 				printOutput(message);
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KNS_COMMAND)) {
@@ -346,10 +346,10 @@ public class Main {
 				printOutput("Installing KNS " + url);
 				KBox.installKNS(knsURL);
 				printOutput("KNS installed.");
-				jsonActionOutput("install", true);
+				printActionStatusInJson("install", true);
 			} catch (MalformedURLException e) {
 				printOutput(e.getMessage());
-				jsonActionOutput("install", false);
+				printActionStatusInJson("install", false);
 				logger.error(e);
 			}
 		} else if (commands.containsKey(SPARQL_QUERY_COMMAND)
@@ -395,12 +395,12 @@ public class Main {
 					printOutput("\t - " + knsServer.getURL());
 					return true;
 				});
-				listKnsCommandJsonOutput(knsList, true);
+				printKnsListJsonFormat(knsList, true);
 			} catch (Exception e) {
 				String message = "An error occurred while listing the available knowledge bases: "
 						+ e.getCause().getMessage();
 				printOutput(message);
-				listKnsCommandJsonOutput(knsList, false);
+				printKnsListJsonFormat(knsList, false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LIST_COMMAND) && !commands.containsKey(KNS_COMMAND)) {
@@ -414,17 +414,17 @@ public class Main {
 					listAllVisitor = new ConsoleKNSServerListVisitor(pagination);
 				}
 				KBox.visit(listAllVisitor);
-				printVisitedKNinJson();
+				printVisitedKNJsonFormat();
 			} catch (UnknownHostException e) {
 				String message = "An error occurred while listing the available resources. Check your connection.";
 				printOutput(message);
 				logger.error(message, e);
-				jsonActionOutput("success", false);
+				printActionStatusInJson("success", false);
 			} catch (Exception e) {
 				String message = "An error occurred while listing the available resources: " + e.getMessage();
 				printOutput(message);
 				logger.error(message, e);
-				jsonActionOutput("success", false);
+				printActionStatusInJson("success", false);
 			}
 		} else if (commands.containsKey(REMOVE_COMMAND) && commands.containsKey(KNS_COMMAND)) {
 			String knsURL = getSingleParam(commands, REMOVE_COMMAND);
@@ -432,11 +432,11 @@ public class Main {
 				printOutput("Removing KNS " + knsURL);
 				KBox.removeKNS(new URL(knsURL));
 				printOutput("KNS removed.");
-				jsonActionOutput("remove", true);
+				printActionStatusInJson("remove", true);
 			} catch (Exception e) {
 				String message = "An error occurred while removing the KNS: " + knsURL + ".";
 				printOutput(message);
-				jsonActionOutput("remove", false);
+				printActionStatusInJson("remove", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(RESOURCE_DIR_COMMAND)) {
@@ -445,17 +445,17 @@ public class Main {
 				try {
 					KBox.setResourceFolder(resourceDir);
 					printOutput("Resource directory redirected to " + resourceDir + ".");
-					showPathInJsonFormat(resourceDir);
+					printPathInJsonFormat(resourceDir);
 				} catch (Exception e) {
 					String message = "Error changing KBox resource repository to " + resourceDir + ".";
 					printOutput(message);
-					showPathInJsonFormat(resourceDir);
+					printPathInJsonFormat(resourceDir);
 					logger.error(message, e);
 				}
 			} else {
 				resourceDir = KBox.getResourceFolder();
 				printOutput("Your current resource directory is: " + resourceDir);
-				showPathInJsonFormat(resourceDir);
+				printPathInJsonFormat(resourceDir);
 			}
 		} else if (commands.containsKey(SEARCH_COMMAND)) {
 			String pattern = getSingleParam(commands, SEARCH_COMMAND);
@@ -465,12 +465,12 @@ public class Main {
 					commands.containsKey(PAGINATION_COMMAND));
 			try {
 				KBox.visit(searchVisitor);
-				printVisitedKNinJson();
+				printVisitedKNJsonFormat();
 			} catch (Exception e) {
 				String message = "An error occurred while enquiring search using the pattern: " + pattern;
 				printOutput(message);
 				logger.error(message, e);
-				jsonActionOutput("success", false);
+				printActionStatusInJson("success", false);
 			}
 		} else if (commands.containsKey(INFO_COMMAND)) {
 			String kn = getSingleParam(commands, INFO_COMMAND);
@@ -482,7 +482,7 @@ public class Main {
 			} catch (Exception e) {
 				String message = "An error occurred while enquiring information from the KN " + kn;
 				printOutput(message);
-				jsonActionOutput("success", false);
+				printActionStatusInJson("success", false);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && !commands.containsKey(KB_COMMAND)) {
@@ -490,11 +490,11 @@ public class Main {
 			try {
 				String path = org.aksw.kbox.KBox.locate(new URL(resourceURL)).getAbsolutePath();
 				printOutput(path);
-				showPathInJsonFormat(path);
+				printPathInJsonFormat(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the resource: " + resourceURL;
 				printOutput(message);
-				showPathInJsonFormat(null);
+				printPathInJsonFormat(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KB_COMMAND)) {
@@ -503,11 +503,11 @@ public class Main {
 			try {
 				String path = KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT, version).getAbsolutePath();
 				printOutput(path);
-				showPathInJsonFormat(path);
+				printPathInJsonFormat(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KB: " + kbURL;
 				printOutput(message);
-				showPathInJsonFormat(null);
+				printPathInJsonFormat(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(KN_COMMAND)) {
@@ -517,11 +517,11 @@ public class Main {
 			try {
 				String path = KBox.locate(new URL(kbURL), format, version).getAbsolutePath();
 				printOutput(path);
-				showPathInJsonFormat(path);
+				printPathInJsonFormat(path);
 			} catch (Exception e) {
 				String message = "An error occurred while resolving the KN: " + kbURL;
 				printOutput(message);
-				showPathInJsonFormat(null);
+				printPathInJsonFormat(null);
 				logger.error(message, e);
 			}
 		} else if (commands.containsKey(SERVER_COMMAND)) {
@@ -805,7 +805,7 @@ public class Main {
 		}
 	}
 
-	private static void jsonActionOutput(String action, boolean success) {
+	private static void printActionStatusInJson(String action, boolean success) {
 		if (!isJsonOutput) {
 			return;
 		}
@@ -814,7 +814,7 @@ public class Main {
 		System.out.println(jsonObject.toString(JSON_INDENTATION));
 	}
 
-	private static void showPathInJsonFormat(String path) {
+	private static void printPathInJsonFormat(String path) {
 		if (!isJsonOutput) {
 			return;
 		}
@@ -823,7 +823,7 @@ public class Main {
 		System.out.println(jsonObject.toString(JSON_INDENTATION));
 	}
 
-	private static void listKnsCommandJsonOutput(List<String> knsList, boolean success) {
+	private static void printKnsListJsonFormat(List<String> knsList, boolean success) {
 		if (!isJsonOutput) {
 			return;
 		}
@@ -840,7 +840,7 @@ public class Main {
 //		System.out.println(jsonObject.toJSONString().replaceAll("\\\\", ""));
 	}
 
-	private static void printVisitedKNinJson() {
+	private static void printVisitedKNJsonFormat() {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("success", true);
 		JSONArray visitedKNs = new JSONArray();
