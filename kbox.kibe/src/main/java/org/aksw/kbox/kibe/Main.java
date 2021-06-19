@@ -854,6 +854,7 @@ public class Main {
 		}
 		jsonObject.put("results", visitedKNs);
 		System.out.println(jsonObject.toString(JSON_INDENTATION));
+		visitedKNList.clear(); // clear all the visited list.
 	}
 
 	public static void printKNInfo(KN kn) {
