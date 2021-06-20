@@ -3,6 +3,7 @@ package org.aksw.kbox.kibe.console;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
+import org.aksw.kbox.kibe.JsonSerializer;
 import org.aksw.kbox.kibe.Main;
 import org.aksw.kbox.kibe.stream.InstallStreamListener;
 import org.apache.commons.lang3.StringUtils;
@@ -79,7 +80,7 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	 * @param read current streamed length.
 	 */
 	private void printProgress(long startTime, long read, long length, int blockSize) {
-		if(Main.getIsJsonOutput()) {
+		if(JsonSerializer.getInstance().getIsJsonOutput()) {
 			return; // avoid printing ETA time when user is expecting a json output
 		}
 		int percentage = (int)(((double)read / (double)length) * 100);
@@ -127,7 +128,7 @@ public class ConsoleStreamListener implements InstallStreamListener {
 	 * @param size the size of the console bar.
 	 */
 	private void printUndefined(long read, int size) {
-		if(Main.getIsJsonOutput()) {
+		if(JsonSerializer.getInstance().getIsJsonOutput()) {
 			return; // avoid printing ETA time when user is expecting a json output
 		}
 	    StringBuilder string = new StringBuilder(140);

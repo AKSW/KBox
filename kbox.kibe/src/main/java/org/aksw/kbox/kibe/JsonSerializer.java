@@ -1,5 +1,6 @@
 package org.aksw.kbox.kibe;
 
+import org.aksw.kbox.kns.KN;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -7,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MessagePrinter {
+public class JsonSerializer {
 
-    private static MessagePrinter messagePrinterInstance;
+    private static JsonSerializer jsonSerializerInstance;
     private final static String OUTPUT = "-o";
     private final static String JSON_OUTPUT_FORMAT = "json";
     private final static int JSON_INDENTATION = 4;
@@ -17,19 +18,19 @@ public class MessagePrinter {
 
     private boolean isJsonOutput;
 
-    private MessagePrinter() {
+    private JsonSerializer() {
 
     }
 
-    public static MessagePrinter getInstance() {
-        if (messagePrinterInstance == null) {
-            synchronized (MessagePrinter.class) {
-                if (messagePrinterInstance == null) {
-                    messagePrinterInstance = new MessagePrinter();
+    public static JsonSerializer getInstance() {
+        if (jsonSerializerInstance == null) {
+            synchronized (JsonSerializer.class) {
+                if (jsonSerializerInstance == null) {
+                    jsonSerializerInstance = new JsonSerializer();
                 }
             }
         }
-        return messagePrinterInstance;
+        return jsonSerializerInstance;
     }
 
     public void containsJsonOutputCommand(Map<String, String[]> commands) {
@@ -42,7 +43,6 @@ public class MessagePrinter {
             commands.remove(OUTPUT); // removing the -o from map, so it won't affect to other if conditions
             isJsonOutput = result;
         }
-        isJsonOutput = false;
     }
 
     public void printOutput(String msg) {
@@ -83,6 +83,41 @@ public class MessagePrinter {
         jsonObject.put("success", success);
         jsonObject.put("knsList", jsonArray);
         System.out.println(jsonObject.toString(JSON_INDENTATION));
+    }
+
+    public void printVisitedKNJsonFormat() {
+        if (!isJsonOutput) {
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success", true);
+        JSONArray visitedKNs = new JSONArray();
+        for (String kn : visitedKNList) {
+            String[] split = kn.split(",");
+            JSONObject jsonKN = new JSONObject();
+            jsonKN.put("name", split[0]);
+            jsonKN.put("format", split[1]);
+            jsonKN.put("version", split[2]);
+            visitedKNs.put(jsonKN);
+        }
+        jsonObject.put("results", visitedKNs);
+        System.out.println(jsonObject.toString(JSON_INDENTATION));
+        visitedKNList.clear(); // clear all the visited list.
+    }
+
+    public void printKNInfo(KN kn) {
+        JSONObject knJsonObj = new JSONObject();
+        knJsonObj.put("success", true);
+        knJsonObj.put("info", kn.getJsonObject());
+        System.out.println(knJsonObj.toString(JSON_INDENTATION));
+    }
+
+    public void addVisitedKN(String kn) {
+        visitedKNList.add(kn);
+    }
+
+    public boolean getIsJsonOutput() {
+        return isJsonOutput;
     }
 
 }
