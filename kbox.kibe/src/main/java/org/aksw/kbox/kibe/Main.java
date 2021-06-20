@@ -101,6 +101,8 @@ public class Main {
 			System.out.println("Key: " + entry.getKey() + " Value: " + Arrays.toString(entry.getValue()));
 		}*/
 		isJsonOutput = containsJsonOutputCommand(commands);
+//		MessagePrinter msgPrinter = MessagePrinter.getInstance();
+//		msgPrinter.containsJsonOutputCommand(commands);
 		if (commands.containsKey(CONVERT_COMMAND) && !commands.containsKey(ZIP_ENCODE_COMMAND)
 				&& !commands.containsKey(GZIP_ENCODE_COMMAND)) {
 			String directoryParam = commands.get(CONVERT_COMMAND)[0];
@@ -837,10 +839,12 @@ public class Main {
 		jsonObject.put("success", success);
 		jsonObject.put("knsList", jsonArray);
 		System.out.println(jsonObject.toString(JSON_INDENTATION));
-//		System.out.println(jsonObject.toJSONString().replaceAll("\\\\", ""));
 	}
 
 	private static void printVisitedKNJsonFormat() {
+		if (!isJsonOutput) {
+			return;
+		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("success", true);
 		JSONArray visitedKNs = new JSONArray();
