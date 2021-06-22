@@ -32,7 +32,7 @@ public class ConsoleKNSServerListVisitor extends AbstractKNSListVisitor {
 	public void print(PrintStream out, KN kn) {
 		AssertionUtils.notNull(new IllegalArgumentException("out"), out);
 		AssertionUtils.notNull(new IllegalArgumentException("kn"), kn);
-		if (!JsonSerializer.getInstance().getIsJsonOutput()) {
+		if (!JSONSerializer.getInstance().getIsJsonOutput()) {
 			if (lineNumber == 0) {
 				out.println("KBox KNS Resource table list");
 				out.println("##############################");
@@ -46,7 +46,7 @@ public class ConsoleKNSServerListVisitor extends AbstractKNSListVisitor {
 				System.console().readLine();
 			}
 		} else {
-			JsonSerializer.getInstance().addVisitedKN(kn.getName() + "," + kn.getFormat() + "," + kn.getVersion());
+			JSONSerializer.getInstance().addVisitedKN(kn.getName() + "," + kn.getFormat() + "," + kn.getVersion());
 		}
 	}
 

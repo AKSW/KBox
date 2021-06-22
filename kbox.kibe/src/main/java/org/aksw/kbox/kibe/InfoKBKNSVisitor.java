@@ -22,11 +22,11 @@ public class InfoKBKNSVisitor extends AbstractKNSListVisitor {
 	@Override
 	public boolean visit(KN kn) {
 		if(kn.equals(kbName, format, version)) {
-			if (!JsonSerializer.getInstance().getIsJsonOutput()) {
+			if (!JSONSerializer.getInstance().getIsJsonOutput()) {
 				kn.print(System.out);
 				System.out.println("__________________________________________");
 			} else {
-				JsonSerializer.getInstance().printKNInfo(kn);
+				JSONSerializer.getInstance().setVisitedKN(kn);
 			}
 		}
 		return true;
