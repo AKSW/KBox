@@ -43,6 +43,7 @@ public class JSONSerializer {
             if (commands.get(OUTPUT)[0] == null) {
                 System.out.println("Output format not specified. Hence showing default outputs.");
                 isJsonOutput = false;
+                return;
             }
             boolean result = commands.get(OUTPUT)[0].equalsIgnoreCase(JSON_OUTPUT_FORMAT);
             commands.remove(OUTPUT); // removing the -o from map, so it won't affect to other if conditions

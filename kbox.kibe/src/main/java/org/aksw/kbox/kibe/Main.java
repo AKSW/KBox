@@ -33,15 +33,18 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 
 public class Main {
 
 	private final static Logger logger = Logger.getLogger(Main.class);
 
 	// CONSTANTS
-	private final static String VERSION = "v0.0.2-alpha1";
+	private final static String VERSION = "v0.0.2-beta";
 
 	public final static String KNS_FILE_NAME = "kbox.kibe.kns";
 	public final static String CONTEXT_NAME = "kbox.kibe";
@@ -60,30 +63,30 @@ public class Main {
 	private final static String KB_WEB_CLIENT = "http://kbox.aksw.org/webclient";
 
 	// COMMANDS
-	private final static String INSTALL_COMMAND = "-install";
-	private final static String KB_COMMAND = "-kb";
-	private final static String KN_COMMAND = "-kn";
-	private final static String KNS_COMMAND = "-kns";
-	private final static String REMOVE_COMMAND = "-remove";
-	private final static String SERVER_COMMAND = "-server";
-	private final static String LIST_COMMAND = "-list";
+	private final static String INSTALL_COMMAND = "install";
+	private final static String KB_COMMAND = "kb";
+	private final static String KN_COMMAND = "kn";
+	private final static String KNS_COMMAND = "kns";
+	private final static String REMOVE_COMMAND = "remove";
+	private final static String SERVER_COMMAND = "server";
+	private final static String LIST_COMMAND = "list";
 	private final static String PAGINATION_COMMAND = "/p";
-	private final static String SPARQL_QUERY_COMMAND = "-sparql";
+	private final static String SPARQL_QUERY_COMMAND = "sparql";
 	private final static String SPARQL_QUERY_JSON_OUTPUT_FORMAT_COMMAND = "-json";
-	private final static String FILE_COMMAND = "-file";
-	private final static String INFO_COMMAND = "-info";
-	private final static String SEARCH_COMMAND = "-search";
-	private final static String CONVERT_COMMAND = "-convert";
-	private final static String ZIP_ENCODE_COMMAND = "-zip";
-	private final static String GZIP_ENCODE_COMMAND = "-gzip";
-	private final static String VERSION_COMMAND = "-version";
-	private final static String RESOURCE_DIR_COMMAND = "-r-dir";
-	private final static String SERVER_COMMAND_PORT = "-port";
-	private final static String LOCATE_COMMAND = "-locate";
-	private final static String SEVER_COMMAND_SUBDOMAIN = "-subDomain";
-	private final static String FORMAT_COMMAND = "-format";
-	private final static String RDF_COMMAND = "-rdf";
-	private final static String TARGET_COMMAND = "-target";
+	private final static String FILE_COMMAND = "file";
+	private final static String INFO_COMMAND = "info";
+	private final static String SEARCH_COMMAND = "search";
+	private final static String CONVERT_COMMAND = "convert";
+	private final static String ZIP_ENCODE_COMMAND = "zip";
+	private final static String GZIP_ENCODE_COMMAND = "gzip";
+	private final static String VERSION_COMMAND = "version";
+	private final static String RESOURCE_DIR_COMMAND = "r-dir";
+	private final static String SERVER_COMMAND_PORT = "port";
+	private final static String LOCATE_COMMAND = "locate";
+	private final static String SEVER_COMMAND_SUBDOMAIN = "subDomain";
+	private final static String FORMAT_COMMAND = "format";
+	private final static String RDF_COMMAND = "rdf";
+	private final static String TARGET_COMMAND = "target";
 
 	public static void main(String[] args) {
 		Map<String, String[]> commands = parse(args);
@@ -428,7 +431,7 @@ public class Main {
 				jsonSerializer.printErrorInJsonFormat(message, true);
 			}
 		} else if (commands.containsKey(REMOVE_COMMAND) && commands.containsKey(KNS_COMMAND)) {
-			String knsURL = getSingleParam(commands, REMOVE_COMMAND);
+			String knsURL = getSingleParam(commands, KNS_COMMAND);
 			try {
 				jsonSerializer.printOutput("Removing KNS " + knsURL);
 				KBox.removeKNS(new URL(knsURL));
@@ -763,20 +766,49 @@ public class Main {
 	 */
 	public static Map<String, String[]> parse(String[] args) {
 		Map<String, String[]> map = new HashMap<String, String[]>();
+		Set<String> commandList = new HashSet<>();
+		addCommands(commandList);
 		for (int i = 0; i < args.length; i++) {
-			if (args[i].startsWith(COMMAND_PRAGMA) || args[i].startsWith(SUB_COMMAND_PRAGMA)) { // is
+			if (commandList.contains(args[i]) || args[i].startsWith(SUB_COMMAND_PRAGMA)) { // is
 																								// it
 																								// a
 																								// command
 				map.put(args[i], new String[] { null, null });
 				int j = i + 1;
-				while (j < args.length && !args[j].startsWith(COMMAND_PRAGMA)) {
+				while (j < args.length && !commandList.contains(args[j])) {
 					map.get(args[i])[(j - i) - 1] = args[j];
 					j++;
 				}
 			}
 		}
 		return map;
+	}
+
+	private static void addCommands(Set<String> commandList) {
+		commandList.add(INSTALL_COMMAND);
+		commandList.add(KB_COMMAND);
+		commandList.add(KN_COMMAND);
+		commandList.add(KNS_COMMAND);
+		commandList.add(REMOVE_COMMAND);
+		commandList.add(LIST_COMMAND);
+		commandList.add(PAGINATION_COMMAND);
+		commandList.add(SPARQL_QUERY_COMMAND);
+		commandList.add(SPARQL_QUERY_JSON_OUTPUT_FORMAT_COMMAND);
+		commandList.add(FILE_COMMAND);
+		commandList.add(INFO_COMMAND);
+		commandList.add(SEARCH_COMMAND);
+		commandList.add(CONVERT_COMMAND);
+		commandList.add(ZIP_ENCODE_COMMAND);
+		commandList.add(GZIP_ENCODE_COMMAND);
+		commandList.add(VERSION_COMMAND);
+		commandList.add(RESOURCE_DIR_COMMAND);
+		commandList.add(SERVER_COMMAND_PORT);
+		commandList.add(LOCATE_COMMAND);
+		commandList.add(SEVER_COMMAND_SUBDOMAIN);
+		commandList.add(FORMAT_COMMAND);
+		commandList.add(RDF_COMMAND);
+		commandList.add(TARGET_COMMAND);
+		commandList.add("-o");
 	}
 
 }
