@@ -84,7 +84,7 @@ public class Main {
 	private final static String SERVER_COMMAND_PORT = "port";
 	private final static String LOCATE_COMMAND = "locate";
 	private final static String SEVER_COMMAND_SUBDOMAIN = "subDomain";
-	private final static String FORMAT_COMMAND = "format";
+	private final static String FORMAT_COMMAND = "-format";
 	private final static String RDF_COMMAND = "rdf";
 	private final static String TARGET_COMMAND = "target";
 
