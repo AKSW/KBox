@@ -91,7 +91,42 @@ Where [command] is:
    * r-dir <resourceDir>        - Change the path of the resource folder.
    * version    - display KBox version.
 ```
+** Note: If you want to get the results of above commands as a JSON output, you can append `-o json` parameter at the 
+end of each command.
 
+Let's look at the `list` command as an example,
+````
+java -jar kbox.jar list
+
+KBox KNS Resource table list
+##############################
+name,format,version
+##############################
+http://purl.org/pcp-on-web/dbpedia,kibe,c9a618a875c5d46add88de4f00b538962f9359ad
+http://purl.org/pcp-on-web/ontology,kibe,c9a618a875c5d46add88de4f00b538962f9359ad
+````
+When you append `-o json` parameter at the end, the result will be look like this,
+```
+java -jar kbox.jar list -o json
+
+{
+    "status_code": 200,
+    "message": "visited all KNs.",
+    "results": [
+        {
+            "name": "http://purl.org/pcp-on-web/dbpedia",
+            "format": "kibe",
+            "version": "c9a618a875c5d46add88de4f00b538962f9359ad"
+        },
+        {
+            "name": "http://purl.org/pcp-on-web/ontology",
+            "format": "kibe",
+            "version": "c9a618a875c5d46add88de4f00b538962f9359ad"
+        }
+    ]
+}
+```
+This `-o json`sub command is only applicable with `list, install, remove, info, locate, search, r-dir & version` commands.
 ### How can I use KBox in my project?
 
 * KBox is distributed over Maven.
@@ -233,8 +268,8 @@ Your current resource directory is: kbox/dir/path
 
 ### Changing the resource folder
 
-You might get problems with permissions using KBox in shared enviroments.
-Therefore you can change the resource directory of KBox to your desired one.
+You might get problems with permissions using KBox in shared environments.
+Therefore, you can change the resource directory of KBox to your desired one.
 
 ```
 java -jar kbox-v0.0.1-alpha3-RC16.jar r-dir new/path
@@ -299,7 +334,7 @@ Information needed:
 3. The Publisher: Your or your organization's email/URL;
 4. The Creator: Who has created the Knowledge base, e.g. DBpedia -> http://dbpedia.org;
 5. The License: the dataset license;
-6. The URL where the Knowledge graph file can be dereferenced (please create the file using KBox `createIndex` command);
+6. The URL where the Knowledge graph file can be dereference (please create the file using KBox `createIndex` command);
 7. The Dataset URI name: the URI name that will be used by users to dereference your dataset;
 8. The Dataset description: Give us a few words to help others to know what your dataset is about;
 9. Tell us one reason why KBox is awesome. :-)
