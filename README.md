@@ -60,36 +60,33 @@ It is easy to plug and use it.
 java -jar kbox.jar <command> [option]
 KBox.jar <command> [option]
 Where [command] is:
-   * createIndex <directory>    - Create an index with the files in a given directory.
-                                 ps: the directory might contain only RDF compatible file formats.
-   * serialize <directory>      - Serialize the content of a directory to be served in a KNS system.
-   * sparql <query> (kb <KB> | server <URL>) [-install] [-json]       - Query a given KB (e.g. -sparql "Select ..." -kb "KB1,KB2")
-                                                 - ps: use -install in case you want to enable the auto-dereference.
-   * server [port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install]   - Start an SPARQL enpoint in the given subDomain containing the given KB.
-   * list       - List all available knowledge base.
-   * list kns  - List all availables KNS services.
-   * install <URL>      - Install a given resource.
-   * install kns <kns-URL>     - Install a given KNS service.
-   * install kb <kb-URL>       - Install a given knowledge base using the available KNS services to resolve it.
-   * install kb <kb-URL> -format <format>      - Install a given knowledge base using the available KNS services to resolve it.
-   * install kb <kb-URL> -format <format> -version <version>   - Install a given knowledge base using the available KNS services to resolve it.
-   * install kb <kb-URL> index <indexFile>    - Install a given index in a given knowledge base URL.
-   * install kb <kb-URL> kns <kns-URL>        - Install a knowledge base from a a given KNS service.
-   * install kb <kb-URL> kns <kns-URL> -format <format> -version <version> - Install a knowledge base from a a given KNS service with the specific format and version.
-   * remove kns <kns-URL>      - Remove a given KNS service.
-   * info <kb-URL>      - Gives the information about a specific KB.
-   * info <kb-URL> -format <format>     - Gives the information about a specific KB.
-   * info <kb-URL> -format <format> -version <version>  - Gives the information about a specific KB.
-   * locate <URL>       - returns the local address of the given resource.
-   * locate kb <kb-URL>        - returns the local address of the given KB.
-   * locate kb <kb-URL> -format <format>       - returns the local address of the given KB.
-   * locate kb <kb-URL> -format <format> -version <version>    - returns the local address of the given KB.
-   * search <kb-URL-pattern>    - Search for all kb-URL containing a given pattern.
-   * search <kb-URL-pattern> -format <format>   - Search for all kb-URL containing a given pattern.
-   * search <kb-URL-pattern> -format <format> -version <version>        - Search for all kb-URL containing a given pattern.
-   * r-dir      - Show the path to the resource folder.
-   * r-dir <resourceDir>        - Change the path of the resource folder.
-   * version    - display KBox version.
+   * convert <directory|file> [<destFile>] [kb|zip]	 - convert the content of a directory (default kb).
+             kb	 - into a kb file. ps: the directory might contain only RDF compatible file formats.
+             zip	 - into a zip file.
+   * convert <file> [<destFile>] gzip	 - encode a given file.
+   * sparql <query> (kb <KB> | server <URL>) [install] [-json]	 - Query a given knowledge base (e.g. sparql "Select ..." kb "KB1,KB2")
+                                               	 - ps: use -install in case you want to enable the auto-dereference.
+   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] kb <kb-URL> [install] 	 - Start an SPARQL endpoint in the given subDomain containing the given bases.
+   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] rdf <directories|files> [install [install]]	 - Start an SPARQL endpoint in the given subDomain containing the given RDF files.
+   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] target <target>	 - Start an SPARQL endpoint in the given subDomain containing the target RDF files.
+   * list [/p]	 - List all available KNS services and knowledge bases.
+   * list kns	 - List all available KNS services.
+   * install <URL>	 - Install a given resource.
+   * install kns <kns-URL>	 - Install a given KNS service.
+   * install kb <kb-URL> [version <version>]	 - Install a given knowledge base using the available KNS services to resolve it.
+   * install kb <kb-URL> file <kbFile>	 - Install a given kb file in a given Kb-URL.
+   * install kb <kb-URL> kns <kns-URL> [version <version>]	 - Install a knowledge base from a a given KNS service with the specific version.
+   * install [install] kb <kb-URL> rdf <directories|files> [version <version>]	 - Install a knowledge base from a a given RDF files with the specific version.
+   * install kn <kn-URL> [format [version <version>]]	 - Install a given knowledge base using the available KNS services to resolve it.
+   * remove kns <kns-URL>	 - Remove a given KNS service.
+   * info <URL> format <format> version <version>]]	 - Gives the information about a specific KB.
+   * locate <URL>	 - returns the local address of the given resource.
+   * locate kb <kb-URL> version <version>]	 - returns the local address of the given KB.
+   * locate kn <kn-URL> format version <version>]]	 - returns the local address of the given KB.
+   * search <kn-URL-pattern> [format <format> [version <version>]] [/p]	 - Search for all kb-URL containing a given pattern.
+   * r-dir	 - Show the path to the resource folder.
+   * r-dir <resourceDir>	 - Change the path of the resource folder.
+   * version 	 - display KBox version.
 ```
 ** Note: If you want to get the results of above commands as a JSON output, you can append `-o json` parameter at the 
 end of each command.
