@@ -651,47 +651,47 @@ public class Main {
 		System.out.println("KBox.jar <command> [option]");
 		System.out.println("Where [command] is:");
 		System.out.println(
-				"   * -convert <directory|file> [<destFile>] [-kb|-zip]\t - convert the content of a directory (default -kb).");
+				"   * convert <directory|file> [<destFile>] [kb|zip]\t - convert the content of a directory (default kb).");
 		System.out.println(
-				"             -kb\t - into a kb file. ps: the directory might contain only RDF compatible file formats.");
-		System.out.println("             -zip\t - into a zip file.");
-		System.out.println("   * -convert <file> [<destFile>] -gzip\t - encode a given file.");
+				"             kb\t - into a kb file. ps: the directory might contain only RDF compatible file formats.");
+		System.out.println("             zip\t - into a zip file.");
+		System.out.println("   * convert <file> [<destFile>] gzip\t - encode a given file.");
 		System.out.println(
-				"   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]\t - Query a given knowledge base (e.g. -sparql \"Select ...\" -kb \"KB1,KB2\")");
+				"   * sparql <query> (kb <KB> | server <URL>) [install] [-json]\t - Query a given knowledge base (e.g. sparql \"Select ...\" kb \"KB1,KB2\")");
 		System.out.println(
 				"                                               \t - ps: use -install in case you want to enable the auto-dereference.");
 		System.out.println(
-				"   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <kb-URL> [-install] \t - Start an SPARQL endpoint in the given subDomain containing the given bases.");
+				"   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] kb <kb-URL> [install] \t - Start an SPARQL endpoint in the given subDomain containing the given bases.");
 		System.out.println(
-				"   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -rdf <directories|files> [-install [install]]\t - Start an SPARQL endpoint in the given subDomain containing the given RDF files.");
+				"   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] rdf <directories|files> [install [install]]\t - Start an SPARQL endpoint in the given subDomain containing the given RDF files.");
 		System.out.println(
-				"   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -target <target>\t - Start an SPARQL endpoint in the given subDomain containing the target RDF files.");
-		System.out.println("   * -list [/p]\t - List all available KNS services and knowledge bases.");
-		System.out.println("   * -list -kns\t - List all available KNS services.");
-		System.out.println("   * -install <URL>\t - Install a given resource.");
-		System.out.println("   * -install -kns <kns-URL>\t - Install a given KNS service.");
+				"   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] target <target>\t - Start an SPARQL endpoint in the given subDomain containing the target RDF files.");
+		System.out.println("   * list [/p]\t - List all available KNS services and knowledge bases.");
+		System.out.println("   * list kns\t - List all available KNS services.");
+		System.out.println("   * install <URL>\t - Install a given resource.");
+		System.out.println("   * install kns <kns-URL>\t - Install a given KNS service.");
 		System.out.println(
-				"   * -install -kb <kb-URL> [-version <version>]\t - Install a given knowledge base using the available KNS services to resolve it.");
-		System.out.println("   * -install -kb <kb-URL> -file <kbFile>\t - Install a given kb file in a given Kb-URL.");
+				"   * install kb <kb-URL> [version <version>]\t - Install a given knowledge base using the available KNS services to resolve it.");
+		System.out.println("   * install kb <kb-URL> file <kbFile>\t - Install a given kb file in a given Kb-URL.");
 		System.out.println(
-				"   * -install -kb <kb-URL> -kns <kns-URL> [-version <version>]\t - Install a knowledge base from a a given KNS service with the specific version.");
+				"   * install kb <kb-URL> kns <kns-URL> [version <version>]\t - Install a knowledge base from a a given KNS service with the specific version.");
 		System.out.println(
-				"   * -install [install] -kb <kb-URL> -rdf <directories|files> [-version <version>]\t - Install a knowledge base from a a given RDF files with the specific version.");
+				"   * install [install] kb <kb-URL> rdf <directories|files> [version <version>]\t - Install a knowledge base from a a given RDF files with the specific version.");
 		System.out.println(
-				"   * -install -kn <kn-URL> [-format [-version <version>]]\t - Install a given knowledge base using the available KNS services to resolve it.");
-		System.out.println("   * -remove -kns <kns-URL>\t - Remove a given KNS service.");
+				"   * install kn <kn-URL> [format [version <version>]]\t - Install a given knowledge base using the available KNS services to resolve it.");
+		System.out.println("   * remove kns <kns-URL>\t - Remove a given KNS service.");
 		System.out.println(
-				"   * -info <URL> [-format <format> [-version <version>]]\t - Gives the information about a specific KB.");
-		System.out.println("   * -locate <URL>\t - returns the local address of the given resource.");
+				"   * info <URL> format <format> version <version>]]\t - Gives the information about a specific KB.");
+		System.out.println("   * locate <URL>\t - returns the local address of the given resource.");
 		System.out.println(
-				"   * -locate -kb <kb-URL> [-version <version>]\t - returns the local address of the given KB.");
+				"   * locate kb <kb-URL> version <version>]\t - returns the local address of the given KB.");
 		System.out.println(
-				"   * -locate -kn <kn-URL> [-format [-version <version>]]\t - returns the local address of the given KB.");
+				"   * locate kn <kn-URL> format version <version>]]\t - returns the local address of the given KB.");
 		System.out.println(
-				"   * -search <kn-URL-pattern> [-format <format> [-version <version>]] [/p]\t - Search for all kb-URL containing a given pattern.");
-		System.out.println("   * -r-dir\t - Show the path to the resource folder.");
-		System.out.println("   * -r-dir <resourceDir>\t - Change the path of the resource folder.");
-		System.out.println("   * -version \t - display KBox version.");
+				"   * search <kn-URL-pattern> [format <format> [version <version>]] [/p]\t - Search for all kb-URL containing a given pattern.");
+		System.out.println("   * r-dir\t - Show the path to the resource folder.");
+		System.out.println("   * r-dir <resourceDir>\t - Change the path of the resource folder.");
+		System.out.println("   * version \t - display KBox version.");
 	}
 
 	private static void out(Map<String, String[]> commands, ResultSet rs) {
