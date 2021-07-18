@@ -33,7 +33,7 @@ KBox is an abbreviation for Knowledge Box. it is a data management framework des
 - [Changing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#changing-the-resource-folder)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
-- [How can I create my own custom build(jar) of KBox?](https://github.com/AKSW/KBox#How-can-I-create-my-own-custom-build(.jar)-of-KBox?)
+- [How can I create my own custom build(jar) of KBox?](https://github.com/AKSW/KBox#how-can-i-create-my-own-custom-buildjar-of-kbox)
 - [Check our Wiki for old APIs](https://github.com/AKSW/KBox/wiki)
 
 ### Why use KBox?
