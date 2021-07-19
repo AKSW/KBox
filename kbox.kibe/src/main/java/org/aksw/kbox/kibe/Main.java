@@ -341,6 +341,49 @@ public class Main {
 				jsonSerializer.printErrorInJsonFormat(message, false);
 				logger.error(message, e);
 			}
+		} else if (!commands.containsKey(SPARQL_QUERY_COMMAND) && !commands.containsKey(SERVER_COMMAND)
+				&& commands.containsKey(INSTALL_COMMAND) && commands.containsKey(FORMAT_COMMAND)) {
+			String format = getSingleParam(commands, FORMAT_COMMAND);
+			String version = getSingleParam(commands, VERSION_COMMAND);
+			String graphNames = getSingleParam(commands, INSTALL_COMMAND);
+			URL[] urls;
+			try {
+				urls = URLUtils.stringToURL(graphNames);
+				for (URL resourceName : urls) {
+					try {
+						File kbFile = KBox.getResource(resourceName, format, version, true);
+						String message;
+						if (kbFile != null) {
+							message = resourceName + " KB installed.";
+							jsonSerializer.printOutput(message);
+							jsonSerializer.printInstallCommandJsonResponse(message);
+						} else {
+							message = resourceName + " KB could NOT be installed.";
+							jsonSerializer.printOutput(message);
+							jsonSerializer.printErrorInJsonFormat(message, false);
+						}
+					} catch (MalformedURLException e) {
+						String message = e.getMessage();
+						jsonSerializer.printOutput(message);
+						jsonSerializer.printErrorInJsonFormat(message, false);
+						logger.error(message, e);
+					} catch (Exception e) {
+						String message = "The knowledge base could not be found: URL:" + resourceName;
+						if (version != null) {
+							message += ", " + "vesion: " + version;
+						}
+						jsonSerializer.printOutput(message);
+						jsonSerializer.printErrorInJsonFormat(message, false);
+						logger.error(message, e);
+					}
+				}
+			} catch (Exception e) {
+				String message = "An error occurred while parsing the KB Name list \"" + graphNames + "\": "
+						+ e.getMessage();
+				jsonSerializer.printOutput(message);
+				jsonSerializer.printErrorInJsonFormat(message, false);
+				logger.error(message, e);
+			}
 		} else if (commands.containsKey(INSTALL_COMMAND) && commands.containsKey(KNS_COMMAND)) {
 			String url = getSingleParam(commands, KNS_COMMAND);
 			try {
