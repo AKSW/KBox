@@ -535,7 +535,8 @@ public class Main {
 				jsonSerializer.printErrorInJsonFormat(message, true);
 				logger.error(message, e);
 			}
-		} else if (commands.containsKey(LOCATE_COMMAND) && !commands.containsKey(KB_COMMAND)) {
+		} else if (commands.containsKey(LOCATE_COMMAND) && !commands.containsKey(KB_COMMAND)
+				&& !commands.containsKey(FORMAT_COMMAND)) {
 			String resourceURL = getSingleParam(commands, LOCATE_COMMAND);
 			try {
 				String path = org.aksw.kbox.KBox.locate(new URL(resourceURL)).getAbsolutePath();
@@ -552,6 +553,20 @@ public class Main {
 			String version = getSingleParam(commands, VERSION_COMMAND);
 			try {
 				String path = KBox.locate(new URL(kbURL), KBox.KIBE_FORMAT, version).getAbsolutePath();
+				jsonSerializer.printOutput(path);
+				jsonSerializer.printLocateCommandJsonResponse("Action Completed.", path);
+			} catch (Exception e) {
+				String message = "An error occurred while resolving the KB: " + kbURL;
+				jsonSerializer.printOutput(message);
+				jsonSerializer.printErrorInJsonFormat(message, true);
+				logger.error(message, e);
+			}
+		} else if (commands.containsKey(LOCATE_COMMAND) && commands.containsKey(FORMAT_COMMAND)) {
+			String kbURL = getSingleParam(commands, LOCATE_COMMAND);
+			String format = getSingleParam(commands, FORMAT_COMMAND);
+			String version = getSingleParam(commands, VERSION_COMMAND);
+			try {
+				String path = KBox.locate(new URL(kbURL), format, version).getAbsolutePath();
 				jsonSerializer.printOutput(path);
 				jsonSerializer.printLocateCommandJsonResponse("Action Completed.", path);
 			} catch (Exception e) {
