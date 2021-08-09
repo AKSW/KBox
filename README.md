@@ -23,11 +23,12 @@ KBox is an abbreviation for Knowledge Box. it is a data management framework des
 - [What is possible to do with it?](https://github.com/AKSW/KBox#what-is-possible-to-do-with-it)
 - [How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
 - [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
+- [How can I use KBox with python?](https://github.com/AKSW/KBox#how-can-i-use-kbox-with-python)
 - [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
 - [How can I list available knowledge bases?](https://github.com/AKSW/KBox#how-can-i-list-available-knowledge-bases)
 - [How can I query a published knowledge bases?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-bases)
 - [How can I query multi-bases?](https://github.com/AKSW/KBox#how-can-i-query-multi-bases)
-- [Starting a SPARQL enpoint](https://github.com/AKSW/KBox/blob/master/README.md#starting-a-sparql-endpoint)
+- [Starting a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#starting-a-sparql-endpoint)
 - [Querying a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#querying-a-sparql-endpoint)
 - [Listing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#listing-the-resource-folder)
 - [Changing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#changing-the-resource-folder)
@@ -125,6 +126,23 @@ java -jar kbox.jar list -o json
 }
 ```
 This `-o json`sub command is only applicable with `list, install, remove, info, locate, search, r-dir & version` commands.
+
+### How can I use KBox with python?
+1. Install KBox pip package
+````
+pip install KBox
+````
+2. Import the kbox package (`from kbox import kbox`).
+3. Execute any KBox command with execute() function as follows.
+
+   ```
+   kbox.execute('<kbox_command>')
+   ```
+
+**Note: `execute()` method will return a string output which contains the result of the executed command.
+
+You can see more details about KBox python package from [here](https://github.com/AKSW/KBox/blob/master/kbox.pip/README.md)
+
 ### How can I use KBox in my project?
 
 * KBox is distributed over Maven.
