@@ -3,7 +3,7 @@ KBox python implementation
 
 This package is created to distribute KBox as a python package.
 
-* Download the library [here](https://pypi.org/project/kbox/)
+* View the library from [here](https://pypi.org/project/kbox/)
 
 * Install using pip
 ```
@@ -17,33 +17,24 @@ up a python environment to use the kbox package.
 Open a terminal and execute KBox commands in python with kbox package as below,
 
 ````
-kbox list -o json
+kbox -list
 ````
-**Note: Here the `-o json` is an optional parameter. If you want to get the output as a json message, you should use this. 
-Otherwise, use the command without `-o json`.
 
 ````
-{
-    "status_code": 200,
-    "message": "visited all KNs.",
-    "results": [
-        {
-            "name": "http://purl.org/pcp-on-web/dbpedia",
-            "format": "kibe",
-            "version": "c9a618a875c5d46add88de4f00b538962f9359ad"
-        },
-        {
-            "name": "http://purl.org/pcp-on-web/ontology",
-            "format": "kibe",
-            "version": "c9a618a875c5d46add88de4f00b538962f9359ad"
-        },
-        {
-            "name": "http://purl.org/pcp-on-web/dataset",
-            "format": "kibe",
-            "version": "dd240892384222f91255b0a94fd772c5d540f38b"
-        }
-    ]
-}
+KBox KNS Resource table list
+##############################
+name,format,version
+##############################
+https://schema.org/,kibe,0
+http://productcatalogue.org/products/eco/,kibe,0
+http://productcatalogue.org/products/amazon/,kibe,0
+http://company.org,kibe,0
+http://github.org/aksw/NSpM/monument_300_2,kibe,0
+http://github.org/aksw/NSpM/monument_300,NSPM/Model,0
+http://purl.org/dc/dcmitype/,kibe,0
+http://purl.org/dc/dc0/,kibe,0
+...
+...
 
 ````
 

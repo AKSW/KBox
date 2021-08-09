@@ -4,7 +4,7 @@ import subprocess
 import click
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-JAR_EXECUTE = "java -jar " + DIR_PATH + "/kbox-v0.0.2-beta.jar"  # kbox-v0.0.2-beta.jar
+JAR_EXECUTE = "java -jar " + DIR_PATH + "/kbox-v0.0.2-alpha.jar"  # kbox-v0.0.2-alpha.jar
 SPACE = " "
 PUSH_COMMAND = 'push'
 COMMAND_LIST = [PUSH_COMMAND]
