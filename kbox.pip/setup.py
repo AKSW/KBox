@@ -5,12 +5,11 @@ with open("README.md", "r") as fh:
 
 setup(
     name="KBox",
-    version="0.0.1",
+    version="0.0.2-alpha",
     author="Edgard Marx",
     author_email='edgard.marx@htwk-leipzig.de',
     url='https://github.com/AKSW/KBox/tree/master/kbox.pip',
-    description="application will allow users to " +
-                "share and dereference ML models.",
+    description="Python distribution of the KBox.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     py_modules=['kbox'],
