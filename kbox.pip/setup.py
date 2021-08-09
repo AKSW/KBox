@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name="KBox",
     version="0.0.1",
-    authors="Edgard Marx",
+    author="Edgard Marx",
     author_email='edgard.marx@htwk-leipzig.de',
     url='https://github.com/AKSW/KBox/tree/master/kbox.pip',
     description="application will allow users to " +
@@ -20,7 +20,7 @@ setup(
     install_requires=['click>=7.1.2'],
     entry_points={
         'console_scripts': [
-            'airML=airML.airML:execute_kbox_command',
+            'kbox=kbox.kbox:execute_kbox_command',
         ],
     },
     license='Apache',
