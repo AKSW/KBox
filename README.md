@@ -33,7 +33,7 @@ KBox is an abbreviation for Knowledge Box. it is a data management framework des
 - [Changing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#changing-the-resource-folder)
 - [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
 - [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
-- [How can I create my own custom build(jar) of KBox?](https://github.com/AKSW/KBox#How-can-I-create-my-own-custom-build(.jar)-of-KBox?)
+- [How can I create my own custom build(jar) of KBox?](https://github.com/AKSW/KBox#how-can-i-create-my-own-custom-buildjar-of-kbox)
 - [Check our Wiki for old APIs](https://github.com/AKSW/KBox/wiki)
 
 ### Why use KBox?
@@ -61,38 +61,70 @@ It is easy to plug and use it.
 java -jar kbox.jar <command> [option]
 KBox.jar <command> [option]
 Where [command] is:
-   * -createIndex <directory>    - Create an index with the files in a given directory.
-                                 ps: the directory might contain only RDF compatible file formats.
-   * -serialize <directory>      - Serialize the content of a directory to be served in a KNS system.
-   * -sparql <query> (-kb <KB> | -server <URL>) [-install] [-json]       - Query a given KB (e.g. -sparql "Select ..." -kb "KB1,KB2")
-                                                 - ps: use -install in case you want to enable the auto-dereference.
-   * -server [-port <port> (default 8080)] [-subDomain <subDomain> (default kbox)] -kb <KB> [-install]   - Start an SPARQL enpoint in the given subDomain containing the given KB.
-   * -list       - List all available knowledge base.
-   * -list -kns  - List all availables KNS services.
-   * -install <URL>      - Install a given resource.
-   * -install -kns <kns-URL>     - Install a given KNS service.
-   * -install -kb <kb-URL>       - Install a given knowledge base using the available KNS services to resolve it.
-   * -install -kb <kb-URL> -format <format>      - Install a given knowledge base using the available KNS services to resolve it.
-   * -install -kb <kb-URL> -format <format> -version <version>   - Install a given knowledge base using the available KNS services to resolve it.
-   * -install -kb <kb-URL> -index <indexFile>    - Install a given index in a given knowledge base URL.
-   * -install -kb <kb-URL> -kns <kns-URL>        - Install a knowledge base from a a given KNS service.
-   * -install -kb <kb-URL> -kns <kns-URL> -format <format> -version <version> - Install a knowledge base from a a given KNS service with the specific format and version.
-   * -remove -kns <kns-URL>      - Remove a given KNS service.
-   * -info <kb-URL>      - Gives the information about a specific KB.
-   * -info <kb-URL> -format <format>     - Gives the information about a specific KB.
-   * -info <kb-URL> -format <format> -version <version>  - Gives the information about a specific KB.
-   * -locate <URL>       - returns the local address of the given resource.
-   * -locate -kb <kb-URL>        - returns the local address of the given KB.
-   * -locate -kb <kb-URL> -format <format>       - returns the local address of the given KB.
-   * -locate -kb <kb-URL> -format <format> -version <version>    - returns the local address of the given KB.
-   * -search <kb-URL-pattern>    - Search for all kb-URL containing a given pattern.
-   * -search <kb-URL-pattern> -format <format>   - Search for all kb-URL containing a given pattern.
-   * -search <kb-URL-pattern> -format <format> -version <version>        - Search for all kb-URL containing a given pattern.
-   * -r-dir      - Show the path to the resource folder.
-   * -r-dir <resourceDir>        - Change the path of the resource folder.
-   * -version    - display KBox version.
+   * convert <directory|file> [<destFile>] [kb|zip]	 - convert the content of a directory (default kb).
+             kb	 - into a kb file. ps: the directory might contain only RDF compatible file formats.
+             zip	 - into a zip file.
+   * convert <file> [<destFile>] gzip	 - encode a given file.
+   * sparql <query> (kb <KB> | server <URL>) [install] [-json]	 - Query a given knowledge base (e.g. sparql "Select ..." kb "KB1,KB2")
+                                               	 - ps: use -install in case you want to enable the auto-dereference.
+   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] kb <kb-URL> [install] 	 - Start an SPARQL endpoint in the given subDomain containing the given bases.
+   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] rdf <directories|files> [install [install]]	 - Start an SPARQL endpoint in the given subDomain containing the given RDF files.
+   * server [port <port> (default 8080)] [subDomain <subDomain> (default kbox)] target <target>	 - Start an SPARQL endpoint in the given subDomain containing the target RDF files.
+   * list [/p]	 - List all available KNS services and knowledge bases.
+   * list kns	 - List all available KNS services.
+   * install <URL>	 - Install a given resource.
+   * install kns <kns-URL>	 - Install a given KNS service.
+   * install kb <kb-URL> [version <version>]	 - Install a given knowledge base using the available KNS services to resolve it.
+   * install kb <kb-URL> file <kbFile>	 - Install a given kb file in a given Kb-URL.
+   * install kb <kb-URL> kns <kns-URL> [version <version>]	 - Install a knowledge base from a a given KNS service with the specific version.
+   * install [install] kb <kb-URL> rdf <directories|files> [version <version>]	 - Install a knowledge base from a a given RDF files with the specific version.
+   * install kn <kn-URL> [format [version <version>]]	 - Install a given knowledge base using the available KNS services to resolve it.
+   * remove kns <kns-URL>	 - Remove a given KNS service.
+   * info <URL> format <format> version <version>]]	 - Gives the information about a specific KB.
+   * locate <URL>	 - returns the local address of the given resource.
+   * locate kb <kb-URL> version <version>]	 - returns the local address of the given KB.
+   * locate kn <kn-URL> format version <version>]]	 - returns the local address of the given KB.
+   * search <kn-URL-pattern> [format <format> [version <version>]] [/p]	 - Search for all kb-URL containing a given pattern.
+   * r-dir	 - Show the path to the resource folder.
+   * r-dir <resourceDir>	 - Change the path of the resource folder.
+   * version 	 - display KBox version.
 ```
+** Note: If you want to get the results of above commands as a JSON output, you can append `-o json` parameter at the 
+end of each command.
 
+Let's look at the `list` command as an example,
+````
+java -jar kbox.jar list
+
+KBox KNS Resource table list
+##############################
+name,format,version
+##############################
+http://purl.org/pcp-on-web/dbpedia,kibe,c9a618a875c5d46add88de4f00b538962f9359ad
+http://purl.org/pcp-on-web/ontology,kibe,c9a618a875c5d46add88de4f00b538962f9359ad
+````
+When you append `-o json` parameter at the end, the result will be look like this,
+```
+java -jar kbox.jar list -o json
+
+{
+    "status_code": 200,
+    "message": "visited all KNs.",
+    "results": [
+        {
+            "name": "http://purl.org/pcp-on-web/dbpedia",
+            "format": "kibe",
+            "version": "c9a618a875c5d46add88de4f00b538962f9359ad"
+        },
+        {
+            "name": "http://purl.org/pcp-on-web/ontology",
+            "format": "kibe",
+            "version": "c9a618a875c5d46add88de4f00b538962f9359ad"
+        }
+    ]
+}
+```
+This `-o json`sub command is only applicable with `list, install, remove, info, locate, search, r-dir & version` commands.
 ### How can I use KBox in my project?
 
 * KBox is distributed over Maven.
@@ -124,7 +156,7 @@ Where [command] is:
 You can list the available knowledge graphs with list command:
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar -list
+java -jar kbox-v0.0.1-alpha3-RC16.jar list
 Knowledge base table list
 http://dbpedia.org/3.9/en/full
 http://dbpedia.org/3.9/en
@@ -144,7 +176,7 @@ Remember the commands listed on '[How can I execute KBox in command Line](https:
 It's just about executing the command line below. Remember to add `-install`, so the knowledge base is automatically dereferenced.
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
+java -jar kbox-v0.0.1-alpha3-RC16.jar sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
 ------
 | n  |
 ======
@@ -171,7 +203,7 @@ It's very easy, as you just need to add the knowledge base you want to query sep
 
 In the given example, we query two knowledge bases, https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
+java -jar kbox-v0.0.1-alpha3-RC16.jar sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" install
 -------
 | n   |
 =======
@@ -196,7 +228,7 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 Yes, you can!!
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar -server -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
+java -jar kbox-v0.0.1-alpha3-RC16.jar server kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" install
 Loading Model...
 Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
@@ -209,7 +241,7 @@ If you successfully instantiate your server, now you can access the web client a
 
 by console
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar -server "http://localhost:8080/kbox/query" -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}"
+java -jar kbox-v0.0.1-alpha3-RC16.jar server "http://localhost:8080/kbox/query" sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}"
 -------
 | n   |
 =======
@@ -228,17 +260,17 @@ try(ResultSet rs = KBox.query(sparql, serverURL);) { // do not forget to close t
 ### Listing the resource folder
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar -r-dir
+java -jar kbox-v0.0.1-alpha3-RC16.jar r-dir
 Your current resource directory is: kbox/dir/path
 ```
 
 ### Changing the resource folder
 
-You might get problems with permissions using KBox in shared enviroments.
-Therefore you can change the resource directory of KBox to your desired one.
+You might get problems with permissions using KBox in shared environments.
+Therefore, you can change the resource directory of KBox to your desired one.
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar -r-dir new/path
+java -jar kbox-v0.0.1-alpha3-RC16.jar r-dir new/path
 ```
 
 ### Using KBox with Docker
@@ -259,7 +291,7 @@ docker pull aksw/kbox
 
 3) Run it...
 ```
-docker run aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
+docker run aksw/kbox sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" kb "https://www.w3.org/2000/01/rdf-schema" install
 ------
 | n  |
 ======
@@ -269,7 +301,7 @@ docker run aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}
 
 4) Start a server using docker, but do not forget the --name flag:
 ```
-docker run -p 8080:8080 --name myendpoint aksw/kbox -server -kb "https://www.w3.org/2000/01/rdf-schema" -install
+docker run -p 8080:8080 --name myendpoint aksw/kbox server kb "https://www.w3.org/2000/01/rdf-schema" install
 Loading Model...
 Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
@@ -277,7 +309,7 @@ Service up and running ;-) ...
 
 5) You can also query your endpoint from a KBox docker container, but do not forget to use the --link flag:
 ```
-docker run --link myendpoint aksw/kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -server "http://myendpoint:8080/kbox/query"
+docker run --link myendpoint aksw/kbox sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" server "http://myendpoint:8080/kbox/query"
 ------
 | n  |
 ======
@@ -300,7 +332,7 @@ Information needed:
 3. The Publisher: Your or your organization's email/URL;
 4. The Creator: Who has created the Knowledge base, e.g. DBpedia -> http://dbpedia.org;
 5. The License: the dataset license;
-6. The URL where the Knowledge graph file can be dereferenced (please create the file using KBox `-createIndex` command);
+6. The URL where the Knowledge graph file can be dereference (please create the file using KBox `createIndex` command);
 7. The Dataset URI name: the URI name that will be used by users to dereference your dataset;
 8. The Dataset description: Give us a few words to help others to know what your dataset is about;
 9. Tell us one reason why KBox is awesome. :-)

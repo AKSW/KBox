@@ -277,6 +277,35 @@ public class KN extends KNComparator {
 		println(out, "version Tags:", versionTags);
 	}
 
+	public org.json.JSONObject getJsonObject() {
+		org.json.JSONObject jsonObject = new org.json.JSONObject();
+		jsonObject.put("KNS:", kns);
+		jsonObject.put("KN:", name);
+		if (nameTags != null) {
+			org.json.JSONArray nameTagsArr = new org.json.JSONArray();
+			for (String tag : nameTags) {
+				nameTagsArr.put(tag);
+			}
+			jsonObject.put("Name Tags:", nameTagsArr);
+		}
+		jsonObject.put("label:", label);
+		jsonObject.put("Description:", desc);
+		jsonObject.put("Subsets:", subsets);
+		jsonObject.put("License:", license);
+		jsonObject.put("Publisher:", publisher);
+		jsonObject.put("Owner:", owner);
+		jsonObject.put("Format:", format);
+		jsonObject.put("Version:", version);
+		if (versionTags != null) {
+			org.json.JSONArray versionTagArr = new org.json.JSONArray();
+			for (String versionTag : versionTags) {
+				versionTagArr.put(versionTag);
+			}
+			jsonObject.put("version Tags:", versionTagArr);
+		}
+		return jsonObject;
+	}
+
 	private void println(PrintStream out, String label, Object variable) {
 		if(variable != null) {
 			out.println(label + variable.toString());

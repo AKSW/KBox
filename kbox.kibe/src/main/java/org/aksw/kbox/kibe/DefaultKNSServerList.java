@@ -9,8 +9,8 @@ import org.aksw.kbox.kns.KNSServerListVisitor;
 public class DefaultKNSServerList extends URLKNSServerList {
 	
 	// Default KNS table URL
-	private final static String DEFAULT_KNS_TABLE_URL = "https://raw.github.com/AKSW/kbox/master";
-	
+	private final static String DEFAULT_KNS_TABLE_URL = "https://raw.githubusercontent.com/AKSW/KBox/master/kns/2.0/";
+
 	private CustomKNSServerList customKNSServerList = new CustomKNSServerList();
 	
 	public DefaultKNSServerList() throws MalformedURLException {

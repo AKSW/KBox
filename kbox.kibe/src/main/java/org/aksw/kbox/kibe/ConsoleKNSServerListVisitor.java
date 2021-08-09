@@ -32,17 +32,21 @@ public class ConsoleKNSServerListVisitor extends AbstractKNSListVisitor {
 	public void print(PrintStream out, KN kn) {
 		AssertionUtils.notNull(new IllegalArgumentException("out"), out);
 		AssertionUtils.notNull(new IllegalArgumentException("kn"), kn);
-		if(lineNumber == 0) {
-			out.println("KBox KNS Resource table list");
-			out.println("##############################");
-			out.println("name,format,version");
-			out.println("##############################");
-		}
-		out.println(kn.getName() + "," + kn.getFormat() + "," + kn.getVersion());
-		lineNumber++;
-		if(pagination && (lineNumber % 40) == 0) {
-			System.console().format("\nPress Enter to continue...");
-			System.console().readLine();
+		if (!JSONSerializer.getInstance().getIsJsonOutput()) {
+			if (lineNumber == 0) {
+				out.println("KBox KNS Resource table list");
+				out.println("##############################");
+				out.println("name,format,version");
+				out.println("##############################");
+			}
+			out.println(kn.getName() + "," + kn.getFormat() + "," + kn.getVersion());
+			lineNumber++;
+			if (pagination && (lineNumber % 40) == 0) {
+				System.console().format("\nPress Enter to continue...");
+				System.console().readLine();
+			}
+		} else {
+			JSONSerializer.getInstance().addVisitedKN(kn.getName() + "," + kn.getFormat() + "," + kn.getVersion());
 		}
 	}
 

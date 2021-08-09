@@ -27,7 +27,7 @@ public class KNSTable {
 
 	public boolean visit(KNSVisitor visitor) throws IOException {
 		boolean next = true;
-		try(InputStream is = tableURL.openStream()) {		
+		try(InputStream is = tableURL.openStream()) {
 			try(BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
 				String line = null;
 				while((line = in.readLine()) != null) {
