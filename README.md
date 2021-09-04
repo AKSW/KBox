@@ -205,7 +205,7 @@ Remember the commands listed on '[How can I execute KBox in command Line](https:
 It's just about executing the command line below. Remember to add `-install`, so the knowledge base is automatically dereferenced.
 
 ```
-kbox sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
+kbox sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" kb "https://www.w3.org/2000/01/rdf-schema" install
 ------
 | n  |
 ======
@@ -232,7 +232,7 @@ It's very easy, as you just need to add the knowledge base you want to query sep
 
 In the given example, we query two knowledge bases, https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
 ```
-kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" install
+kbox sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" install
 -------
 | n   |
 =======
@@ -257,7 +257,7 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 Yes, you can!!
 
 ```
-kbox -server -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
+kbox server kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" install
 Loading Model...
 Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
@@ -270,7 +270,7 @@ If you successfully instantiate your server, now you can access the web client a
 
 by console
 ```
-kbox -server "http://localhost:8080/kbox/query" -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}"
+kbox server "http://localhost:8080/kbox/query" sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}"
 -------
 | n   |
 =======
