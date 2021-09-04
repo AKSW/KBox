@@ -22,6 +22,7 @@ KBox is an abbreviation for Knowledge Box. it is a data management framework des
 - [Why use KBox?](https://github.com/AKSW/KBox#why-use-kbox)
 - [What is possible to do with it?](https://github.com/AKSW/KBox#what-is-possible-to-do-with-it)
 - [How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
+- [Installing KBox](https://github.com/AKSW/KBox#installing-kbox)
 - [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
 - [How can I use KBox with python?](https://github.com/AKSW/KBox#how-can-i-use-kbox-with-python)
 - [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
@@ -53,14 +54,24 @@ It takes around ~50 minutes to start querying DBpedia on your computer to avoid 
 You can use KBox either as a command-line program or a library in your application.
 It is easy to plug and use it.
 
-### How can I execute KBox in command Line?
+### Installing KBox
+
+1) Use via runnable jar file:
 
 * Download the library [here](https://github.com/AKSW/KBox/releases).
 
+2) Use via command line:
+
+* Install via pip:
+```
+pip install kbox
+```
+
+### How can I execute KBox in command Line?
+
 * Type the following:
 ```
-java -jar kbox.jar <command> [option]
-KBox.jar <command> [option]
+kbox <command> [option]
 Where [command] is:
    * convert <directory|file> [<destFile>] [kb|zip]	 - convert the content of a directory (default kb).
              kb	 - into a kb file. ps: the directory might contain only RDF compatible file formats.
@@ -95,7 +106,7 @@ end of each command.
 
 Let's look at the `list` command as an example,
 ````
-java -jar kbox.jar list
+kbox list
 
 KBox KNS Resource table list
 ##############################
@@ -106,7 +117,7 @@ http://purl.org/pcp-on-web/ontology,kibe,c9a618a875c5d46add88de4f00b538962f9359a
 ````
 When you append `-o json` parameter at the end, the result will be look like this,
 ```
-java -jar kbox.jar list -o json
+kbox list -o json
 
 {
     "status_code": 200,
@@ -174,7 +185,7 @@ You can see more details about KBox python package from [here](https://github.co
 You can list the available knowledge graphs with list command:
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar list
+kbox list
 Knowledge base table list
 http://dbpedia.org/3.9/en/full
 http://dbpedia.org/3.9/en
@@ -194,7 +205,7 @@ Remember the commands listed on '[How can I execute KBox in command Line](https:
 It's just about executing the command line below. Remember to add `-install`, so the knowledge base is automatically dereferenced.
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
+kbox sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema" -install
 ------
 | n  |
 ======
@@ -221,7 +232,7 @@ It's very easy, as you just need to add the knowledge base you want to query sep
 
 In the given example, we query two knowledge bases, https://www.w3.org/2000/01/rdf-schema and http://xmlns.com/foaf/0.1.
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" install
+kbox -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" install
 -------
 | n   |
 =======
@@ -246,7 +257,7 @@ KBox.query("Select (count(distinct ?s) as ?n) where {?s ?p ?o}", model);
 Yes, you can!!
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar server kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" install
+kbox -server -kb "https://www.w3.org/2000/01/rdf-schema,http://xmlns.com/foaf/0.1" -install
 Loading Model...
 Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
@@ -259,7 +270,7 @@ If you successfully instantiate your server, now you can access the web client a
 
 by console
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar server "http://localhost:8080/kbox/query" sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}"
+kbox -server "http://localhost:8080/kbox/query" -sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}"
 -------
 | n   |
 =======
@@ -278,7 +289,7 @@ try(ResultSet rs = KBox.query(sparql, serverURL);) { // do not forget to close t
 ### Listing the resource folder
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar r-dir
+kbox r-dir
 Your current resource directory is: kbox/dir/path
 ```
 
@@ -288,7 +299,7 @@ You might get problems with permissions using KBox in shared environments.
 Therefore, you can change the resource directory of KBox to your desired one.
 
 ```
-java -jar kbox-v0.0.1-alpha3-RC16.jar r-dir new/path
+kbox r-dir new/path
 ```
 
 ### Using KBox with Docker
