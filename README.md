@@ -56,11 +56,11 @@ It is easy to plug and use it.
 
 ### Installing KBox
 
-1) Use via runnable jar file:
+1) Installing via runnable jar file:
 
 * Download the library [here](https://github.com/AKSW/KBox/releases).
 
-2) Use via command line:
+2) Installing via pip:
 
 * Install via pip:
 ```
