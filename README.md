@@ -352,7 +352,7 @@ Although you can create your own KNS service and publish your datasets, currentl
 In order to do that, you must contact us.
 
 Contact: 
-cbaron@informatik.uni-leipzig.de
+marx@informatik.uni-leipzig.de
 
 Information needed:
 
