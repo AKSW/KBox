@@ -328,17 +328,17 @@ docker run aksw/kbox sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}"
 ------
 ```
 
-4) Start a server using docker, but do not forget the --name flag:
+4) Start a server using docker:
 ```
-docker run -p 8080:8080 --name myendpoint aksw/kbox server kb "https://www.w3.org/2000/01/rdf-schema" install
+docker run -p 8080:8080 aksw/kbox server kb "https://www.w3.org/2000/01/rdf-schema" install
 Loading Model...
 Publishing service on http://localhost:8080/kbox/query
 Service up and running ;-) ...
 ```
 
-5) You can also query your endpoint from a KBox docker container, but do not forget to use the --link flag:
+5) You can also query your endpoint from a KBox docker container, but do not forget to use the '--network host' flag:
 ```
-docker run --link myendpoint aksw/kbox sparql "Select (count(distinct ?s) as ?n) where {?s ?p ?o}" server "http://myendpoint:8080/kbox/query"
+docker run --network host aksw/kbox -sparql "Select ?s {?s ?p ?o} limit 5" -server "http://localhost:8080/kbox/sparql"
 ------
 | n  |
 ======
