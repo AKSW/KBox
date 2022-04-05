@@ -346,6 +346,12 @@ docker run --network host aksw/kbox -sparql "Select ?s {?s ?p ?o} limit 5" -serv
 ------
 ```
 
+6) You can also cache the installed knowledge bases, so you don't need to download them multiple times:
+```
+mkdir my-cache-dir/.kbox
+docker run  --name kbox --mount type=bind,source=my-cache-dir/.kbox,target=/root/.kbox aksw/kbox -server -kb "https://www.w3.org/2000/01/rdf-schema"  -install
+```
+
 ### How can I publish my own Dataset?
 
 Although you can create your own KNS service and publish your datasets, currently KBox does not allow you to directly publish content to make them available to other users.
