@@ -19,14 +19,24 @@
 
 KBox is an abbreviation for Knowledge Box. it is a data management framework designed to facilitate data deployment whether on the cloud, personal computers or smart devices (edge). KBox is designed to cover different aspects of data management. It can be used to describe how the data is built as well as its dependencies. The concept of a data management might be familiar to you if you are aware of software management tools such as npm for JavaScript, gem for Ruby, and NutGet for .NET. KBox is the option for data dependency management. The rationale behind KBox is to allow users to manage data dependency models for data-driven applications. That is, KBox helps you to publish as well as locate and install data models. Moreover, to make it easier to manage Knowledge Graphs, KBox has embedded one of the most popular RDF frameworks, Jena. With KBox users can natively share, deploy and query RDF Knowledge Graphs at scale.
 
-- [Usability](https://github.com/aksw/natuke#usability)
-- [Submodules](https://github.com/aksw/natuke#submodules)
-- [Benchmark](https://github.com/aksw/natuke#benchmark)
-- [Data](https://github.com/aksw/natuke#data)
-- [Models](https://github.com/aksw/natuke#models)
-- [Results](https://github.com/aksw/natuke#results)
-- [License](https://github.com/aksw/natuke#license)
-- [Wiki](https://github.com/aksw/natuke#wiki)
+- [Why use KBox?](https://github.com/AKSW/KBox#why-use-kbox)
+- [What is possible to do with it?](https://github.com/AKSW/KBox#what-is-possible-to-do-with-it)
+- [How can I use KBox?](https://github.com/AKSW/KBox#how-can-i-use-kbox)
+- [Installing KBox](https://github.com/AKSW/KBox#installing-kbox)
+- [How can I execute KBox in command Line?](https://github.com/AKSW/KBox#how-can-i-execute-kbox-in-command-line)
+- [How can I use KBox with python?](https://github.com/AKSW/KBox#how-can-i-use-kbox-with-python)
+- [How can I use KBox in my project?](https://github.com/AKSW/KBox#how-can-i-use-kbox-in-my-project)
+- [How can I list available knowledge bases?](https://github.com/AKSW/KBox#how-can-i-list-available-knowledge-bases)
+- [How can I query a published knowledge bases?](https://github.com/AKSW/KBox#how-can-i-query-a-published-knowledge-bases)
+- [How can I query multi-bases?](https://github.com/AKSW/KBox#how-can-i-query-multi-bases)
+- [Starting a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#starting-a-sparql-endpoint)
+- [Querying a SPARQL endpoint](https://github.com/AKSW/KBox/blob/master/README.md#querying-a-sparql-endpoint)
+- [Listing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#listing-the-resource-folder)
+- [Changing the resource's folder](https://github.com/AKSW/KBox/blob/master/README.md#changing-the-resource-folder)
+- [Using KBox with Docker](https://github.com/AKSW/KBox#using-kbox-with-docker)
+- [How can I publish my own dataset?](https://github.com/AKSW/KBox#how-can-i-publish-my-own-dataset)
+- [How can I create my own custom build(jar) of KBox?](https://github.com/AKSW/KBox#how-can-i-create-my-own-custom-buildjar-of-kbox)
+- [Check our Wiki for old APIs](https://github.com/AKSW/KBox/wiki)
 
 ### Why use KBox?
 Systems usually deal with resources and knowledge that are often duplicated among several instances.
